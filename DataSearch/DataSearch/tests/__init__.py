@@ -1,0 +1,3 @@
+"""
+DataSearch module tests directory.
+"""

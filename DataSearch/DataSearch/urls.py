@@ -10,7 +10,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include
-from DataSearch.views import home, contact, about, ExistingDataIndex, \
+from DataSearch.views import home, contact, ExistingDataIndex, \
     ExistingDataList, ExistingDataCreate, ExistingDataDetail, \
     ExistingDataEdit, ExistingDataDelete, web_dev_tools, clean_qapps, \
     attachments_download, attachment_delete
@@ -26,10 +26,9 @@ urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^dashboard/?$', home, name='dashboard'),
     url(r'^contact/?$', contact, name='contact'),
-    url(r'^about/?$', about, name='about'),
 
     url(r'^dev/?$', web_dev_tools, name='web_dev_tools'),
-    url(r'^dev/clean_qapps/?$', clean_qapps, name='web_dev_tools'),
+    url(r'^dev/clean_qapps/?$', clean_qapps, name='clean_qapps'),
 
     # Begin existingdata URLs.
     # URLs for PDF and Excel exports.
@@ -92,6 +91,9 @@ urlpatterns = [
         ExistingDataList.as_view(),
         name='tracking_tool_list'),
     url(r'^existingdata/list/team/(?P<pk>\d+)/?$',
+        ExistingDataList.as_view(),
+        name='tracking_tool_list'),
+    url(r'^existingdata/list/?$',
         ExistingDataList.as_view(),
         name='tracking_tool_list'),
 

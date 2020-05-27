@@ -206,7 +206,8 @@ class ExistingDataEdit(LoginRequiredMixin, UpdateView):
                                                    user=request.user)})
 
         reason = 'You cannot edit this data.'
-        return HttpResponseRedirect('/existingdata/detail/%s' % pk, 401, reason)
+
+        return HttpResponseRedirect('/existingdata/', 401, reason)
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -338,20 +339,6 @@ def contact(request):
         {
             'title': 'Contact',
             'message': 'Your contact page.',
-            'year': datetime.now().year,
-        }
-    )
-
-
-def about(request):
-    """Renders the about page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'main/about.html',
-        {
-            'title': 'About',
-            'message': 'Your application description page.',
             'year': datetime.now().year,
         }
     )

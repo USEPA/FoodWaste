@@ -4,3 +4,10 @@ omit =
     */__pycache__/*
 	*/__init__.py
 	*/migrations/*
+	*/site-packages/*
+	*/Envs/*
+	*/tests/*
+	*/test*.py
+	*/settings.py
+	*/local_settings.py
+	*/context_processors.py
