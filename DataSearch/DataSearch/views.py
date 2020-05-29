@@ -206,7 +206,6 @@ class ExistingDataEdit(LoginRequiredMixin, UpdateView):
                                                    user=request.user)})
 
         reason = 'You cannot edit this data.'
-
         return HttpResponseRedirect('/existingdata/', 401, reason)
 
     @method_decorator(login_required)
@@ -225,7 +224,7 @@ class ExistingDataEdit(LoginRequiredMixin, UpdateView):
             return render(request, self.template_name, {'form': form})
 
         reason = 'You cannot edit this data.'
-        return HttpResponseRedirect('/existingdata/detail/%s' % pk, 401, reason)
+        return HttpResponseRedirect('/existingdata/', 401, reason)
 
 
 def existing_form_process_teams_attachments(request, form, instance=None):
