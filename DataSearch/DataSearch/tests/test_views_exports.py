@@ -72,7 +72,7 @@ class TestViewExportsAuthenticated(TestCase):
     def test_export_pdf_single(self):
         """Test the function to export a single Existing Data object as PDF."""
         response = self.client.post(f'/existingdata/exportpdf/{self.dat.id}')
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'ReportLab Generated PDF document' in response.content)
 
     def test_add_attachments_to_zip(self):
@@ -90,13 +90,13 @@ class TestViewExportsAuthenticated(TestCase):
     def test_export_excel_single(self):
         """Test the function to export a single Existing Data object as Excel."""
         response = self.client.post(f'/existingdata/exportexcel/{self.dat.id}')
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'workbook.xml' in response.content)
 
     def test_export_doc_single(self):
         """Test the function to export a single Existing Data object as Word Doc."""
         response = self.client.post(f'/existingdata/exportdocx/{self.dat.id}')
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'word/numbering.xml' in response.content)
 
     def test_export_user_doc(self):
@@ -105,7 +105,7 @@ class TestViewExportsAuthenticated(TestCase):
         as a zip file of Word Doc.
         """
         response = self.client.post(f'/existingdata/exportdocx/user/{self.user.id}')
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'test.docx.zip' in response.content)
         self.assertTrue(b'This is a test file.' in response.content)
 
@@ -115,7 +115,7 @@ class TestViewExportsAuthenticated(TestCase):
         as a zip file of PDF.
         """
         response = self.client.post(f'/existingdata/exportpdf/user/{self.user.id}')
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'export_Test.pdf.zip' in response.content)
         self.assertTrue(b'This is a test file.' in response.content)
         self.assertTrue(b'ReportLab Generated PDF document' in response.content)
@@ -126,7 +126,7 @@ class TestViewExportsAuthenticated(TestCase):
         as a zip file of Excel.
         """
         response = self.client.post(f'/existingdata/exportexcel/user/{self.user.id}')
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(b'export_Test.xlsx.zip' in response.content)
         self.assertTrue(b'This is a test file.' in response.content)
 
@@ -136,7 +136,7 @@ class TestViewExportsAuthenticated(TestCase):
     #    as a zip file of Word Doc.
     #    """
     #    response = self.client.post(f'/existingdata/exportdocx/team/{self.team.id}')
-    #    self.assertTrue(response.status_code, 200)
+    #    self.assertEqual(response.status_code, 200)
     #    self.assertTrue(b'test.docx.zip' in response.content)
     #    self.assertTrue(b'This is a test file.' in response.content)
 
@@ -146,7 +146,7 @@ class TestViewExportsAuthenticated(TestCase):
     #    as a zip file of PDF.
     #    """
     #    response = self.client.post(f'/existingdata/exportpdf/team/{self.team.id}')
-    #    self.assertTrue(response.status_code, 200)
+    #    self.assertEqual(response.status_code, 200)
     #    self.assertTrue(b'export_Test.pdf.zip' in response.content)
     #    self.assertTrue(b'This is a test file.' in response.content)
     #    self.assertTrue(b'ReportLab Generated PDF document' in response.content)
@@ -157,6 +157,6 @@ class TestViewExportsAuthenticated(TestCase):
     #    as a zip file of Excel.
     #    """
     #    response = self.client.post(f'/existingdata/exportexcel/team/{self.team.id}')
-    #    self.assertTrue(response.status_code, 200)
+    #    self.assertEqual(response.status_code, 200)
     #    self.assertTrue(b'export_Test.xlsx.zip' in response.content)
     #    self.assertTrue(b'This is a test file.' in response.content)
