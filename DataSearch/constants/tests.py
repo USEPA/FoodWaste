@@ -11,14 +11,50 @@ Available functions:
 - None
 """
 
-from django.test import TestCase
+import django
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import EmailMultiAlternatives
-from constants.utils import split_email_list, is_epa_email, non_epa_email_message, create_qt_email_message, xstr, \
-    sort_rap_numbers, get_rap_fields, is_float
+from django.test import TestCase
+from constants.utils import split_email_list, is_epa_email, non_epa_email_message, \
+    create_qt_email_message, xstr, sort_rap_numbers, get_rap_fields, is_float, \
+    get_attachment_storage_path, get_flowsa_storage_path, get_scifinder_storage_path, \
+    download_files, download_file
+from accounts.models import User
+from DataSearch.models import Attachment
+from flowsa.models import Upload as FlowsaUpload
+from scifinder.models import Upload as ScifinderUpload
+
 
 
 class TestUtils(TestCase):
     """Test utils."""
+
+    if django.VERSION[:2] >= (1, 7):
+        # Django 1.7 requires an explicit setup() when running tests in PTVS.
+        @classmethod
+        def setUpClass(cls):
+            """TODO."""
+            super(TestUtils, cls).setUpClass()
+            django.setup()
+
+    def setUp(self):
+        """Prepare various objects for this class of tests."""
+        self.test_str = 'Test'
+        self.client.login(username='dyoung11', password='Evelynj1!')
+        self.user = User.objects.get(id=1)
+        self.file = SimpleUploadedFile('test.txt', b'This is a test file.')
+        self.excel_file = SimpleUploadedFile('test.xlsx', b'This is a test file.')
+        self.attachment_excel = Attachment.objects.create(
+            name=self.test_str, file=self.excel_file, uploaded_by=self.user)
+        self.attachment_1 = Attachment.objects.create(
+            name=self.test_str, file=self.file, uploaded_by=self.user)
+        # Attachment 2 will not be found since we don't call objects.create()
+        self.attachment_2 = Attachment(
+            name=self.test_str, file=self.file, uploaded_by=self.user)
+        self.flowsa_upload = FlowsaUpload(
+            name=self.test_str, file=self.file, uploaded_by=self.user)
+        self.scifinder_upload = ScifinderUpload(
+            name=self.test_str, file=self.file, uploaded_by=self.user)
 
     def test_split_email_list_pass_one(self):
         """Runs the char split on an email that will be equal."""
@@ -121,3 +157,41 @@ class TestUtils(TestCase):
         results = is_float(val_str)
         # Print(results).
         self.assertEqual(results, False)
+
+    def test_get_attachment_storage_path(self):
+        """Test that the DataSearch Attachment storage path is returned as expected."""
+        response = get_attachment_storage_path(
+            instance=self.attachment_1, filename=self.test_str)
+        self.assertTrue('dyoung11/attachments/' in response)
+
+    def test_get_flowsa_storage_path(self):
+        """Test that the Flowsa Upload storage path is returned as expected."""
+        response = get_flowsa_storage_path(
+            instance=self.flowsa_upload, filename=self.test_str)
+        self.assertTrue('dyoung11/flowsa/' in response)
+
+    def test_get_scifinder_storage_path(self):
+        """Test that the Scifinder Upload storage path is returned as expected."""
+        response = get_scifinder_storage_path(
+            instance=self.scifinder_upload, filename=self.test_str)
+        self.assertTrue('dyoung11/scifinder/' in response)
+
+    def test_download_files(self):
+        """Test the function to download multiple files as a zip."""
+        zip_name = 'test.zip'
+        files_list = [self.attachment_1, self.attachment_2]
+        response = download_files(files_list, zip_name)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(b'PK' in response.content)
+
+    def test_download_file(self):
+        """Test the function to download multiple files as a zip."""
+        response = download_file(self.attachment_1)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(b'This is a test file.' in response.content)
+
+    def test_download_file_excel(self):
+        """Test the function to download multiple files as a zip."""
+        response = download_file(self.attachment_excel)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(b'This is a test file.' in response.content)
