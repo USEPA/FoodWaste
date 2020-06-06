@@ -21,7 +21,7 @@
 #---------------------------------------------------------------------------------------#
 # Required for site to run properly:
 django-grappelli==2.14.2        # A jazzy skin for the Django Admin-Interface.
-Django==3.0.6                   # Python Modules.
+Django==3.0.7                   # Python Modules.
 djangorestframework==3.11.0     # Powerful and flexible toolkit for building Web APIs.
 django-filter==2.2.0            # Reusable Django application allows users to filter querysets dynamically.
 django-phonenumber-field==4.0.0 # An international phone number field for django models.
