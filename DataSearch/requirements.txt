@@ -40,7 +40,8 @@ coverage==5.1                   # Measures code coverage, typically during test 
 django-docs==0.3.1              # Allows to serve Sphinx generated docs directly from Django.
 duecredit==0.8.0                # Citation of scientific software and methods, and limited visibility of donation requests for open-source software.
 flake8==3.8.2                   # Flake8 is a wrapper around these tools: PyFlakes; pycodestyle; Ned Batchelder's McCabe script.
-pep8==1.7.1                     # Tool to check your Python code against some of the style conventions in PEP 8.
+pycodestyle==2.6.0              # Tool to check your Python code against some of the style conventions in PEP 8.
+pydocstyle==5.0.2               # Static analysis tool for checking compliance with Python docstring conventions in PEP 257.
 pylint==2.5.2                   # Static code analysis tool which looks for programming errors, helps enforcing PEP 8 coding standard.
 pylint_django==2.0.15           # pylint_django.checkers.db_performance looks for migrations which add new model fields and these fields have a default value.
 
