@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 SITE_NAME = 'https://134.67.216.106/accounts/login'
 
-EMAIL_DISCLAIMER = '<p style='font-weight:bold;color:red'>Please do not reply to this email. Thank you.</p>'
+EMAIL_DISCLAIMER = '<p style="font-weight:bold;color:red">Please do not reply to this email. Thank you.</p>'
 EMAIL_DISCLAIMER_PLAIN = 'Please do not reply to this email. Thank you.'
 BCC_EMAIL = ''
 
