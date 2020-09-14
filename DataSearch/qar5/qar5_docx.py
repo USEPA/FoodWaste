@@ -228,23 +228,25 @@ def export_doc_single(request, *args, **kwargs):
 
     add_custom_heading(document, 'A.1 Approval Page', level=2)
     # Signature grid ...
-    num_signatures = len(qapp_info['signatures'])
+    num_signatures = 0
+    num_signatures = len(qapp_info.get('signatures', []))
     table = document.add_table(rows=6+num_signatures, cols=12)
     table.style = styles['Table Grid']
 
     set_table_row_height(table)
 
-    row_cells = table.rows[0].cells
-    row_cells[0].text = 'QA Project Plan Title:'
-    row_cells[0].merge(row_cells[3])
-    row_cells[4].text = qapp_info['qapp_approval'].project_plan_title
-    row_cells[4].merge(row_cells[11])
+    if qapp_info.get('qapp_approval', False):
+        row_cells = table.rows[0].cells
+        row_cells[0].text = 'QA Project Plan Title:'
+        row_cells[0].merge(row_cells[3])
+        row_cells[4].text = qapp_info['qapp_approval'].project_plan_title
+        row_cells[4].merge(row_cells[11])
 
-    row_cells = table.rows[1].cells
-    row_cells[0].text = 'QA Activity Number:'
-    row_cells[0].merge(row_cells[3])
-    row_cells[4].text = qapp_info['qapp_approval'].activity_number
-    row_cells[4].merge(row_cells[11])
+        row_cells = table.rows[1].cells
+        row_cells[0].text = 'QA Activity Number:'
+        row_cells[0].merge(row_cells[3])
+        row_cells[4].text = qapp_info['qapp_approval'].activity_number
+        row_cells[4].merge(row_cells[11])
 
     # TODO: Center text in this row:
     row_cells = table.rows[2].cells
@@ -254,7 +256,7 @@ def export_doc_single(request, *args, **kwargs):
     iter_count = 0
     # TODO: Iterate through EPA Project Approvals:
     # Start with row 3 + iter_count++
-    for sig in qapp_info['signatures']:
+    for sig in qapp_info.get('signatures', []):
         if not sig.contractor:
             row_cells = table.rows[3 + iter_count].cells
             row_cells[0].text = 'Name:'
@@ -281,7 +283,7 @@ def export_doc_single(request, *args, **kwargs):
 
     # TODO: Iterate through Contractor Project Approvals:
     # Start with row 5 + iter_count++
-    for sig in qapp_info['signatures']:
+    for sig in qapp_info.get('signatures', []):
         if sig.contractor:
             row_cells = table.rows[5 + iter_count].cells
             row_cells[0].text = 'Name:'

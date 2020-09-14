@@ -57,7 +57,7 @@ pylint_django==2.3.0            # pylint_django.checkers.db_performance looks fo
 #pyPdf==1.13                     # PDF toolkit.
 #pytest-django==3.8.0            # Django project/applications with the pytest testing tool.
 #pytest==5.4.1                   # Framework to write small tests, yet scales to support complex functional testing for apps/lib.
-reportlab=>3.5.49                # An Open Source Python library for generating PDFs and graphics.
+#reportlab=>3.5.49                # An Open Source Python library for generating PDFs and graphics.
 #scipy==1.5.2                    # Scientific Library for Python.
 #xlwt==1.3.0                     # Projects requirement. Generate spreadsheet files compatible with Microsoft Excel versions 95 to 2003.
 #xlsxwriter==1.3.3               # Projects requirement. XlsxWriter can be used to write text, numbers, formulas and hyperlinks to multiple worksheets.

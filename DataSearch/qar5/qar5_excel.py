@@ -124,23 +124,24 @@ def export_excel_single(request, *args, **kwargs):
 
     # ###########################
     # Write the Approval Page
-    sheet.cell(row=row, column=1).value = 'A.1 Approval Page'
-    row += 1
-    sheet.cell(row=row, column=1).value = 'QA Project Plan Title'
-    sheet.cell(row=row, column=2).value = \
-        qapp_info['qapp_approval'].project_plan_title
-    row += 1
+    if qapp_info.get('qapp_approval', False):
+        sheet.cell(row=row, column=1).value = 'A.1 Approval Page'
+        row += 1
+        sheet.cell(row=row, column=1).value = 'QA Project Plan Title'
+        sheet.cell(row=row, column=2).value = \
+            qapp_info['qapp_approval'].project_plan_title
+        row += 1
 
-    sheet.cell(row=row, column=1).value = 'QA Activity Number'
-    sheet.cell(row=row, column=2).value = \
-        qapp_info['qapp_approval'].activity_number
-    row += 1
+        sheet.cell(row=row, column=1).value = 'QA Activity Number'
+        sheet.cell(row=row, column=2).value = \
+            qapp_info['qapp_approval'].activity_number
+        row += 1
 
     # EPA Signatures section
     sheet.cell(row=row, column=1).value = \
         'If Intramural or Extramural, EPA Project Approvals'
     row += 1
-    for sig in qapp_info['signatures']:
+    for sig in qapp_info.get('signatures', []):
         if not sig.contractor:
             sheet.cell(row=row, column=1).value = 'Name: '
             sheet.cell(row=row, column=2).value = sig.name
@@ -151,7 +152,7 @@ def export_excel_single(request, *args, **kwargs):
     sheet.cell(row=row, column=1).value = \
         'If Extramural, Contractor Approvals'
     row += 1
-    for sig in qapp_info['signatures']:
+    for sig in qapp_info.get('signatures', []):
         if sig.contractor:
             sheet.cell(row=row, column=1).value = 'Name: '
             sheet.cell(row=row, column=2).value = sig.name
