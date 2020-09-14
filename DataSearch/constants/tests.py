@@ -25,7 +25,6 @@ from flowsa.models import Upload as FlowsaUpload
 from scifinder.models import Upload as ScifinderUpload
 
 
-
 class TestUtils(TestCase):
     """Test utils."""
 

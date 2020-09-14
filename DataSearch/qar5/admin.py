@@ -42,7 +42,7 @@ class QappAdmin(admin.ModelAdmin):
         if not obj.pk:
             obj.prepared_by = request.user
         return super().save_model(request, obj, form, change)
-    
+
 
 admin.site.register(Qapp, QappAdmin)
 

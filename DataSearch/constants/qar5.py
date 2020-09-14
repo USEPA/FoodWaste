@@ -89,9 +89,10 @@ A9_DOCUMENTS_RECORDS = 'Research activities must be documented according ' + \
     'the ORD Quality Management Plan for QA Category A Projects.'
 
 # A9_RECORDS_RETENTION = """
-#    Records retention: Records that are generated under this research effort will
-#    be retained in accordance with EPA Records Schedule 1035, and as required by
-#    Section 5.1 of the ORD Quality Management Plan for QA Category A Projects.
+#    Records retention: Records that are generated under this research effort
+#    will be retained in accordance with EPA Records Schedule 1035, and as
+#    required by Section 5.1 of the ORD Quality Management Plan for QA Category
+#    A Projects.
 # """
 
 SECTION_A_INFO = {

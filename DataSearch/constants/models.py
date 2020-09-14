@@ -35,24 +35,25 @@ ONLY_YN_CHOICES = (('Y', 'Y'),)
 YES_OR_NO = ((True, 'Yes'), (False, 'No'))
 
 # From QATRACK Constants:
-YNNA_CHOICES = (('',''), ('Y','Y'), ('N','N'), ('NA','NA'))
-PUBLIC_CHOICES = (('',''), ('PUBLIC','PUBLIC'), ('PRIVATE','PRIVATE'))
-RAP_CHOICES = (('',''), ('ACE','ACE'), ('CSS','CSS'), ('SSWR','SSWR'),
-               ('HHRA','HHRA'), ('HSR','HSR'),('SHC', 'SHC'),
-               ('Not Applicable','Not Applicable'),  )
-STATUS_CHOICES = (('',''), ('Active','Active'), ('Inactive','Inactive'))
-USER_TYPE_CHOICES = (('',''),('SUPER','SUPER USER'), ('ALL','ALL LABS'),
-                     ('LAB','SINGLE LAB'), ('DIVISION','DIVISION USER'),
-                     ('BRANCH','BRANCH USER'))
+YNNA_CHOICES = (('', ''), ('Y', 'Y'), ('N', 'N'), ('NA', 'NA'))
+PUBLIC_CHOICES = (('', ''), ('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'))
+RAP_CHOICES = (('', ''), ('ACE', 'ACE'), ('CSS', 'CSS'), ('SSWR', 'SSWR'),
+               ('HHRA', 'HHRA'), ('HSR', 'HSR'), ('SHC', 'SHC'),
+               ('Not Applicable', 'Not Applicable'), )
+STATUS_CHOICES = (('', ''), ('Active', 'Active'), ('Inactive', 'Inactive'))
+USER_TYPE_CHOICES = (('', ''), ('SUPER', 'SUPER USER'), ('ALL', 'ALL LABS'),
+                     ('LAB', 'SINGLE LAB'), ('DIVISION', 'DIVISION USER'),
+                     ('BRANCH', 'BRANCH USER'))
 PERMISSION_CHOICES = (('READER', 'READER'), ('EDITOR', 'EDITOR'),
                       ('ADMIN', 'ADMIN'))
 EDITOR_PERMISSION_CHOICES = (('READER', 'READER'), ('EDITOR', 'EDITOR'))
 READER_PERMISSION_CHOICES = (('READER', 'READER'))
-# this is used only i the equipment app - don't know yet whether that app is used in QA Track or not
+# This is used only i the equipment app - do not know yet whether that app is
+# used in QA Track or not.
 METROLOGY_DOC_CHOICES = (
-    ('Other','Other'), ('CP','Calibration Procedure'),
-    ('MD','Metrology Document'), ('TM','Technical Manual'),
-    ('Image','Image'), ('Thumbnail','Thumbnail'), ('Key','Key Image - BIG'))
+    ('Other', 'Other'), ('CP', 'Calibration Procedure'),
+    ('MD', 'Metrology Document'), ('TM', 'Technical Manual'),
+    ('Image', 'Image'), ('Thumbnail', 'Thumbnail'), ('Key', 'Key Image - BIG'))
 
 
 DIVISION_CHOICES = [
