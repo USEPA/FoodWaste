@@ -64,7 +64,10 @@ class TeamListView(LoginRequiredMixin, ListView):
     template_name = 'team_list.html'
 
     def get_queryset(self):
-        """Override default queryset with set of teams which requesting user is member."""
+        """
+        Override default queryset with set of teams which requesting user is
+        member.
+        """
         user = self.request.user
         return Team.objects.filter(members=user).order_by(
             'name').select_related(
@@ -166,7 +169,7 @@ class TeamEditView(FormView):
             ctx['team_data'] = APITeamDetailView.as_view()(
                 get_request, team_id=ctx['team_id'], format='json').rendered_content
             ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
-            #return render(request, self.template, ctx)
+            # return render(request, self.template, ctx)
             return HttpResponseRedirect('/teams/list/')
 
         # We should never get here, so just redirect to the dashboard.
@@ -191,7 +194,7 @@ class TeamManagementView(FormView):
             ctx['nonmembers_data'] = APITeamMembershipListView.as_view()(
                 request, team_id=ctx['team_id'], nonmember=1, format='json').rendered_content
             ctx['nonmembers'] = JSONParser().parse(BytesIO(ctx['nonmembers_data']))
-            
+
             membership = TeamMembership.objects.filter(
                 team_id=ctx['team_id'], member_id=request.user).first()
             ctx['user_can_edit'] = membership.can_edit

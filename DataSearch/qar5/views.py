@@ -31,7 +31,7 @@ from constants.qar5_sectionb import SECTION_B_INFO
 from DataSearch.settings import DATETIME_FORMAT, DEBUG, STATIC_ROOT
 from qar5.forms import QappForm, QappApprovalForm, QappLeadForm, \
     QappApprovalSignatureForm, SectionAForm, SectionBForm, \
-   SectionDForm, RevisionForm, ReferencesForm
+    SectionDForm, RevisionForm, ReferencesForm
 from qar5.models import Qapp, QappApproval, QappLead, QappApprovalSignature, \
     SectionA, SectionB, SectionBType, SectionC, SectionD, \
     QappSharingTeamMap, Revision, References
@@ -71,7 +71,8 @@ class QappList(LoginRequiredMixin, ListView):
         """
         Custom method override to send data to the template.
 
-        - Specifically, want to send the user or team information for this list of data.
+        - Specifically, want to send the user or team information for this
+          list of data.
         """
         context = super().get_context_data(**kwargs)
         path = self.request.path.split('/')
@@ -190,7 +191,7 @@ class QappCreate(LoginRequiredMixin, CreateView):
         return render(
             request, 'qapp_create.html',
             {'form': QappForm(user=request.user),
-            'project_lead_class': QappLeadForm})
+             'project_lead_class': QappLeadForm})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -302,7 +303,7 @@ class ProjectLeadEdit(LoginRequiredMixin, UpdateView):
 
     model = QappLead
     form_class = QappLeadForm
-    template_name  = 'SectionA/project_lead_create.html'
+    template_name = 'SectionA/project_lead_create.html'
 
     def get(self, request, *args, **kwargs):
         """
@@ -429,7 +430,10 @@ class ProjectApprovalSignatureCreate(LoginRequiredMixin, CreateView):
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        """Return a view with an empty form for creating a new Approval Signature."""
+        """
+        Return a view with an empty form for creating a new Approval
+        Signature.
+        """
         qapp_id = request.GET.get('qapp_id', 0)
         qapp = Qapp.objects.get(id=qapp_id)
         if check_can_edit(qapp, request.user):
@@ -486,8 +490,8 @@ class ProjectApprovalSignatureEdit(LoginRequiredMixin, UpdateView):
     """Class view for editing approval signatures."""
 
     model = QappApprovalSignature
-    form_class  = QappApprovalSignatureForm
-    template_name  = 'SectionA/project_approval_signature_create.html'
+    form_class = QappApprovalSignatureForm
+    template_name = 'SectionA/project_approval_signature_create.html'
 
     def get(self, request, *args, **kwargs):
         """
@@ -521,7 +525,6 @@ class ProjectApprovalSignatureEdit(LoginRequiredMixin, UpdateView):
 
         reason = 'You cannot edit this data.'
         return HttpResponseRedirect('/qar5/detail/%s' % qapp.id, 401, reason)
-
 
 
 class SectionAView(LoginRequiredMixin, TemplateView):
@@ -659,7 +662,6 @@ class SectionBView(LoginRequiredMixin, TemplateView):
 
         ctx['selected_sectionb_types'] = qapp.sectiona.sectionb_type.all()
 
-
         # Update if existing, otherwise insert new:
         if existing_section_b:
             ctx['form'] = SectionBForm(
@@ -693,6 +695,7 @@ class SectionCView(LoginRequiredMixin, TemplateView):
                       {'title': 'QAPP Section C', 'qapp_id': qapp_id,
                        'SECTION_C_DEFAULTS': SECTION_C_DEFAULTS,
                        'c3_info': C3_QUALITY_METRICS})
+
 
 class SectionDView(LoginRequiredMixin, TemplateView):
     """Class for processing QAPP Section D information."""

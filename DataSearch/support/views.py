@@ -336,7 +336,7 @@ def file_upload_support(request, obj_id):
 
 
 # NOTE: This function isn't used, except inside the tests.py file...
-#def create_help_request(request):
+# def create_help_request(request):
 #    if request.method == 'POST':
 #        form = SupportForm(data=request.POST, files=request.FILES)
 #        if form.is_valid():
