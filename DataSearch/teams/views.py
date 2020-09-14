@@ -130,12 +130,14 @@ class TeamEditView(FormView):
     def get(self, request, *args, **kwargs):
         """Display the project create form."""
         ctx = {}
-        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and 'team_id' in kwargs else None
+        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and \
+            'team_id' in kwargs else None
         if ctx['team_id'] is not None:
             if can_user_edit_team(request.user, ctx['team_id']):
                 return render(request, self.template, ctx)
             ctx['team_data'] = APITeamDetailView.as_view()(
-                request, team_id=ctx['team_id'], format='json').rendered_content
+                request, team_id=ctx['team_id'],
+                format='json').rendered_content
             ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
         return HttpResponseRedirect('/teams/list/')
 
@@ -144,7 +146,8 @@ class TeamEditView(FormView):
         """Save the changes to the user form."""
         ctx = {}
         ctx['params'] = request.POST
-        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and 'team_id' in kwargs else None
+        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and \
+            'team_id' in kwargs else None
 
         if ctx['team_id'] is not None:
             if not can_user_edit_team(request.user, ctx['team_id']):
@@ -153,7 +156,8 @@ class TeamEditView(FormView):
             # Update the team name.
             ctx['team_obj'] = Team.objects.get(id=ctx['team_id'])
             if ctx['team_obj'] is not None:
-                ctx['name'] = ctx['params']['name'] if 'name' in ctx['params'] else None
+                ctx['name'] = ctx['params']['name'] if 'name' in \
+                    ctx['params'] else None
                 ctx['name'] = ctx['name'].strip()
                 if ctx['name'] is not None and ctx['name']:
                     ctx['team_obj'].name = ctx['name']
@@ -167,7 +171,8 @@ class TeamEditView(FormView):
             get_request = RequestFactory().get('/')
             get_request.user = request.user
             ctx['team_data'] = APITeamDetailView.as_view()(
-                get_request, team_id=ctx['team_id'], format='json').rendered_content
+                get_request, team_id=ctx['team_id'],
+                format='json').rendered_content
             ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
             # return render(request, self.template, ctx)
             return HttpResponseRedirect('/teams/list/')
@@ -186,14 +191,18 @@ class TeamManagementView(FormView):
     def get(self, request, *args, **kwargs):
         """Display the project create form."""
         ctx = {}
-        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and 'team_id' in kwargs else None
+        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and \
+            'team_id' in kwargs else None
         if ctx['team_id'] is not None:
             ctx['team_data'] = APITeamDetailView.as_view()(
-                request, team_id=ctx['team_id'], format='json').rendered_content
+                request, team_id=ctx['team_id'],
+                format='json').rendered_content
             ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
             ctx['nonmembers_data'] = APITeamMembershipListView.as_view()(
-                request, team_id=ctx['team_id'], nonmember=1, format='json').rendered_content
-            ctx['nonmembers'] = JSONParser().parse(BytesIO(ctx['nonmembers_data']))
+                request, team_id=ctx['team_id'], nonmember=1,
+                format='json').rendered_content
+            ctx['nonmembers'] = JSONParser().parse(
+                BytesIO(ctx['nonmembers_data']))
 
             membership = TeamMembership.objects.filter(
                 team_id=ctx['team_id'], member_id=request.user).first()
@@ -207,8 +216,10 @@ class TeamManagementView(FormView):
         """Save the changes to the user form."""
         ctx = {}
         ctx['params'] = request.POST
-        ctx['command'] = ctx['params']["command"] if "command" in ctx['params'] else None
-        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and 'team_id' in kwargs else None
+        ctx['command'] = ctx['params']["command"] if "command" in \
+            ctx['params'] else None
+        ctx['team_id'] = kwargs["team_id"] if kwargs is not None and \
+            'team_id' in kwargs else None
         if not can_user_edit_team(request.user, ctx['team_id']):
             return HttpResponseRedirect('/teams/list/')
 
@@ -219,17 +230,20 @@ class TeamManagementView(FormView):
                 team_id=ctx['team_id'], member_id=request.user).first()
             ctx['user_can_edit'] = membership.can_edit
             if not membership.can_edit:
-                return HttpResponseRedirect('/teams/team/%s/manage' % ctx['team_id'])
+                return HttpResponseRedirect(
+                    '/teams/team/%s/manage' % ctx['team_id'])
 
             if ctx['command'] == 'adduser':
                 # Add a user membership to the team.
-                user_id = int(ctx['params']['user_id']) if 'user_id' in ctx['params'] else None
+                user_id = int(ctx['params']['user_id']) if 'user_id' in \
+                    ctx['params'] else None
                 if user_id is not None:
                     # Check if the user already has a membership, this can
                     # happen if the user reloads the page.
                     ctx['membership_list'] = TeamMembership.objects.filter(
                         team_id=ctx['team_id'], member_id=user_id).all()
-                    if ctx['membership_list'] is None or not ctx['membership_list']:
+                    mem_list = ctx['membership_list']
+                    if mem_list is None or not mem_list:
                         # Add a membership.
                         ctx['member_obj'] = User.objects.get(id=user_id)
                         ctx['membership'] = TeamMembership()
@@ -244,10 +258,12 @@ class TeamManagementView(FormView):
 
             elif ctx['command'] == 'deleteuser':
                 # Remove a user membership.
-                user_id = int(ctx['params']['user_id']) if 'user_id' in ctx['params'] else None
+                user_id = int(ctx['params']['user_id']) if 'user_id' in \
+                    ctx['params'] else None
                 if user_id is not None:
                     # Add a membership.
-                    ctx['membership'] = TeamMembership.objects.get(team_id=ctx['team_id'], member_id=user_id)
+                    ctx['membership'] = TeamMembership.objects.get(
+                        team_id=ctx['team_id'], member_id=user_id)
                     if ctx['membership'] is not None:
                         ctx['membership'].delete()
                 else:
@@ -256,7 +272,8 @@ class TeamManagementView(FormView):
             elif ctx['command'] == 'updatename':
                 # Update the team name.
                 if ctx['team_obj'] is not None:
-                    ctx['name'] = ctx['params']['name'] if 'name' in ctx['params'] else None
+                    ctx['name'] = ctx['params']['name'] if 'name' in \
+                        ctx['params'] else None
                     ctx['name'] = ctx['name'].strip()
                     if ctx['name'] is not None and ctx['name']:
                         ctx['team_obj'].name = ctx['name']
@@ -268,26 +285,31 @@ class TeamManagementView(FormView):
 
             elif ctx['command'] == 'canedit':
                 # Change this user's can_edit status.
-                user_id = int(ctx['params']['user_id']) if 'user_id' in ctx['params'] else None
-                ctx['can_edit'] = ctx['params']['can_edit'] if 'can_edit' in ctx['params'] else None
+                user_id = int(ctx['params']['user_id']) if 'user_id' in \
+                    ctx['params'] else None
+                ctx['can_edit'] = ctx['params']['can_edit'] if 'can_edit' \
+                    in ctx['params'] else None
                 if user_id is not None and ctx['can_edit'] is not None:
                     # Get the membership object:
-                    ctx['membership'] = TeamMembership.objects.get(team_id=ctx['team_id'], member_id=user_id)
+                    ctx['membership'] = TeamMembership.objects.get(
+                        team_id=ctx['team_id'], member_id=user_id)
                     if ctx['membership'] is not None:
                         ctx['membership'].can_edit = ctx['can_edit']
                         ctx['membership'].save()
-
 
             # Retrieve the updated data and render the view.
             get_request = RequestFactory().get('/')
             get_request.user = request.user
 
             ctx['team_data'] = APITeamDetailView.as_view()(
-                get_request, team_id=ctx['team_id'], format='json').rendered_content
+                get_request, team_id=ctx['team_id'],
+                format='json').rendered_content
             ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
             ctx['nonmembers_data'] = APITeamMembershipListView.as_view()(
-                get_request, team_id=ctx['team_id'], nonmember=1, format='json').rendered_content
-            ctx['nonmembers'] = JSONParser().parse(BytesIO(ctx['nonmembers_data']))
+                get_request, team_id=ctx['team_id'],
+                nonmember=1, format='json').rendered_content
+            ctx['nonmembers'] = JSONParser().parse(
+                BytesIO(ctx['nonmembers_data']))
             return render(request, self.template, ctx)
 
         # We should never get here, so just redirect to the dashboard.
@@ -314,16 +336,19 @@ class APITeamListView(APIView):
 
         if exclude is not None:
             teams = (
-                Team.objects.exclude(id__in=exclude).filter(members=user).order_by('name')
+                Team.objects.exclude(id__in=exclude).filter(
+                    members=user).order_by('name')
                 .select_related("created_by", "last_modified_by")
-                .prefetch_related("team_memberships", "team_memberships__member")
+                .prefetch_related("team_memberships",
+                                  "team_memberships__member")
                 .all()
             )
         else:
             teams = (
                 Team.objects.filter(members=user).order_by('name')
                 .select_related("created_by", "last_modified_by")
-                .prefetch_related("team_memberships", "team_memberships__member")
+                .prefetch_related("team_memberships",
+                                  "team_memberships__member")
                 .all()
             )
 
@@ -332,7 +357,8 @@ class APITeamListView(APIView):
 
     def post(self, request, *args, **kwargs):
         """Create a new team."""
-        serializer = TeamSerializer(data=request.data, context={'request': request})
+        serializer = TeamSerializer(data=request.data,
+                                    context={'request': request})
         if serializer.is_valid():
             team = serializer.save()
             # Add a membership for the requesting user.
@@ -355,12 +381,15 @@ class APITeamDetailView(APIView):
 
     @classmethod
     def get_object(cls, p_id, user):
-        """Retrieve a team and its membership based on the provided user and p_id."""
+        """
+        Retrieve a team and its membership based on the provided user and p_id.
+        """
         try:
             team = (
                 Team.objects
                 .select_related("created_by", "last_modified_by")
-                .prefetch_related("team_memberships", "team_memberships__member")
+                .prefetch_related("team_memberships",
+                                  "team_memberships__member")
                 .get(id=p_id)
             )
             for membership in team.team_memberships.all():
@@ -377,12 +406,20 @@ class APITeamDetailView(APIView):
         return Response(serializer.data)
 
     def put(self, request, team_id, *args, **kwargs):
-        """Update an existing team. :param request: :param team_id: :param format: :return:."""
+        """
+        Update an existing team.
+        :param request:
+        :param team_id:
+        :param format:
+        :return:.
+        """
         (team, membership) = self.get_object(team_id, request.user)
         if not membership.can_edit:
-            return Response({"detail": "current user cannot edit this team"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "current user cannot edit this team"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = TeamSerializer(team, data=request.data, context={'request': request})
+        serializer = TeamSerializer(team, data=request.data,
+                                    context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -399,7 +436,8 @@ class APITeamDetailView(APIView):
         """
         (team, membership) = self.get_object(team_id, request.user)
         if not membership.can_edit:
-            return Response({"detail": "current user cannot delete this team"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "current user cannot delete this team"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         team.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -416,7 +454,8 @@ class APITeamMembershipListView(APIView):
         try:
             team = (
                 Team.objects
-                .prefetch_related("team_memberships", "team_memberships__member")
+                .prefetch_related("team_memberships",
+                                  "team_memberships__member")
                 .get(id=p_id)
             )
             team_memberships = team.team_memberships.all()
@@ -431,9 +470,12 @@ class APITeamMembershipListView(APIView):
         """Get the membership information for the specified team."""
         # If query param "nonmember" is set, returns users not on this team.
         nonmember = kwargs.get('nonmember', None)
-        nonmember = request.query_params.get('nonmember', None) if nonmember is None else nonmember
+        nonmember = request.query_params.get('nonmember', None) if \
+            nonmember is None else nonmember
         if nonmember is not None:
-            users = User.objects.exclude(member_memberships__team_id=team_id).order_by('last_name').all()
+            users = User.objects.exclude(
+                member_memberships__team_id=team_id).order_by(
+                    'last_name').all()
             serializer = UserSerializer(users, many=True)
             return Response(serializer.data)
         team_memberships = self.get_object(team_id, request.user)
@@ -447,13 +489,15 @@ class APITeamMembershipListView(APIView):
         serializer = TeamMembershipModifySerializer(data=request.data)
         if serializer.is_valid():
             # Make sure the membership doesn't already exist.
-            existing_membership = TeamMembership.objects.filter(team__id=team_id,
-                                                                member__id=request.data["member"]).first()
+            existing_membership = TeamMembership.objects.filter(
+                team__id=team_id, member__id=request.data["member"]).first()
             if existing_membership is not None:
-                return Response("user is already a member of this team", status=status.HTTP_400_BAD_REQUEST)
+                return Response("user is already a member of this team",
+                                status=status.HTTP_400_BAD_REQUEST)
             membership = serializer.save()
             display_serializer = TeamMembershipSerializer(instance=membership)
-            return Response(display_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(display_serializer.data,
+                            status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -464,7 +508,10 @@ class APITeamMembershipDetailView(APIView):
 
     @classmethod
     def get_object(cls, membership_id, user):
-        """Get current membership information for the provided user and membership_id."""
+        """
+        Get current membership information for the
+        provided user and membership_id.
+        """
         try:
             current_membership = (
                 TeamMembership.objects
@@ -481,7 +528,8 @@ class APITeamMembershipDetailView(APIView):
 
     def get(self, request, team_id, membership_id, *args, **kwargs):
         """Get details for the specified team."""
-        (membership, _current_user_can_edit) = self.get_object(membership_id, request.user)
+        (membership, _current_user_can_edit) = self.get_object(membership_id,
+                                                               request.user)
         serializer = TeamMembershipSerializer(instance=membership)
         return Response(serializer.data)
 
@@ -495,13 +543,16 @@ class APITeamMembershipDetailView(APIView):
         :param format:
         :return:
         """
-        (membership, current_user_can_edit) = self.get_object(membership_id, request.user)
+        (membership, current_user_can_edit) = self.get_object(membership_id,
+                                                              request.user)
         if not current_user_can_edit:
-            return Response({"detail": "calling user cannot edit this team"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "calling user cannot edit this team"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         request.data["team"] = team_id
         request.data["member"] = membership.member.id
-        serializer = TeamMembershipModifySerializer(membership, data=request.data)
+        serializer = TeamMembershipModifySerializer(
+            membership, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -509,8 +560,11 @@ class APITeamMembershipDetailView(APIView):
 
     def delete(self, request, team_id, membership_id, *args, **kwargs):
         """Delete the specified team membership."""
-        (membership, current_user_can_edit) = self.get_object(membership_id, request.user)
+        (membership, current_user_can_edit) = self.get_object(
+            membership_id, request.user)
         if not current_user_can_edit:
-            return Response({"detail": "calling user cannot edit this team"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "calling user cannot edit this team"},
+                status=status.HTTP_400_BAD_REQUEST)
         membership.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

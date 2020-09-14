@@ -64,16 +64,19 @@ class ExistingData(models.Model):
     # Require users to double-check the generated citation before continuing
     citation = models.CharField(blank=False, null=False, max_length=2048)
 
-    date_accessed = models.DateTimeField(blank=False, null=False, default=timezone.now)
+    date_accessed = models.DateTimeField(blank=False, null=False,
+                                         default=timezone.now)
     comments = models.CharField(blank=True, null=True, max_length=2048)
     created_by = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     # List of teams with which the Existing Data is shared.
     teams = models.ManyToManyField(Team, through='ExistingDataSharingTeamMap')
-    attachments = models.ManyToManyField(Attachment, through='DataAttachmentMap')
+    attachments = models.ManyToManyField(Attachment,
+                                         through='DataAttachmentMap')
 
     def get_fields(self):
         """Method used in the template to iterate and display all fields."""
-        return [(field.name, field.value_to_string(self)) for field in ExistingData._meta.fields]
+        return [(field.name, field.value_to_string(self))
+                for field in ExistingData._meta.fields]
 
     def __str__(self):
         """Override str method to display source instead of stringified obj."""

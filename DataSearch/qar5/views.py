@@ -148,7 +148,8 @@ class QappEdit(LoginRequiredMixin, UpdateView):
         self.object = form.save(commit=False)
         if not check_can_edit(self.object, self.request.user):
             reason = 'You cannot edit this QAPP.'
-            return HttpResponseRedirect('/qar5/detail/%s' % self.object.id, 401, reason)
+            return HttpResponseRedirect(
+                '/qar5/detail/%s' % self.object.id, 401, reason)
 
         self.object.save()
         # Prepare and insert teams data.
@@ -566,7 +567,8 @@ class SectionAView(LoginRequiredMixin, TemplateView):
         qapp = Qapp.objects.get(id=ctx['qapp_id'])
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
-            return HttpResponseRedirect('/qar5/SectionA?qapp_id=%s' % qapp.id, 401, reason)
+            return HttpResponseRedirect(
+                '/qar5/SectionA?qapp_id=%s' % qapp.id, 401, reason)
 
         existing_section_a = SectionA.objects.filter(qapp=qapp).first()
 
@@ -618,7 +620,8 @@ class SectionBView(LoginRequiredMixin, TemplateView):
         if not sectionb_type_id:
             sectionb_type = selected_sectionb_types[0]
         else:
-            sectionb_type = selected_sectionb_types.filter(id=int(sectionb_type_id)).first()
+            sectionb_type = selected_sectionb_types.filter(
+                id=int(sectionb_type_id)).first()
 
         existing_section_b = SectionB.objects.filter(
             qapp=qapp, sectionb_type=sectionb_type).first()
@@ -651,7 +654,8 @@ class SectionBView(LoginRequiredMixin, TemplateView):
         qapp = Qapp.objects.get(id=ctx['qapp_id'])
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
-            return HttpResponseRedirect('/qar5/SectionB?qapp_id=%s' % qapp.id, 401, reason)
+            return HttpResponseRedirect(
+                '/qar5/SectionB?qapp_id=%s' % qapp.id, 401, reason)
 
         sectionb_type_id = request.POST.get('sectionb_type')
         ctx['sectionb_type'] = qapp.sectiona.sectionb_type.filter(
@@ -733,7 +737,8 @@ class SectionDView(LoginRequiredMixin, TemplateView):
         qapp = Qapp.objects.get(id=ctx['qapp_id'])
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
-            return HttpResponseRedirect('/qar5/SectionD?qapp_id=%s' % qapp.id, 401, reason)
+            return HttpResponseRedirect(
+                '/qar5/SectionD?qapp_id=%s' % qapp.id, 401, reason)
 
         existing_section_d = SectionD.objects.filter(qapp=qapp).first()
 
@@ -787,7 +792,8 @@ class SectionEView(LoginRequiredMixin, TemplateView):
         qapp = Qapp.objects.get(id=ctx['qapp_id'])
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
-            return HttpResponseRedirect('/qar5/SectionE?qapp_id=%s' % qapp.id, 401, reason)
+            return HttpResponseRedirect(
+                '/qar5/SectionE?qapp_id=%s' % qapp.id, 401, reason)
 
         existing_references = References.objects.filter(qapp=qapp).first()
 
@@ -847,7 +853,8 @@ class RevisionCreate(LoginRequiredMixin, CreateView):
         qapp = Qapp.objects.filter(id=qapp_id).first()
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
-            return HttpResponseRedirect('/qar5/revisions?qapp_id=%s' % qapp.id, 401, reason)
+            return HttpResponseRedirect(
+                '/qar5/revisions?qapp_id=%s' % qapp.id, 401, reason)
         # datetime_str = form.data['effective_date']
         # datetime_obj = datetime.strptime(datetime_str, DATETIME_FORMAT)
         # form.data['effective_date'] = datetime_obj

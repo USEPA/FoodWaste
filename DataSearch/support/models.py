@@ -42,14 +42,16 @@ class SupportType(models.Model):
     created_by = models.CharField(blank=True, null=True, max_length=255)
     last_modified_by = models.CharField(blank=True, null=True, max_length=255)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
 
     the_name = models.CharField(blank=True, null=True, max_length=255)
 
     the_description = models.TextField(null=True, blank=True)
 
     weblink = models.CharField(blank=True, null=True, max_length=255)
-    ordering = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=1)
+    ordering = models.DecimalField(
+        null=True, blank=True, max_digits=10, decimal_places=1)
 
     class Meta:
         """Add docstring."""  # TODO add docstring.
@@ -69,14 +71,16 @@ class Priority(models.Model):
     created_by = models.CharField(blank=True, null=True, max_length=255)
     last_modified_by = models.CharField(blank=True, null=True, max_length=255)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
 
     the_name = models.CharField(blank=True, null=True, max_length=255)
 
     the_description = models.TextField(null=True, blank=True)
 
     weblink = models.CharField(blank=True, null=True, max_length=255)
-    ordering = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=1)
+    ordering = models.DecimalField(
+        null=True, blank=True, max_digits=10, decimal_places=1)
 
     class Meta:
         """Add docstring."""  # TODO add docstring.
@@ -93,22 +97,29 @@ class Support(models.Model):
 
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
-                                   related_name="support_created_by")
-    last_modified_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
-                                         related_name="support_last_modified_by")
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        related_name="support_created_by")
+    last_modified_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        related_name="support_last_modified_by")
     make_public = models.BooleanField(blank=False, default=False)
     share_with_user_group = models.BooleanField(blank=False, default=False)
 
-    attachment = models.FileField(null=True, blank=True, upload_to=get_support_storage_path)
+    attachment = models.FileField(
+        null=True, blank=True, upload_to=get_support_storage_path)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    support_type = models.ForeignKey(SupportType, on_delete=models.CASCADE, null=True, blank=True)
-    priority = models.ForeignKey(Priority, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    support_type = models.ForeignKey(
+        SupportType, on_delete=models.CASCADE, null=True, blank=True)
+    priority = models.ForeignKey(
+        Priority, on_delete=models.CASCADE, null=True, blank=True)
 
     the_name = models.CharField(blank=True, null=True, max_length=255)
     subject = models.CharField(blank=True, null=True, max_length=255)
-    length_of_reference = models.CharField(blank=True, null=True, max_length=255)
+    length_of_reference = models.CharField(
+        blank=True, null=True, max_length=255)
     author = models.CharField(blank=True, null=True, max_length=255)
 
     is_closed = models.BooleanField(blank=False, default=False)
@@ -117,7 +128,8 @@ class Support(models.Model):
     resolution = models.TextField(null=True, blank=True)
 
     weblink = models.CharField(blank=True, null=True, max_length=255)
-    ordering = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=1)
+    ordering = models.DecimalField(
+        null=True, blank=True, max_digits=10, decimal_places=1)
     date_resolved = models.DateField(blank=True, null=True)
 
     STATUSES = (
@@ -148,11 +160,15 @@ class SupportAttachment(models.Model):
     created_by = models.CharField(blank=True, null=True, max_length=255)
     last_modified_by = models.CharField(blank=True, null=True, max_length=255)
 
-    attachment = models.FileField(null=True, blank=True, max_length=255, upload_to=get_support_attachment_storage_path)
+    attachment = models.FileField(
+        null=True, blank=True, max_length=255,
+        upload_to=get_support_attachment_storage_path)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    support = models.ForeignKey(Support, on_delete=models.CASCADE, null=True, blank=True,
-                                related_name="support_attachments")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    support = models.ForeignKey(
+        Support, on_delete=models.CASCADE, null=True, blank=True,
+        related_name="support_attachments")
 
     the_name = models.CharField(blank=True, null=True, max_length=255)
     the_size = models.CharField(blank=True, null=True, max_length=255)

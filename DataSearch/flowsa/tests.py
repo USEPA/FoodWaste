@@ -98,22 +98,25 @@ class TestFlowsa(TestCase):
         response = self.client.get(f'/flowsa/delete_file/{pk}/')
         self.assertEqual(response.status_code, 200)
         # TODO verify the file is deleted...
-        #upload = Upload.objects.filter(id=pk).first()
-        #self.assertIsNone(upload)
+        # upload = Upload.objects.filter(id=pk).first()
+        # self.assertIsNone(upload)
 
     def test_flowsa_delete_redirect(self):
         """Test the delete method for flowsa uploads."""
         response = self.client.get('/flowsa/delete_file/0/')
         self.assertEqual(response.status_code, 302)
-        
+
     def test_flowsa_download_single(self):
         """Test the flowsa file download method for one upload file."""
-        response = self.client.get(f'/flowsa/download_file/{self.upload_1.id}/')
+        response = self.client.get(
+            f'/flowsa/download_file/{self.upload_1.id}/')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(b'This is a test file.' in response.content)
 
     def test_flowsa_download_all(self):
-        """Test the flowsa file download method for all the user's upload files."""
+        """
+        Test the flowsa file download method for all the user's upload files.
+        """
         response = self.client.get(f'/flowsa/download_files/')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(b'This is a test file.' in response.content)

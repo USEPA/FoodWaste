@@ -73,8 +73,10 @@ def export_pdf_single(request, *args, **kwargs):
         archive = add_attachments_to_zip(archive, attachment_ids)
 
         archive.close()
-        response = HttpResponse(zip_mem.getvalue(), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % filename
+        response = HttpResponse(zip_mem.getvalue(),
+                                content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % \
+            filename
         response['Content-length'] = zip_mem.tell()
         response['filename'] = '%s.zip' % filename
         return response
@@ -115,13 +117,15 @@ def export_excel_single(request, *args, **kwargs):
             sheet.cell(row=row, column=1).value = 'Disclaimer'
             repl_str = '\n                    '
             # Replace '\n                    ' with ' ' in the disclaimer
-            sheet.cell(row=row, column=2).value = APP_DISCLAIMER.replace(repl_str, ' ')
-
+            sheet.cell(row=row, column=2).value = \
+                APP_DISCLAIMER.replace(repl_str, ' ')
 
         # If no attachments, return the generated excel sheet.
-        content_type = 'application/vnd.vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        content_type = 'application/vnd.vnd.openxmlformats-' + \
+                       'officedocument.spreadsheetml.sheet'
         response = HttpResponse(content_type=content_type)
-        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        response['Content-Disposition'] = 'attachment; filename="%s"' % \
+            filename
         sheet.title = slugify(filename.split('.')[0])
         workbook.save(response)
         response['filename'] = '%s.xlsx' % filename
@@ -130,18 +134,20 @@ def export_excel_single(request, *args, **kwargs):
         attachment_ids = DataAttachmentMap.objects.filter(
             data_id=data_id).values_list('attachment', flat=True)
         if attachment_ids:
-            # Create a zip archive to return multiple files: PDF, n attachments.
+            # Create a zip archive to return multiple files: PDF, n attachments
             zip_mem = BytesIO()
             archive = ZipFile(zip_mem, 'w')
             archive = add_attachments_to_zip(archive, attachment_ids)
 
             # Add excel to the zip
-            #with tempfile.SpooledTemporaryFile() as tmp:
+            # with tempfile.SpooledTemporaryFile() as tmp:
             archive.writestr(filename, response.content)
 
             archive.close()
-            response = HttpResponse(zip_mem.getvalue(), content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="%s.zip"' % filename
+            response = HttpResponse(zip_mem.getvalue(),
+                                    content_type='application/force-download')
+            response['Content-Disposition'] = \
+                'attachment; filename="%s.zip"' % filename
             response['Content-length'] = zip_mem.tell()
             response['filename'] = '%s.zip' % filename
             return response
@@ -164,7 +170,7 @@ def export_doc_single(request, *args, **kwargs):
     styles = document.styles
     document.add_heading(
         'Existing Data Search: %s' % data.source_title, level=1)
-    
+
     document.add_heading('User Work Office/Lab', level=3)
     document.add_paragraph(data.work)
     document.add_heading('Email Address', level=3)
@@ -222,18 +228,18 @@ def export_doc_single(request, *args, **kwargs):
 
     # Write the finalized docx to zip file:
     content_type = 'application/vnd.openxmlformats-officedocument.' + \
-            'wordprocessingml.document'
+                   'wordprocessingml.document'
     fake_response = HttpResponse(content_type)
     fake_response['Content-Disposition'] = 'attachment; filename=%s' % filename
     document.save(fake_response)
-    
+
     with tempfile.SpooledTemporaryFile() as tmp:
         archive.writestr(filename, fake_response.content)
 
     archive.close()
 
-    response = HttpResponse(zip_mem.getvalue(),\
-        content_type='application/force-download')
+    response = HttpResponse(zip_mem.getvalue(),
+                            content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename="%s.zip"' % \
         filename
     response['Content-length'] = zip_mem.tell()
@@ -241,9 +247,11 @@ def export_doc_single(request, *args, **kwargs):
     return response
 
 
-
 def export(request, *args, **kwargs):
-    """Function to export multiple Existing Data as a zip file of the provided formats."""
+    """
+    Function to export multiple Existing Data as
+    a zip file of the provided formats.
+    """
     if 'user' in request.path:
         user_id = kwargs.get('pk', None)
         team_id = data_id = None
@@ -280,7 +288,8 @@ def export(request, *args, **kwargs):
                 with tempfile.SpooledTemporaryFile() as tmp:
                     archive.writestr(temp_file_name, resp.content)
 
-        username = User.objects.filter(id=user_id).values('username').first()['username']
+        username = User.objects.filter(
+            id=user_id).values('username').first()['username']
 
         archive.close()
         response = HttpResponse(
@@ -289,5 +298,5 @@ def export(request, *args, **kwargs):
             'attachment; filename="%s_datasearches.zip"' % username
         response['Content-length'] = zip_mem.tell()
         return response
-    
+
     return HttpResponseRedirect(request)

@@ -134,8 +134,8 @@ class SuggestionCreateView(FormView):
         """Display the project create form."""
         if 'suggestion' == support_type_name.lower():
             title = 'Make a suggestion to improve DataSearch'
-            instructions = 'Describe your suggestion for DataSearch below.  ' + \
-                'You will have the option to add attachments ' + \
+            instructions = 'Describe your suggestion for DataSearch ' + \
+                'below.  You will have the option to add attachments ' + \
                 'after saving the suggestion.'
         else:
             title = 'request help with DataSearch'
@@ -251,11 +251,12 @@ class SuggestionEditView(FormView):
             # body to indicate that to the recipient.
             referer_url = request.META['HTTP_REFERER']
             if referer_url.endswith('?new=1'):
-                email_subject = 'DataSearch ' + str(support_type_desc) + ' ' + \
-                    str(obj_id) + ': ' + str(support.subject)
+                email_subject = 'DataSearch ' + str(support_type_desc) + \
+                    ' ' + str(obj_id) + ': ' + str(support.subject)
                 email_body = support.the_description
             else:
-                email_subject = 'UPDATED: DataSearch ' + str(support_type_desc) + \
+                email_subject = 'UPDATED: DataSearch ' + \
+                    str(support_type_desc) + \
                     ' ' + str(obj_id) + ': ' + str(support.subject)
                 email_body = 'This automated email is to notify you ' + \
                     'that your support request has been updated.\r\n\r\n' + \
@@ -342,7 +343,8 @@ def file_upload_support(request, obj_id):
 #        if form.is_valid():
 #            if not settings.EMAIL_DISABLED:
 #                send_mail('DataSearch Support Request',
-#                          'A DataSearch Support Request Has Been Submitted. ' + \
+#                          'A DataSearch Support Request Has Been ' + \
+#                          'Submitted. ' + \
 #                          'Here is the description of the issue: %s' % \
 #                          str(support.the_description), support.weblink ,
 #                          ['qatrack@epa.gov'], fail_silently=False)
@@ -435,7 +437,7 @@ def delete_support_attachment(request, obj_id):
             support_attachment.delete()
         else:
             error = 'You are not authorized to delete this attachment.'
-    except:
+    except Exception:
         error = 'Failed to delete attachment. Please try again.'
 
     return render(request, 'show/show_support.html', locals())

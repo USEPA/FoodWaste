@@ -30,7 +30,8 @@ class AttachmentTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.get(id=1)
-        self.att = Attachment.objects.create(name='Test', file='', uploaded_by=self.user)
+        self.att = Attachment.objects.create(
+            name='Test', file='', uploaded_by=self.user)
 
     def test_attachment_str(self):
         self.assertTrue(isinstance(self.att, Attachment))
@@ -73,9 +74,10 @@ class ExistingDataTest(TestCase):
         self.source = ExistingDataSource.objects.get(id=1)
         self.dat = ExistingData.objects.create(
             work=self.test_str, email=self.test_str, phone=self.test_str,
-            search=self.test_str, source=self.source, source_title=self.test_str,
-            keywords=self.test_str, url=self.test_str, disclaimer_req=False,
-            citation=self.test_str, comments=self.test_str, created_by=self.user)
+            search=self.test_str, source=self.source,
+            source_title=self.test_str, keywords=self.test_str,
+            url=self.test_str, disclaimer_req=False, citation=self.test_str,
+            comments=self.test_str, created_by=self.user)
 
     def test_existingdata_str(self):
         self.assertTrue(isinstance(self.dat, ExistingData))

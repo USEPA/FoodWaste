@@ -23,7 +23,7 @@ urlpatterns = [
 
     url(r'^create/?$', ProjectCreateView.as_view(), name='project_create'),
 
-    url(r'^detail/(?P<pk>\d+)/?$', 
+    url(r'^detail/(?P<pk>\d+)/?$',
         ProjectDetailView.as_view(),
         name='project_detail'),
 
@@ -33,17 +33,17 @@ urlpatterns = [
 
     # /api/ URLS:
     # /api/centers/<office_pk>/
-    url(r'^api/centers/(?P<pk>\d+)/?$', 
+    url(r'^api/centers/(?P<pk>\d+)/?$',
         APICentersListView.as_view(),
         name='centers_json'),
 
     # /api/divisions/<centeroffice_pk>/
-    url(r'^api/divisions/(?P<pk>\d+)/?$', 
+    url(r'^api/divisions/(?P<pk>\d+)/?$',
         APIDivisionsListView.as_view(),
         name='divisions_json'),
 
     # /api/branches/<division_pk>/
-    url(r'^api/branches/(?P<pk>\d+)/?$', 
+    url(r'^api/branches/(?P<pk>\d+)/?$',
         APIBranchesListView.as_view(),
         name='branches_json'),
 ]

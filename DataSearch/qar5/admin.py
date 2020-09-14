@@ -15,7 +15,8 @@ Available functions:
 
 from django.contrib import admin
 from qar5.forms import QappForm
-from qar5.models import Qapp, SectionA, SectionB, SectionD, References, Revision
+from qar5.models import Qapp, SectionA, SectionB, SectionD, References, \
+    Revision
 
 
 class QappAdmin(admin.ModelAdmin):

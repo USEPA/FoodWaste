@@ -26,6 +26,7 @@ from DataSearch.models import ExistingData, ExistingDataSharingTeamMap, \
 from qar5.models import SectionA
 from teams.models import Team, TeamMembership
 
+
 @login_required
 @staff_member_required
 def web_dev_tools(request, *args, **kwargs):
@@ -33,7 +34,7 @@ def web_dev_tools(request, *args, **kwargs):
     Method to redirect a user to a webpage.
 
     - Includes various custom admin functionality.
-    - Includes button to remove extra new line characters/spaces from QAPP data.
+    - Includes button to remove extra new line characters/spaces from QAPP data
     """
     return render(request, 'web_dev.html', {})
 
@@ -133,7 +134,7 @@ class ExistingDataList(LoginRequiredMixin, ListView):
         """
         Custom method override to send data to the template.
 
-        - Specifically, want to send the user or team information for this list of data.
+        - Specifically, send the user or team information for this list of data
         """
         context = super().get_context_data(**kwargs)
         path = self.request.path.split('/')
@@ -167,7 +168,7 @@ class ExistingDataDetail(LoginRequiredMixin, DetailView):
         """
         Custom method override to send data to the template.
 
-        - Specifically, want to send the user or team information for this list of data.
+        - Send the user or team information for this list of data.
         """
         context = super().get_context_data(**kwargs)
         context['edit_disabled'] = ''
@@ -214,7 +215,7 @@ class ExistingDataEdit(LoginRequiredMixin, UpdateView):
         pk = kwargs.get('pk')
         instance = ExistingData.objects.filter(id=pk).first()
         if check_can_edit(instance, request.user):
-            form = ExistingDataForm(request.POST, request.FILES, 
+            form = ExistingDataForm(request.POST, request.FILES,
                                     instance=instance, user=request.user)
             if form.is_valid():
                 obj = existing_form_process_teams_attachments(
@@ -275,18 +276,19 @@ def existing_form_process_teams_attachments(request, form, instance=None):
 
     return obj
 
+
 class ExistingDataCreate(LoginRequiredMixin, CreateView):
     """Class for creating new Existing Data."""
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        """Return a view with an empty form for creating a new Existing Data."""
+        """Return a view with an empty form for creating a new Existing Data"""
         return render(request, "DataSearch/existing_data_create.html",
                       {'form': ExistingDataForm(user=request.user)})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        """Process the post request with a new Existing Data form filled out."""
+        """Process the post request with a new Existing Data form filled out"""
         form = ExistingDataForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             obj = existing_form_process_teams_attachments(request, form, None)

@@ -111,10 +111,10 @@ class QappLeadForm(ModelForm):
         label=_("Lead Name:"), required=True)
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
-                               required=True, label=_("Parent QAPP"),
-                               widget=TextInput(
-                                   attrs={'class': 'form-control mb-2',
-                                          'readonly': 'readonly'}))
+                            required=True, label=_("Parent QAPP"),
+                            widget=TextInput(
+                                attrs={'class': 'form-control mb-2',
+                                       'readonly': 'readonly'}))
 
     class Meta:
         """Meta data for QAPP Form."""
@@ -135,10 +135,10 @@ class QappApprovalForm(ModelForm):
         label=_("Activity Number"), required=True)
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
-                               required=True, label=_("Parent QAPP"),
-                               widget=TextInput(
-                                   attrs={'class': 'form-control mb-2',
-                                          'readonly': 'readonly'}))
+                            required=True, label=_("Parent QAPP"),
+                            widget=TextInput(
+                                attrs={'class': 'form-control mb-2',
+                                       'readonly': 'readonly'}))
 
     class Meta:
         """Meta data for QappApproval Form."""
@@ -187,10 +187,10 @@ class SectionAForm(ModelForm):
     """Class representing the rest of Section A (A.3 and later)."""
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
-                               required=True, label=_("Parent QAPP"),
-                               widget=Textarea(
-                                   attrs={'class': 'form-control mb-2',
-                                          'readonly': 'readonly'}))
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'form-control mb-2',
+                                       'readonly': 'readonly'}))
 
     # A2 is new, see Jira DAT-32
     a2 = CharField(
@@ -269,7 +269,7 @@ class SectionBForm(ModelForm):
                             initial=0, required=True,
                             label=_("Parent QAPP"), widget=Select(
                                 attrs={'class': 'form-control mb-2',
-                                        'readonly': 'readonly'}))
+                                       'readonly': 'readonly'}))
 
     sectionb_type = ModelChoiceField(queryset=SectionBType.objects.all(),
                                      initial=0, required=True,
@@ -304,10 +304,10 @@ class SectionDForm(ModelForm):
     """Class representing the entirety of SectionD for a given QAPP."""
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
-                               required=True, label=_("Parent QAPP"),
-                               widget=Textarea(
-                                   attrs={'class': 'form-control mb-2',
-                                          'readonly': 'readonly'}))
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'form-control mb-2',
+                                       'readonly': 'readonly'}))
 
     d1 = CharField(
         label=_("D.1 Data Review, Verification, and Validation"),
@@ -332,10 +332,10 @@ class ReferencesForm(ModelForm):
     """Form for creating and adding References (Section E) to QAPP."""
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
-                               required=True, label=_("Parent QAPP"),
-                               widget=Textarea(
-                                   attrs={'class': 'form-control mb-2',
-                                          'readonly': 'readonly'}))
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'form-control mb-2',
+                                       'readonly': 'readonly'}))
     references = CharField(
         label=_("References"),
         required=True, widget=Textarea({'class': 'form-control mb-2'}))
@@ -351,10 +351,10 @@ class RevisionForm(ModelForm):
     """Form for creating and adding new Revisions (Section F) to QAPP."""
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
-                               required=True, label=_("Parent QAPP"),
-                               widget=Textarea(
-                                   attrs={'class': 'form-control mb-2',
-                                          'readonly': 'readonly'}))
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'form-control mb-2',
+                                       'readonly': 'readonly'}))
     revision = CharField(
         label=_("Revision Number"),
         required=True, widget=TextInput({'class': 'form-control mb-2'}))

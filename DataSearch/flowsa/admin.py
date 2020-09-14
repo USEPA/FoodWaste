@@ -11,4 +11,4 @@ Available functions:
 - Sets Team Memberships
 """
 
-from django.contrib import admin
+# from django.contrib import admin

@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 SITE_NAME = 'https://134.67.216.106/accounts/login'
 
-EMAIL_DISCLAIMER = '<p style="font-weight:bold;color:red">Please do not reply to this email. Thank you.</p>'
+EMAIL_DISCLAIMER = '<p style="font-weight:bold;color:red">Please do not reply to this email. Thank you.</p>'  # noqa
 EMAIL_DISCLAIMER_PLAIN = 'Please do not reply to this email. Thank you.'
 BCC_EMAIL = ''
 
@@ -123,16 +123,16 @@ WSGI_APPLICATION = 'DataSearch.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators.
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',  # noqa
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',  # noqa
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',  # noqa
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa
     },
 ]
 
@@ -167,10 +167,12 @@ ENABLE_RSS_FEEDS = False
 
 APP_NAME = 'ExistingData'
 APP_VERSION = '1.0.0'
-APP_DISCLAIMER = '''The information and data presented in this product were obtained
-                    from sources that are believed to be reliable. However, in many
-                    cases the quality of the information or data was not documented
-                    by those sources; therefore, no claim is made regarding their quality.'''
+APP_DISCLAIMER = 'The information and data presented in this product ' + \
+                 'were obtained from sources that are believed to be ' + \
+                 'reliable. However, in many cases the quality of the ' + \
+                 'information or data was not documented by those ' + \
+                 'sources; therefore, no claim is made regarding ' + \
+                 'their quality.'
 
 try:
     from .local_settings import *

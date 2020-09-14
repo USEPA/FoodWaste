@@ -247,7 +247,8 @@ def export_excel_single(request, *args, **kwargs):
                     sheet.cell(row=row, column=1).value = \
                         section_b_info[key]['heading']
                     row += 1
-                sheet.cell(row=row, column=1).value = section_b_info[key]['label']
+                sheet.cell(row=row, column=1).value = \
+                    section_b_info[key]['label']
                 sheet.cell(row=row, column=2).value = val
                 row += 1
             row += 1

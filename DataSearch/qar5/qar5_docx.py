@@ -213,9 +213,9 @@ def export_doc_single(request, *args, **kwargs):
     add_center_heading(document, str(qapp_info['qapp'].date), level=3)
     # blank line
     add_center_heading(document, 'Prepared By', level=2)
-    add_center_heading(document,
-        '%s %s' % (qapp_info['qapp'].prepared_by.first_name,
-                    qapp_info['qapp'].prepared_by.last_name,),
+    add_center_heading(
+        document, '%s %s' % (qapp_info['qapp'].prepared_by.first_name,
+                             qapp_info['qapp'].prepared_by.last_name,),
         level=3)
     # blank line
     add_center_heading(document, qapp_info['qapp'].strap, level=3)
@@ -463,7 +463,7 @@ def export_doc_single(request, *args, **kwargs):
                                styles['No Spacing'])
 
     content_type = 'application/vnd.openxmlformats-officedocument.' + \
-            'wordprocessingml.document'
+                   'wordprocessingml.document'
     response = HttpResponse(content_type)
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     document.save(response)

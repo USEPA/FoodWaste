@@ -89,11 +89,11 @@ urlpatterns = [
         ProjectApprovalSignatureCreate.as_view(),
         name='get_approval_signature_form'),
 
-     url(r'^approval_signature/delete/(?P<pk>\d+)/?$',
+    url(r'^approval_signature/delete/(?P<pk>\d+)/?$',
         ProjectApprovalSignatureDelete.as_view(),
         name='delete_approval_signature'),
 
-     url(r'^approval_signature/edit/(?P<pk>\d+)/?$',
+    url(r'^approval_signature/edit/(?P<pk>\d+)/?$',
         ProjectApprovalSignatureEdit.as_view(),
         name='edit_approval_signature'),
 
@@ -103,11 +103,11 @@ urlpatterns = [
         ProjectLeadCreate.as_view(),
         name='get_project_lead_form'),
 
-     url(r'^project_lead/delete/(?P<pk>\d+)/?$',
+    url(r'^project_lead/delete/(?P<pk>\d+)/?$',
         ProjectLeadDelete.as_view(),
         name='delete_project_lead'),
 
-     url(r'^project_lead/edit/(?P<pk>\d+)/?$',
+    url(r'^project_lead/edit/(?P<pk>\d+)/?$',
         ProjectLeadEdit.as_view(),
         name='edit_project_lead'),
 

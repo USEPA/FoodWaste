@@ -14,7 +14,7 @@ from DataSearch.views import home, contact, ExistingDataIndex, \
     ExistingDataList, ExistingDataCreate, ExistingDataDetail, \
     ExistingDataEdit, ExistingDataDelete, web_dev_tools, clean_qapps, \
     attachments_download, attachment_delete
-    
+
 from DataSearch.views_exports import export_pdf_single, export_excel_single, \
     export_doc_single, export
 from DataSearch.settings import MEDIA_ROOT, MEDIA_URL

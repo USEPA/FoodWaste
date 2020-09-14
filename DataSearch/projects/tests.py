@@ -23,7 +23,8 @@
 #         """Prepare necessary objects for testing the Projects module."""
 #         self.type_texture = "1"
 #         self.client = Client()
-#         self.user = User.objects.create_user(username='testuser', password='12345')
+#         self.user = User.objects.create_user(
+#             username='testuser', password='12345')
 #         self.client.login(username='testuser', password='12345')
 
 #     def test_team_create_view_get(self):
@@ -49,7 +50,8 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.get("/projects/project/" + url_object_number + "/edit")
+#         response = self.client.get(
+#             "/projects/project/" + url_object_number + "/edit")
 #         self.assertContains(response, 'edit', 1, 200)
 
 #     def test_team_edit_view_get_two(self):
@@ -58,7 +60,9 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.get("/projects/project/" + url_object_number + "/edit", {"team_id": ""})
+#         response = self.client.get(
+#             "/projects/project/" + url_object_number + "/edit",
+#             {"team_id": ""})
 #         self.assertContains(response, 'edit', 1, 200)
 
 #     def test_team_edit_view_post(self):
@@ -67,7 +71,9 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.post("/projects/project/" + url_object_number + "/edit", {'name': "test2"})
+#         response = self.client.post(
+#             "/projects/project/" + url_object_number + "/edit",
+#             {'name': "test2"})
 #         self.assertContains(response, 'edit', 1, 200)
 
 #     def test_team_edit_view_post_two(self):
@@ -76,7 +82,8 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.post("/projects/project/" + url_object_number + "/edit", {'name': ""})
+#         response = self.client.post(
+#             "/projects/project/" + url_object_number + "/edit", {'name': ""})
 #         self.assertContains(response, 'edit', 1, 200)
 
 #     def test_team_management_view_get(self):
@@ -86,7 +93,8 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.get("/projects/project/" + url_object_number + "/manage")
+#         response = self.client.get(
+#             "/projects/project/" + url_object_number + "/manage")
 #         self.assertContains(response, 'manage', 3, 200)
 
 #     def test_team_management_view_post_one(self):
@@ -120,7 +128,9 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.post("/projects/project/" + url_object_number + "/manage", {'command': "deleteuser"})
+#         response = self.client.post(
+#             "/projects/project/" + url_object_number + "/manage",
+#             {'command': "deleteuser"})
 #         self.assertContains(response, 'manage', 3, 200)
 
 #     def test_api_team_list_view_get(self):
@@ -130,8 +140,9 @@
 
 #     def test_api_team_list_view_post(self):
 #         """Tests the Project list View post method."""
-#         # Results = self.client.post("/projects/project/", {'name': "test1"}).
-#         response = self.client.post("/projects/api/project/", {'name': "test1"})
+#         # Results = self.client.post("/projects/project/", {'name': "test1"})
+#         response = self.client.post(
+#             "/projects/api/project/", {'name': "test1"})
 #         self.assertContains(response, "id", 5, 201)
 
 #     def test_api_team_list_view_post_two(self):
@@ -145,7 +156,8 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.get("/projects/api/project/" + url_object_number + "/membership/")
+#         response = self.client.get(
+#             "/projects/api/project/" + url_object_number + "/membership/")
 #         self.assertContains(response, "id", 2, 200)
 
 #     def test_api_team_membership_list_view_put(self):
@@ -154,7 +166,8 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.put("/projects/api/project/" + url_object_number + "/membership/")
+#         response = self.client.put(
+#             "/projects/api/project/" + url_object_number + "/membership/")
 #         self.assertContains(response, "id", 0, 405)
 
 #     def test_api_team_detail_list_view_get(self):
@@ -163,5 +176,6 @@
 #         create_url = str(results)
 #         create_url_split_array = create_url.split("/")
 #         url_object_number = create_url_split_array[4]
-#         response = self.client.get("/projects/api/project/" + url_object_number + "/")
+#         response = self.client.get(
+#             "/projects/api/project/" + url_object_number + "/")
 #         self.assertContains(response, "id", 5, 200)

@@ -162,7 +162,7 @@ class ProjectEditView(LoginRequiredMixin, UpdateView):
                 data_team_map.save()
         # Return back to the details page:
         return HttpResponseRedirect('/projects/detail/' + str(self.object.id))
-    
+
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     """Class for creating new Projects."""
@@ -259,22 +259,22 @@ class APIBranchesListView(LoginRequiredMixin, APIView):
 # Alternatively, rely on the Django Admin portal to create and manage these
 # objects.
 
-#class OfficeListView(LoginRequiredMixin, ListView):
-#class OfficeCreateView(LoginRequiredMixin, CreateView):
-#class OfficeEditView(LoginRequiredMixin, EditView):
-#class OfficeDeleteView(LoginRequiredMixin, DeleteView):
+# class OfficeListView(LoginRequiredMixin, ListView):
+# class OfficeCreateView(LoginRequiredMixin, CreateView):
+# class OfficeEditView(LoginRequiredMixin, EditView):
+# class OfficeDeleteView(LoginRequiredMixin, DeleteView):
 
-#class CenterOfficeListView(LoginRequiredMixin, ListView):
-#class CenterOfficeCreateView(LoginRequiredMixin, CreateView):
-#class CenterOfficeEditView(LoginRequiredMixin, EditView):
-#class CenterOfficeDeleteView(LoginRequiredMixin, DeleteView):
+# class CenterOfficeListView(LoginRequiredMixin, ListView):
+# class CenterOfficeCreateView(LoginRequiredMixin, CreateView):
+# class CenterOfficeEditView(LoginRequiredMixin, EditView):
+# class CenterOfficeDeleteView(LoginRequiredMixin, DeleteView):
 
-#class DivisionListView(LoginRequiredMixin, ListView):
-#class DivisionCreateView(LoginRequiredMixin, CreateView):
-#class DivisionEditView(LoginRequiredMixin, EditView):
-#class DivisionDeleteView(LoginRequiredMixin, DeleteView):
+# class DivisionListView(LoginRequiredMixin, ListView):
+# class DivisionCreateView(LoginRequiredMixin, CreateView):
+# class DivisionEditView(LoginRequiredMixin, EditView):
+# class DivisionDeleteView(LoginRequiredMixin, DeleteView):
 
-#class BranchListView(LoginRequiredMixin, ListView):
-#class BranchCreateView(LoginRequiredMixin, CreateView):
-#class BranchEditView(LoginRequiredMixin, EditView):
-#class BranchDeleteView(LoginRequiredMixin, DeleteView):
+# class BranchListView(LoginRequiredMixin, ListView):
+# class BranchCreateView(LoginRequiredMixin, CreateView):
+# class BranchEditView(LoginRequiredMixin, EditView):
+# class BranchDeleteView(LoginRequiredMixin, DeleteView):

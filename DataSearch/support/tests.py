@@ -32,7 +32,8 @@ class TestSupport(TestCase):
     def setUp(self):
         """Add docstring."""  # TODO add docstring.
         self.client = Client()
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345')
         self.client.login(username='testuser', password='12345')
         self.factory = RequestFactory()
 
@@ -46,13 +47,16 @@ class TestSupport(TestCase):
         """Test the support ticket form when you use suggestion."""
         # create/(?P<support_type_name>\w+)
         response = self.client.get('/support/create/suggestion/')
-        self.assertContains(response, 'Describe your suggestion for GWSC below.', 1, 200)
+        self.assertContains(
+            response, 'Describe your suggestion for GWSC below.', 1, 200)
 
     def test_support_ticket_create_two(self):
         """Test the support ticket form when you do not use suggestion."""
         # create/(?P<support_type_name>\w+)
         response = self.client.get('/support/create/OtherWordsHERE/')
-        self.assertContains(response, 'Describe the problem you encountered with GWSC below.', 1, 200)
+        self.assertContains(
+            response,
+            'Describe the problem you encountered with GWSC below.', 1, 200)
 
     def test_support_post_one(self):
         """Tests the support ticket post method on an invalid form."""
@@ -85,7 +89,6 @@ class TestSupport(TestCase):
     # def test_suggestion_edit_view(self):
     #     """Tests the view for suggestion edit"""
 
-# url(r'^edit/(?P<support_type_name>\w+)/(?P<obj_id>\d+)/$', SuggestionEditView.as_view(), name='edit_support'),
 # GET VIEWS
 # def test_support_ticket_create_one(self):
 #     """Test the support ticket form when you use suggestion"""
@@ -108,6 +111,8 @@ class TestSupport(TestCase):
 # def test_model_environment_with_environment(self):
 #     """Tests the environment of model if it has a environment"""
 #     self.environment = "1"
-#     RequestFactory.request.user = User.objects.create_user(username='testuser2', password='12345')
-#     results = SuggestionEditView.get(self, RequestFactory.request, "suggestion", 1)
+#     RequestFactory.request.user = User.objects.create_user(
+#         username='testuser2', password='12345')
+#     results = SuggestionEditView.get(
+#         self, RequestFactory.request, "suggestion", 1)
 #     self.assertEqual(results, "1 - 1")

@@ -6,7 +6,7 @@
 
 """Definition of forms."""
 
-from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
+from django.forms import CharField, ModelForm, TextInput, \
     Textarea, PasswordInput, ModelMultipleChoiceField, SelectMultiple, \
     BooleanField, RadioSelect, FileField, ClearableFileInput, \
     ModelChoiceField, Select, DateTimeField, inlineformset_factory
@@ -115,8 +115,10 @@ class ExistingDataForm(ModelForm):
             super(ExistingDataForm, self).__init__(*args, **kwargs)
             team_ids = TeamMembership.objects.filter(
                 member=current_user).values_list('team', flat=True)
-            self.fields['teams'].queryset = Team.objects.filter(id__in=team_ids)
-            self.fields['teams'].label_from_instance = lambda obj: "%s" % obj.name
+            self.fields['teams'].queryset = Team.objects.filter(
+                id__in=team_ids)
+            self.fields['teams'].label_from_instance = \
+                lambda obj: "%s" % obj.name
             # If this is an edit form, i.e. instance is passed in, then
             # we need to set the default selected teams, if any...
             instance = kwargs.get('instance', None)

@@ -36,26 +36,23 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
 class TeamMembershipModifySerializer(serializers.ModelSerializer):
     """Serializer for create, update, delete."""
 
-    team = serializers.PrimaryKeyRelatedField(many=False,
-                                              queryset=Team.objects.all())
-    member = serializers.PrimaryKeyRelatedField(many=False,
-                                                queryset=User.objects.all())
+    team = serializers.PrimaryKeyRelatedField(
+        many=False, queryset=Team.objects.all())
+    member = serializers.PrimaryKeyRelatedField(
+        many=False, queryset=User.objects.all())
     id = serializers.IntegerField(required=False, read_only=True)
-    added_date = serializers.DateTimeField(required=False,
-                                           default=serializers.CreateOnlyDefault
-                                           (timezone.now))
-    is_owner = serializers.BooleanField(required=False,
-                                        default=serializers.CreateOnlyDefault(
-                                            False))
-    can_edit = serializers.BooleanField(required=False,
-                                        default=serializers.CreateOnlyDefault(
-                                            True))
+    added_date = serializers.DateTimeField(
+        required=False, default=serializers.CreateOnlyDefault(timezone.now))
+    is_owner = serializers.BooleanField(
+        required=False, default=serializers.CreateOnlyDefault(False))
+    can_edit = serializers.BooleanField(
+        required=False, default=serializers.CreateOnlyDefault(True))
 
     def validate(self, data):
         """Make sure we do not already have an owner."""
         if "is_owner" in data and data["is_owner"]:
-            current_owner = TeamMembership.objects.filter(team=data["team"],
-                                                          is_owner=True).first()
+            current_owner = TeamMembership.objects.filter(
+                team=data["team"], is_owner=True).first()
             if current_owner is not None:
                 raise ValidationError("teams can only have one owner")
         return data
@@ -74,9 +71,8 @@ class TeamSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(many=False, required=False,
                                 default=serializers.CreateOnlyDefault(
                                     serializers.CurrentUserDefault()))
-    created_date = serializers.DateTimeField(required=False,
-                                             default=serializers.CreateOnlyDefault(
-                                                 timezone.now))
+    created_date = serializers.DateTimeField(
+        required=False, default=serializers.CreateOnlyDefault(timezone.now))
     last_modified_by = UserSerializer(many=False,
                                       default=serializers.CurrentUserDefault())
     last_modified_date = serializers.DateTimeField(required=False,

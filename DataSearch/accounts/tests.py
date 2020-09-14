@@ -217,7 +217,8 @@ class SimpleTestCase(unittest.TestCase):
         """[summary]."""
         super().setupclass()
         if cls._overridden_settings:
-            cls._cls_overridden_context = override_settings(**cls._overridden_settings)
+            cls._cls_overridden_context = override_settings(
+                **cls._overridden_settings)
             cls._cls_overridden_context.enable()
         if cls._modified_settings:
             cls._cls_modified_context = modify_settings(cls._modified_settings)
@@ -226,7 +227,8 @@ class SimpleTestCase(unittest.TestCase):
             for alias in connections:
                 conn = connections[alias]
                 conn.cursor = _CursorFailure(cls.__name__, conn.cursor)
-                conn.chunked_cursor = _CursorFailure(cls.__name__, conn.chunked_cursor)
+                conn.chunked_cursor = _CursorFailure(
+                    cls.__name__, conn.chunked_cursor)
 
 
 def teardownclass(cls):
@@ -374,7 +376,8 @@ def assertredirects(self, response, expected_url, status_code=302,
                     "fetch_redirect_response=False)."
                     % (url, domain)
                 )
-            redirect_response = response.client.get(path, QueryDict(query), secure=(scheme == 'https'))
+            redirect_response = response.client.get(
+                path, QueryDict(query), secure=(scheme == 'https'))
 
             # Get the redirection page, using the same client that was used
             # to obtain the original response.
@@ -386,7 +389,9 @@ def assertredirects(self, response, expected_url, status_code=302,
             )
 
     self.assertEqual(
-        url, expected_url, msg_prefix + "Response redirected to '%s', expected '%s'" % (url, expected_url)
+        url, expected_url,
+        msg_prefix +
+        "Response redirected to '%s', expected '%s'" % (url, expected_url)
     )
 
 
@@ -442,8 +447,7 @@ def assertcontains(self, response, text, count=None, status_code=200,
         self.assertEqual(
             real_count, count,
             msg_prefix + "Found %d instances of %s in response (expected "
-                         "%d)" % (
-                real_count, text_repr, count)
+                         "%d)" % (real_count, text_repr, count)
         )
     else:
         self.assertTrue(real_count != 0,
@@ -586,47 +590,58 @@ def assertformseterror(self, response, formset, form_index, field, errors,
                         % (formset, form_index, i, field)
                     )
             elif form_index is not None:
-                non_field_errors = context[formset].forms[form_index].non_field_errors()
-                self.assertFalse(non_field_errors,
-                                 msg_prefix + "The formset '%s', form %d in context %d "
-                                              "does not contain any non-field "
-                                              "errors." % (formset, form_index, i)
-                                 )
-                self.assertTrue(err in non_field_errors,
-                                msg_prefix + "The formset '%s', form %d in context %d "
-                                             "does not contain the non-field error "
-                                             "'%s' (actual errors: %s)" % (
-                                    formset, form_index, i, err, repr(non_field_errors))
-                                )
+                non_field_errors = \
+                    context[formset].forms[form_index].non_field_errors()
+                self.assertFalse(
+                    non_field_errors,
+                    msg_prefix + "The formset '%s', form %d in context %d "
+                    "does not contain any non-field "
+                    "errors." % (formset, form_index, i)
+                )
+                self.assertTrue(
+                    err in non_field_errors,
+                    msg_prefix + "The formset '%s', form %d in context %d "
+                    "does not contain the non-field error "
+                    "'%s' (actual errors: %s)" % (
+                        formset, form_index, i, err, repr(non_field_errors))
+                )
             else:
                 non_form_errors = context[formset].non_form_errors()
-                self.assertFalse(non_form_errors,
-                                 msg_prefix + "The formset '%s' in context %d does not "
-                                              "contain any non-form errors." % (formset, i)
-                                 )
-                self.assertTrue(err in non_form_errors,
-                                msg_prefix + "The formset '%s' in context %d does not "
-                                             "contain the non-form error '%s' ("
-                                             "actual errors: %s)" % (formset, i, err, repr(non_form_errors))
-                                )
+                self.assertFalse(
+                    non_form_errors,
+                    msg_prefix + "The formset '%s' in context %d does not "
+                    "contain any non-form errors." % (formset, i)
+                )
+                self.assertTrue(
+                    err in non_form_errors,
+                    msg_prefix + "The formset '%s' in context %d does not "
+                    "contain the non-form error '%s' ("
+                    "actual errors: %s)" % (
+                        formset, i, err, repr(non_form_errors))
+                )
     if not found_formset:
-        self.fail(msg_prefix + "The formset '%s' was not used to render the response" % formset)
+        self.fail(
+            msg_prefix +
+            "The formset '%s' was not used to render the response" % formset)
 
 
 def _assert_template_used(self, response, template_name, msg_prefix):
     if response is None and template_name is None:
-        raise TypeError('response and/or template_name argument must be provided')
+        raise TypeError(
+            'response and/or template_name argument must be provided')
 
     if msg_prefix:
         msg_prefix += ": "
 
-    if template_name is not None and response is not None and not hasattr(response, 'templates'):
+    bool_hasattr = hasattr(response, 'templates')
+    if template_name is not None and response is not None and not bool_hasattr:
         raise ValueError(
             "assertTemplateUsed() and assertTemplateNotUsed() are only "
             "usable on responses fetched using the Django test Client."
         )
 
-    if not hasattr(response, 'templates') or (response is None and template_name):
+    bool_hasattr = hasattr(response, 'templates')
+    if not bool_hasattr or (response is None and template_name):
         if response:
             template_name = response
             response = None
@@ -638,13 +653,15 @@ def _assert_template_used(self, response, template_name, msg_prefix):
     return None, template_names, msg_prefix
 
 
-def asserttemplateused(self, response=None, template_name=None, msg_prefix='', count=None):
+def asserttemplateused(self, response=None, template_name=None,
+                       msg_prefix='', count=None):
     """
     Assert template with provided name used in rendering response.
 
     Usable as context manager.
     """
-    context_mgr_template, template_names, msg_prefix = self._assert_template_used(response, template_name, msg_prefix)
+    context_mgr_template, template_names, msg_prefix = \
+        self._assert_template_used(response, template_name, msg_prefix)
 
     if context_mgr_template:
         # Use assertTemplateUsed as context manager.
@@ -653,11 +670,12 @@ def asserttemplateused(self, response=None, template_name=None, msg_prefix='', c
     if not template_names:
         self.fail(msg_prefix + "No templates used to render the response")
 
-    self.assertTrue(template_name in template_names,
-                    msg_prefix + "Template '%s' was not a template used to render"
-                                 " the response. Actual template(s) used: %s"
-                    % (template_name, ', '.join(template_names))
-                    )
+    self.assertTrue(
+        template_name in template_names,
+        msg_prefix + "Template '%s' was not a template used to render"
+        " the response. Actual template(s) used: %s"
+        % (template_name, ', '.join(template_names))
+    )
 
     if count is not None:
         self.assertEqual(
@@ -669,7 +687,8 @@ def asserttemplateused(self, response=None, template_name=None, msg_prefix='', c
     return
 
 
-def asserttemplatenotused(self, response=None, template_name=None, msg_prefix=''):
+def asserttemplatenotused(self, response=None, template_name=None,
+                          msg_prefix=''):
     """
     Assert template with provided name was NOT used in rendering the response.
 
@@ -681,10 +700,11 @@ def asserttemplatenotused(self, response=None, template_name=None, msg_prefix=''
         # Use assertTemplateNotUsed as context manager.
         return _AssertTemplateNotUsedContext(self, context_mgr_template)
 
-    return self.assertFalse(template_name in template_names,
-                            msg_prefix + "Template '%s' was used unexpectedly in rendering "
-                                         "the response" % template_name
-                            )
+    return self.assertFalse(
+        template_name in template_names,
+        msg_prefix + "Template '%s' was used unexpectedly in rendering "
+        "the response" % template_name
+    )
 
 
 @contextmanager
@@ -694,7 +714,8 @@ def _assert_raises_message_cm(self, expected_exception, expected_message):
     self.assertIn(expected_message, str(con_man.exception))
 
 
-def assertraisesmessage(self, expected_exception, expected_message, *args, **kwargs):
+def assertraisesmessage(self, expected_exception, expected_message,
+                        *args, **kwargs):
     """
     Assert expected_message is found in the the message of a raised exception.
 
@@ -712,7 +733,8 @@ def assertraisesmessage(self, expected_exception, expected_message, *args, **kwa
         callable_obj = args[0]
         args = args[1:]
 
-    con_man = self._assert_raises_message_cm(expected_exception, expected_message)
+    con_man = self._assert_raises_message_cm(
+        expected_exception, expected_message)
     # Assertion used in context manager fashion.
     if callable_obj is None:
         return con_man
@@ -773,7 +795,8 @@ def assertfieldoutput(self, fieldclass, valid, invalid, field_args=None,
     # Test that max_length and min_length are always accepted.
     if issubclass(fieldclass, CharField):
         field_kwargs.update({'min_length': 2, 'max_length': 20})
-        self.assertIsInstance(fieldclass(*field_args, **field_kwargs), fieldclass)
+        self.assertIsInstance(
+            fieldclass(*field_args, **field_kwargs), fieldclass)
 
 
 def asserthtmlequal(self, html1, html2, msg=None):
@@ -813,16 +836,20 @@ def asserthtmlnotequal(self, html1, html2, msg=None):
 
 def assertinhtml(self, needle, haystack, count=None, msg_prefix=''):
     """Add docstring."""  # Not Necessary in this File.
-    needle = assert_and_parse_html(self, needle, None, 'First argument is not valid HTML:')
-    haystack = assert_and_parse_html(self, haystack, None, 'Second argument is not valid HTML:')
+    needle = assert_and_parse_html(
+        self, needle, None, 'First argument is not valid HTML:')
+    haystack = assert_and_parse_html(
+        self, haystack, None, 'Second argument is not valid HTML:')
     real_count = haystack.count(needle)
     if count is not None:
-        self.assertEqual(real_count, count, msg_prefix +
-                         "Found %d instances of '%s' in response (expected %d)" % (
-                             real_count, needle, count)
-                         )
+        self.assertEqual(
+            real_count, count,
+            msg_prefix + "Found %d instances of '%s' in response " +
+            "(expected %d)" % (real_count, needle, count))
     else:
-        self.assertTrue(real_count != 0, msg_prefix + "could not find '%s' in response" % needle)
+        self.assertTrue(
+            real_count != 0,
+            msg_prefix + "could not find '%s' in response" % needle)
 
 
 def assertjsonequal(self, raw, expected_data, msg=None):
@@ -1007,8 +1034,9 @@ class TransactionTestCase(SimpleTestCase):
 
             # If we need to provide replica initial data from migrated apps,
             # then do so.
-            if self.serialized_rollback and hasattr(connections[db_name],
-                                                    "_test_serialized_contents"):
+            bool_hasattr = hasattr(
+                connections[db_name], "_test_serialized_contents")
+            if self.serialized_rollback and bool_hasattr:
                 if self.available_apps is not None:
                     apps.unset_available_apps()
                 connections[db_name].creation.deserialize_db_from_string(
@@ -1020,7 +1048,9 @@ class TransactionTestCase(SimpleTestCase):
             if self.fixtures:
                 # We have to use this slightly awkward syntax due to the fact
                 # that we're using *args and **kwargs together.
-                call_command('loaddata', *self.fixtures, **{'verbosity': 0, 'database': db_name})
+                call_command(
+                    'loaddata', *self.fixtures,
+                    **{'verbosity': 0, 'database': db_name})
 
     def _should_reload_connections(self):
         return True
@@ -1060,21 +1090,22 @@ class TransactionTestCase(SimpleTestCase):
         for db_name in self._databases_names(include_mirrors=False):
             # Flush the database.
             inhibit_post_migrate = (
-                    self.available_apps is not None or
-                    (  # Inhibit the post_migrate signal when using serialized
-                        # rollback to avoid trying to recreate the
-                        # serialized data.
-                            self.serialized_rollback and
-                            hasattr(connections[db_name],
-                                    '_test_serialized_contents')
-                    )
+                self.available_apps is not None or
+                (  # Inhibit the post_migrate signal when using serialized
+                   # rollback to avoid trying to recreate the
+                   # serialized data.
+                      self.serialized_rollback and
+                      hasattr(connections[db_name],
+                              '_test_serialized_contents')
+                )
             )
             call_command('flush', verbosity=0, interactive=False,
                          database=db_name, reset_sequences=False,
                          allow_cascade=self.available_apps is not None,
                          inhibit_post_migrate=inhibit_post_migrate)
 
-    def assert_queryset_equal(self, queryset, values, transform=repr, ordered=True, msg=None):
+    def assert_queryset_equal(self, queryset, values,
+                              transform=repr, ordered=True, msg=None):
         """Add docstring."""  # Not Necessary in this File.
         items = map(transform, queryset)
         if not ordered:
@@ -1082,12 +1113,14 @@ class TransactionTestCase(SimpleTestCase):
         values = list(values)
         # For example queryset.iterator() could be passed as queryset, but it
         # does not have 'ordered' attribute.
-        if len(values) > 1 and hasattr(queryset, 'ordered') and not queryset.ordered:
+        if len(values) > 1 and hasattr(queryset,
+                                       'ordered') and not queryset.ordered:
             raise ValueError("Trying to compare non-ordered queryset "
                              "against more than one ordered values")
         return self.assertEqual(list(items), values, msg=msg)
 
-    def assert_num_queries(self, num, func=None, *args, using=DEFAULT_DB_ALIAS, **kwargs):
+    def assert_num_queries(self, num, func=None, *args,
+                           using=DEFAULT_DB_ALIAS, **kwargs):
         """Add docstring."""  # Not Necessary in this File.
         conn = connections[using]
 
@@ -1101,7 +1134,8 @@ class TransactionTestCase(SimpleTestCase):
 
 def conns_support_trans():
     """Return True if all connections support transactions."""
-    return all(conn.features.supports_transactions for conn in connections.all())
+    return all(
+        conn.features.supports_transactions for conn in connections.all())
 
 
 class TestCase(TransactionTestCase):
@@ -1181,7 +1215,8 @@ class TestCase(TransactionTestCase):
             self.set_up_test_data()
             return super()._fixture_setup()
 
-        assert not self.reset_sequences, 'reset_sequences cannot be used on TestCase instances'
+        assert not self.reset_sequences, \
+            'reset_sequences cannot be used on TestCase instances'
         self.atomics = self._enter_atomics()
 
     def _fixture_teardown(self):
@@ -1247,10 +1282,11 @@ def _deferredskip(condition, reason):
             # avoid triggering the descriptor.
             skip = test_func.__dict__.get('__unittest_skip__')
             if isinstance(skip, CheckCondition):
-                test_item.__unittest_skip__ = skip.add_condition(condition,
-                                                                 reason)
+                test_item.__unittest_skip__ = skip.add_condition(
+                    condition, reason)
             elif skip is not True:
-                test_item.__unittest_skip__ = CheckCondition((condition, reason))
+                test_item.__unittest_skip__ = CheckCondition(
+                    (condition, reason))
         return test_item
 
     return decorator
@@ -1258,7 +1294,8 @@ def _deferredskip(condition, reason):
     def skipffdbfeature(*features):
         """Skip a test if a database has at least one of the named features."""
 
-    return _deferredskip(lambda: any(getattr(connection.features, feature, False) for feature in features),
+    return _deferredskip(lambda: any(getattr(
+        connection.features, feature, False) for feature in features),
                          "Database has feature(s) %s" % ", ".join(features)
                          )
 
@@ -1266,7 +1303,8 @@ def _deferredskip(condition, reason):
         """Skip a test unless a database has all the named features."""
 
     return _deferredskip(
-        lambda: not all(getattr(connection.features, feature, False) for feature in features),
+        lambda: not all(getattr(
+            connection.features, feature, False) for feature in features),
         "Database does not support feature(s): %s" % ", ".join(features)
     )
 
@@ -1274,8 +1312,10 @@ def _deferredskip(condition, reason):
         """Skip a test unless a database has any of the named features."""
 
     return _deferredskip(
-        lambda: not any(getattr(connection.features, feature, False) for feature in features),
-        "Database does not support any of the feature(s): %s" % ", ".join(features)
+        lambda: not any(getattr(
+            connection.features, feature, False) for feature in features),
+        "Database does not support any of the feature(s): %s" % ", ".join(
+            features)
     )
 
 
@@ -1386,7 +1426,8 @@ class _MediaFilesHandler(FSFilesHandler):
 class LiveServerThread(threading.Thread):
     """Thread for running a live http server while the tests are running."""
 
-    def __init__(self, host, static_handler, connections_override=None, port=0):
+    def __init__(self, host, static_handler,
+                 connections_override=None, port=0):
         self.httpd = self._create_server()
         self.host = host
         self.port = port
@@ -1397,7 +1438,9 @@ class LiveServerThread(threading.Thread):
         super().__init__()
 
     def run(self):
-        """Setup live server databases then loop over handling HTTP requests."""
+        """
+        Setup live server databases then loop over handling HTTP requests.
+        """
         if self.connections_override:
             # Override this thread's database connections with the ones
             # provided by the main thread.

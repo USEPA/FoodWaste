@@ -96,11 +96,13 @@ class UsernameReminderRequestView(FormView):
                             'user': user,
                             'protocol': 'http'
                         }
-                        subject_template_name = 'registration/username_reminder_subject.txt'
+                        subject_template_name = \
+                            'registration/username_reminder_subject.txt'
                         # Copied from django/contrib/admin/templates/
                         # registration/password_reset_subject.txt to templates
                         # directory.
-                        email_template_name = 'registration/username_reminder_email.html'
+                        email_template_name = \
+                            'registration/username_reminder_email.html'
                         # Copied from django/contrib/admin/templates/
                         # registration/password_reset_email.html to templates
                         # directory.
@@ -111,7 +113,8 @@ class UsernameReminderRequestView(FormView):
                         email = loader.render_to_string(
                             email_template_name, content)
                         if not settings.EMAIL_DISABLED:
-                            send_mail(subject, email, settings.DEFAULT_FROM_EMAIL,
+                            send_mail(subject, email,
+                                      settings.DEFAULT_FROM_EMAIL,
                                       [user.email], fail_silently=False)
                     # Render the done page.
                     return render(request,
@@ -219,7 +222,7 @@ class PasswordResetRequestView(FormView):
 
                 if not settings.EMAIL_DISABLED:
                     send_mail(subject, email, settings.DEFAULT_FROM_EMAIL,
-                                [user.email], fail_silently=False)
+                              [user.email], fail_silently=False)
 
             # Render the done page.
             return render(request,
@@ -246,7 +249,10 @@ class PasswordResetConfirmView(FormView):
         """Responds to link from password reset email."""
         form = self.form_class(None)
         if uidb64 is None or token is None:
-            return render(request, 'registration/password_reset_confirm_no_token.html', {'form': form})
+            return render(
+                request,
+                'registration/password_reset_confirm_no_token.html',
+                {'form': form})
         usermodel = get_user_model()
 
         try:
@@ -255,12 +261,15 @@ class PasswordResetConfirmView(FormView):
         except (TypeError, ValueError, OverflowError, usermodel.DoesNotExist):
             user = None
 
-        if user is None or default_token_generator.check_token(user, token) is False:
-            return render(request, 'registration/password_reset_confirm_no_token.html',
-                          {'form': form, 'usermodel': usermodel, 'uid': uid})
+        if user is None or default_token_generator.check_token(user,
+                                                               token) is False:
+            return render(
+                request, 'registration/password_reset_confirm_no_token.html',
+                {'form': form, 'usermodel': usermodel, 'uid': uid})
 
         return render(request, 'registration/password_reset.html',
-                      {'form': form, 'usermodel': usermodel, 'uid': uid, 'user': user})
+                      {'form': form, 'usermodel': usermodel,
+                       'uid': uid, 'user': user})
 
     def post(self, request, *arg, **kwargs):
         # py-lint: disable=keyword-arg-before-vararg
@@ -287,7 +296,10 @@ class PasswordResetConfirmView(FormView):
                 user.set_password(new_password)
                 user.save()
 
-                return render(request, 'registration/password_reset_done.html', locals())
+                return render(
+                    request,
+                    'registration/password_reset_done.html',
+                    locals())
 
             messages.error(
                 request, 'Password reset was unsuccessful. Please try again')
@@ -339,10 +351,13 @@ class UserRegistrationView(FormView):
     template_register = "registration/register.html"
     template_register_inactive = "registration/register_inactive.html"
     # Email and subject line for the message sent to the app admins.
-    admin_subject_template_name = 'registration/register_request_admin_subject.txt'
-    admin_email_template_name = 'registration/register_request_admin_email.html'
+    admin_subject_template_name = \
+        'registration/register_request_admin_subject.txt'
+    admin_email_template_name = \
+        'registration/register_request_admin_email.html'
     # Email and subject line for the message sent to the potential app user.
-    user_subject_template_name = 'registration/register_request_user_subject.txt'
+    user_subject_template_name = \
+        'registration/register_request_user_subject.txt'
     user_email_template_name = 'registration/register_request_user_email.html'
     form_class = ProfileCreationForm
 
@@ -393,7 +408,7 @@ class UserRegistrationView(FormView):
             # This is driven by local_settings.py.
             if not settings.EMAIL_DISABLED:
                 send_mail(subject, email, settings.DEFAULT_FROM_EMAIL,
-                            settings.USER_APPROVAL_EMAIL, fail_silently=False)
+                          settings.USER_APPROVAL_EMAIL, fail_silently=False)
 
             # Send an email to the user notifying them that
             # the account request is under review.
@@ -410,7 +425,7 @@ class UserRegistrationView(FormView):
 
             if not settings.EMAIL_DISABLED:
                 send_mail(subject, email, settings.DEFAULT_FROM_EMAIL,
-                            [user.email], fail_silently=False)
+                          [user.email], fail_silently=False)
 
             # Render the activation needed template.
             return render(request, self.template_register_inactive,
@@ -481,7 +496,8 @@ class UserDenialView(TemplateView):
     View for starting the password reset process.
 
     This view renders the form to enter a username or email address.
-    Upon successful entry of a user/email, an email is sent with password reset instructions
+    Upon successful entry of a user/email, an email is sent
+    with password reset instructions
     and a confirmation message displayed.
     """
 
@@ -542,7 +558,10 @@ class UserActivationView(TemplateView):
     def get(self, request, uidb64=None, token=None):
         """Activate a user, given a valid token in the url."""
         if uidb64 is None or token is None:
-            return render(request, 'registration/register_activate_no_token.html', locals())
+            return render(
+                request,
+                'registration/register_activate_no_token.html',
+                locals())
 
         usermodel = get_user_model()
         try:
@@ -554,8 +573,11 @@ class UserActivationView(TemplateView):
         except (TypeError, ValueError, OverflowError, usermodel.DoesNotExist):
             user = None
 
-        if user is None or default_token_generator.check_token(user, token) is False:
-            return render(request, 'registration/register_activate_no_token.html', locals())
+        if user is None or default_token_generator.check_token(user,
+                                                               token) is False:
+            return render(request,
+                          'registration/register_activate_no_token.html',
+                          locals())
 
         return render(request, self.template_name, locals())
 
@@ -563,8 +585,10 @@ class UserActivationView(TemplateView):
 @sensitive_post_parameters()
 @csrf_protect
 @never_cache
-def login(request, template_name='registration/login.html', redirect_field_name=REDIRECT_FIELD_NAME,
-          authentication_form=AuthenticationForm, current_app=None, extra_context=None):
+def login(request, template_name='registration/login.html',
+          redirect_field_name=REDIRECT_FIELD_NAME,
+          authentication_form=AuthenticationForm,
+          current_app=None, extra_context=None):
     """Displays the login form and handles the login action."""
     redirect_to = request.GET.get(redirect_field_name, )
 
@@ -626,7 +650,8 @@ def login(request, template_name='registration/login.html', redirect_field_name=
 
 
 def logout(request, next_page=None, template_name='registration/logout.html',
-           redirect_field_name=REDIRECT_FIELD_NAME, current_app=None, extra_context=None):
+           redirect_field_name=REDIRECT_FIELD_NAME,
+           current_app=None, extra_context=None):
     """Logs out the user and displays 'You are logged out' message."""
     auth_logout(request)
     redirect_to = request.GET.get(redirect_field_name, )

@@ -7,8 +7,6 @@
 Define classes used to generate Django Admin portion of the website.
 
 Available functions:
-- Sets Teams
-- Sets Team Memberships
 """
 
-from django.contrib import admin
+# from django.contrib import admin
