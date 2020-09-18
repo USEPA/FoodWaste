@@ -43,10 +43,12 @@ def web_dev_tools(request, *args, **kwargs):
 @staff_member_required
 def clean_qapps(request, *args, **kwargs):
     """
-    Method to remove extra new line characters and spaces from QAPP data.
+    Method to clean QAPP Data, which includes:
+    - Removing extra new line characters and spaces.
+    - Converting QA_Category to the proper value.
 
-    - This has been fixed in the constants.
-    - Strings that have already been inserted might need to be cleaned up.
+    These issues have been fixed in the constants, but may need to be
+    cleaned up in existing db entries.
     """
     # TODO: Fix all default data of all sections of all qapps
     sections_a = SectionA.objects.all()
@@ -54,6 +56,11 @@ def clean_qapps(request, *args, **kwargs):
         # Clean Section A
         a3_clean = sect.a3.replace('\r\n', ' ').replace('    ', ' ')
         a9_clean = sect.a9.replace('\r\n', ' ').replace('    ', ' ')
+        a9_clean = a9_clean.replace('QA QA', 'QA')
+        if 'B' in sect.qapp.qa_category:
+            a9_clean = a9_clean.replace('QA Category A', sect.qapp.qa_category)
+        else:
+            a9_clean = a9_clean.replace('QA Category B', sect.qapp.qa_category)
         sect.a3 = a3_clean
         sect.a9 = a9_clean
         sect.save()

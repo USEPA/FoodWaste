@@ -63,7 +63,7 @@ def export_excel_single(request, *args, **kwargs):
     """Function to export a single QAPP object as an Excel sheet."""
     qapp_id = kwargs.get('pk', None)
     qapp_info = get_qapp_info(request.user, qapp_id)
-    qapp_info['qapp'] = qapp_info['qapp'].first()
+    qapp_info['qapp'] = qapp_info['qapp']
 
     if not qapp_info:
         return HttpResponse(request)

@@ -86,7 +86,7 @@ A9_DOCUMENTS_RECORDS = 'Research activities must be documented according ' + \
     'electronic records for ORD. Records retention: Records that are ' + \
     'generated under this research effort will be retained in accordance ' + \
     'with EPA Records Schedule 1035, and as required by Section 5.1 of ' + \
-    'the ORD Quality Management Plan for QA Category A Projects.'
+    'the ORD Quality Management Plan for __category__ Projects.'
 
 # A9_RECORDS_RETENTION = """
 #    Records retention: Records that are generated under this research effort
@@ -219,7 +219,7 @@ SECTION_B_INFO = {
 #######################################################
 # Constants and Strings for the QAPP module Section C.
 # This TEXT needs to be added automatically for C.1
-C1_ASSESSMENTS_RESPONSE_ACTIONS = 'For QA Category A projects, at least ' + \
+C1_ASSESSMENTS_RESPONSE_ACTIONS = 'For __category__ projects, at least ' + \
     'one QA audit is required per ORD QA Policy titled Use of the Graded ' + \
     'Approach for Quality Assurance of Research.  A technical systems ' + \
     'audit TSA will be completed within one year of the initial QA ' + \

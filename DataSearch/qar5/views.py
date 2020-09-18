@@ -547,7 +547,8 @@ class SectionAView(LoginRequiredMixin, TemplateView):
         else:
             form = SectionAForm({'qapp': qapp,
                                  'a3': SECTION_A_INFO['a3'],
-                                 'a9': SECTION_A_INFO['a9']})
+                                 'a9': SECTION_A_INFO['a9'].replace(
+                                     '__category__', qapp.qa_category)})
 
         edit_message = ''
         if not check_can_edit(qapp, request.user):
@@ -893,7 +894,7 @@ def get_qar5_for_team(team_id, qapp_id=None):
 def get_qapp_info(user, qapp_id):
     """Method to return all pieces of a qapp in a dictionary."""
     ctx = {}
-    ctx['qapp'] = get_qar5_for_user(user.id, qapp_id)
+    ctx['qapp'] = get_qar5_for_user(user.id, qapp_id).first()
 
     # Only return this if the user has access to it via super, owner, or team:
     # db_user = User.objects.get(id=user.id)
@@ -907,7 +908,7 @@ def get_qapp_info(user, qapp_id):
                 qapp_approval_id=ctx['qapp_approval'].id)
         ctx['section_a'] = SectionA.objects.filter(qapp_id=qapp_id).first()
         ctx['section_b'] = SectionB.objects.filter(qapp_id=qapp_id).all()
-        ctx['section_c'] = SectionC()
+        ctx['section_c'] = SectionC(qa_category=ctx['qapp'].qa_category)
         ctx['section_d'] = SectionD.objects.filter(qapp_id=qapp_id).first()
         ctx['references'] = References.objects.filter(qapp_id=qapp_id).first()
         ctx['revisions'] = Revision.objects.filter(qapp_id=qapp_id)

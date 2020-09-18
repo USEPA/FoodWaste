@@ -231,6 +231,15 @@ class SectionC(models.Model):
     c2 = SECTION_C_INFO[1]
     # c3 = models.TextField(blank=False, null=False)
 
+    def __init__(self, *args, **kwargs):
+        """
+        Extending init method so we can replace __category__ with the
+        appropriate category, A or B.
+        """
+        qa_category = kwargs.pop('qa_category', None)
+        super(SectionC, self).__init__(*args, **kwargs)
+        self.c1 = SECTION_C_INFO[0].replace('__category__', qa_category)
+
 
 class SectionD(models.Model):
     """Class representing the entirety of SectionD for a given QAPP."""
