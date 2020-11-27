@@ -46,6 +46,7 @@ def is_user_member(user, team=None):
 
 
 def can_user_edit_team(user, team_id):
+    """Add docstring."""  # TODO
     membership = TeamMembership.objects.filter(
         team_id=team_id, member_id=user.id).first()
     return membership.can_edit or user.is_superuser

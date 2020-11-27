@@ -83,6 +83,7 @@ def export_pdf_single(request, *args, **kwargs):
 
 
 def add_attachments_to_zip(archive, attachment_ids):
+    """Add docstring."""  # TODO
     for a_id in attachment_ids:
         # Get the actual file from server file system
         attachment = Attachment.objects.get(id=a_id)
