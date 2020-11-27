@@ -1,4 +1,4 @@
-# Check Python versions = "version Python 3.8.2 (64-bit)."
+# Check Python versions = "version Python 3.9.0 (64-bit)."
 # This requirements document was generated in the following way:
 # 1. Create a new python virtual environment.
 # 2. Install packages in this environment from the previous requirements file in Github
@@ -28,6 +28,7 @@ django-phonenumber-field==5.0.0 # An international phone number field for django
 django-session-security==2.6.6  # Provides a mechanism to logout inactive authenticated users.
 django-wkhtmltopdf==3.3.0       # Allows a Django site to output dynamic PDFs.
 openpyxl==3.0.3                 # Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files.
+pip>=20.2.4                     # The PyPA recommended tool for installing Python packages.
 psycopg2==2.8.6                 # Python-PostgreSQL Database Adapter.
 python-docx==0.8.10             # Python library for creating and updating Microsoft Word (.docx) files.
 xhtml2pdf==0.2.4                # Package for saving html templates as PDF files. Used to return multiple files instead of a
@@ -39,10 +40,8 @@ autopep8==1.5.2                 # Automatically formats Python code to conform t
 coverage==5.1                   # Measures code coverage, typically during test execution.
 django-docs==0.3.1              # Allows to serve Sphinx generated docs directly from Django.
 duecredit==0.8.0                # Citation of scientific software and methods, and limited visibility of donation requests for open-source software.
-flake8==3.8.3                   # Flake8 is a wrapper around these tools: PyFlakes; pycodestyle; Ned Batchelder's McCabe script.
 pycodestyle==2.6.0              # Tool to check your Python code against some of the style conventions in PEP 8.
 pydocstyle==5.0.2               # Static analysis tool for checking compliance with Python docstring conventions in PEP 257.
-pylint==2.6.0                   # Static code analysis tool which looks for programming errors, helps enforcing PEP 8 coding standard.
 pylint_django==2.3.0            # pylint_django.checkers.db_performance looks for migrations which add new model fields and these fields have a default value.
 
 #---------------------------------------------------------------------------------------#

@@ -480,20 +480,20 @@ def result_search_support(request):
         w = request.GET['w']
         if 'next' in request.GET:
             next = request.GET['next']
-            page = int(page) + 1
+            page = int(page) + 1  # TODO: "page" is not defined
             pg = int(page)
         if 'previous' in request.GET:
             previous = request.GET['previous']
-            page = int(page) - 1
+            page = int(page) - 1  # TODO: "page" is not defined
             if page == 0:
                 page = 1
             pg = int(page)
         if 'start' in request.GET:
             start = request.GET['start']
-            pg = int(page)
+            pg = int(page)  # TODO: "page" is not defined
 
-        if pg > 1:
-            y = pg * count_per_page
+        if pg > 1:  # TODO: "pg" is not defined
+            y = pg * count_per_page  # TODO: "pg" is not defined
 
             if y < count_per_page:
                 x = 0
@@ -513,7 +513,7 @@ def result_search_support(request):
     if query:
         the_count = Support.objects.filter(query).count()
         max_page_number = int(floor(the_count / 50)) + 1
-        if max_page_number <= pg:
+        if max_page_number <= pg:  # TODO: "pg" is not defined
             if the_count > count_per_page - 1:
                 y = int(the_count)
                 x = int(y - count_per_page)
@@ -767,20 +767,20 @@ def result_search_support_type(request):
         w = request.GET['w']
         if 'next' in request.GET:
             next = request.GET['next']
-            page = int(page) + 1
+            page = int(page) + 1  # TODO: "page" is not defined
             pg = int(page)
         if 'previous' in request.GET:
             previous = request.GET['previous']
-            page = int(page) - 1
+            page = int(page) - 1  # TODO: "page" is not defined
             if page == 0:
                 page = 1
             pg = int(page)
         if 'start' in request.GET:
             start = request.GET['start']
-            pg = int(page)
+            pg = int(page)  # TODO: "page" is not defined
 
-        if pg > 1:
-            y = pg * count_per_page
+        if pg > 1:  # TODO: "pg" is not defined
+            y = pg * count_per_page  # TODO: "pg" is not defined
 
             if y < count_per_page:
                 x = 0
@@ -800,7 +800,7 @@ def result_search_support_type(request):
     if query:
         the_count = SupportType.objects.filter(query).count()
         max_page_number = int(floor(the_count / 50)) + 1
-        if max_page_number <= pg:
+        if max_page_number <= pg:  # TODO: "pg" is not defined
             if the_count > count_per_page - 1:
                 y = int(the_count)
                 x = int(y - count_per_page)
@@ -961,20 +961,20 @@ def result_search_priority(request):
         w = request.GET['w']
         if 'next' in request.GET:
             next = request.GET['next']
-            page = int(page) + 1
+            page = int(page) + 1  # TODO: "page" is not defined
             pg = int(page)
         if 'previous' in request.GET:
             previous = request.GET['previous']
-            page = int(page) - 1
+            page = int(page) - 1  # TODO: "page" is not defined
             if page == 0:
                 page = 1
             pg = int(page)
         if 'start' in request.GET:
             start = request.GET['start']
-            pg = int(page)
+            pg = int(page)  # TODO: "page" is not defined
 
-        if pg > 1:
-            y = pg * count_per_page
+        if pg > 1:  # TODO: "pg" is not defined
+            y = pg * count_per_page  # TODO: "pg" is not defined
 
             if y < count_per_page:
                 x = 0
@@ -994,7 +994,7 @@ def result_search_priority(request):
     if query:
         the_count = Priority.objects.filter(query).count()
         max_page_number = int(floor(the_count / 50)) + 1
-        if max_page_number <= pg:
+        if max_page_number <= pg:  # TODO: "pg" is not defined
             if the_count > count_per_page - 1:
                 y = int(the_count)
                 x = int(y - count_per_page)

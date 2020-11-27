@@ -337,7 +337,7 @@ class APITeamListView(APIView):
         if exclude is not None:
             teams = (
                 Team.objects.exclude(id__in=exclude).filter(
-                    members=user).order_by('name')
+                    members=user).order_by('name')  # TODO: "user" is not defined
                 .select_related("created_by", "last_modified_by")
                 .prefetch_related("team_memberships",
                                   "team_memberships__member")
@@ -345,7 +345,7 @@ class APITeamListView(APIView):
             )
         else:
             teams = (
-                Team.objects.filter(members=user).order_by('name')
+                Team.objects.filter(members=user).order_by('name')  # TODO: "user" is not defined
                 .select_related("created_by", "last_modified_by")
                 .prefetch_related("team_memberships",
                                   "team_memberships__member")

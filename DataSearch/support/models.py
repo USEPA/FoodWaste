@@ -181,25 +181,25 @@ class SupportAttachment(models.Model):
     def icon_to_use(self):
         """Add docstring."""  # TODO add docstring.
         if str(self.attachment).endswith('pdf'):
-            icon_src = settings.STATIC_URL + "img/pdf-icon.jpg"
+            icon_src = settings.STATIC_URL + "img/pdf-icon.jpg"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('xls'):
-            icon_src = settings.STATIC_URL + "img/xlsx.jpg"
+            icon_src = settings.STATIC_URL + "img/xlsx.jpg"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('xlsx'):
-            icon_src = settings.STATIC_URL + "img/xlsx.jpg"
+            icon_src = settings.STATIC_URL + "img/xlsx.jpg"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('doc'):
-            icon_src = settings.STATIC_URL + "img/word.png"
+            icon_src = settings.STATIC_URL + "img/word.png"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('docx'):
-            icon_src = settings.STATIC_URL + "img/docx.png"
+            icon_src = settings.STATIC_URL + "img/docx.png"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('doc'):
-            icon_src = settings.STATIC_URL + "img/docx.png"
+            icon_src = settings.STATIC_URL + "img/docx.png"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('html'):
-            icon_src = settings.STATIC_URL + "img/html.png"
+            icon_src = settings.STATIC_URL + "img/html.png"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('txt'):
-            icon_src = settings.STATIC_URL + "img/txt.jpg"
+            icon_src = settings.STATIC_URL + "img/txt.jpg"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('csv'):
-            icon_src = settings.STATIC_URL + "img/csv.png"
+            icon_src = settings.STATIC_URL + "img/csv.png"  # TODO: "settings" is not defined
         elif str(self.attachment).endswith('psd'):
-            icon_src = settings.STATIC_URL + "img/psd.jpg"
+            icon_src = settings.STATIC_URL + "img/psd.jpg"  # TODO: "settings" is not defined
         else:
             icon_src = settings.STATIC_URL + "uploads/" + str(self.attachment)
         return icon_src

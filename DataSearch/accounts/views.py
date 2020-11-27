@@ -83,10 +83,10 @@ class UsernameReminderRequestView(FormView):
                 data = form.cleaned_data["email"]
 
             # Uses the method written above.
-            if self.validate_email_address(data) is True:
+            if self.validate_email_address(data) is True:  # TODO: "data" is possibly unbound
                 # Find the users associated with this email.
                 associated_users = User.objects.filter(
-                    Q(email=data) | Q(username=data))
+                    Q(email=data) | Q(username=data))  # TODO: "data" is possibly unbound
                 if associated_users.exists():
                     for user in associated_users:
                         content = {
@@ -265,11 +265,11 @@ class PasswordResetConfirmView(FormView):
                                                                token) is False:
             return render(
                 request, 'registration/password_reset_confirm_no_token.html',
-                {'form': form, 'usermodel': usermodel, 'uid': uid})
+                {'form': form, 'usermodel': usermodel, 'uid': uid})  # TODO: "uid" is possibly unbound
 
         return render(request, 'registration/password_reset.html',
                       {'form': form, 'usermodel': usermodel,
-                       'uid': uid, 'user': user})
+                       'uid': uid, 'user': user})  # TODO: "uid" is possibly unbound
 
     def post(self, request, *arg, **kwargs):
         # py-lint: disable=keyword-arg-before-vararg

@@ -87,7 +87,7 @@ class ProjectForm(forms.ModelForm):
         try:
             current_user = kwargs.pop('user')
             super(ProjectForm, self).__init__(*args, **kwargs)
-            team_ids = TeamMembership.objects.filter(
+            team_ids = TeamMembership.objects.filter(  # TODO: "TeamMembership" is not defined
                 member=current_user).values_list('team', flat=True)
             self.fields['teams'].queryset = \
                 Team.objects.filter(id__in=team_ids)

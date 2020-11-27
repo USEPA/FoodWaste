@@ -21,8 +21,8 @@ EXISTING_DATA = {
     'b1_1': {
         'heading': 'B.1	DATA ACQUISITION AND COLLECTION',
         'label': 'B.1.1 Existing Data',
-        'desc': 'Identify the Existing Data and Information needed to ' + \
-            'meet the research objective(s).'
+        'desc': 'Identify the Existing Data and Information needed to ' + \  # TODO: the backslash is redundant between brackets quite a few
+            'meet the research objective(s).'  # TODO: continuation line unaligned for hanging indent quite a few
     },
     'b1_2': {
         'label': 'B.1.2 Data Use',
