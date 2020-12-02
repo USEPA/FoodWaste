@@ -43,7 +43,7 @@ from urllib.parse import unquote, urljoin, urlparse, urlsplit
 from urllib.request import url2pathname
 from django.test import TestCase
 from django.apps import apps
-from django.conf import settings
+# from django.conf import settings
 from django.core import mail
 from django.core.exceptions import ValidationError
 from django.core.files import locks
