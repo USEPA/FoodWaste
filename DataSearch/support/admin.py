@@ -5,7 +5,7 @@
 # pylint: skip-file
 
 """
-Defines classes used to generate the 'Accounts' Django Admin.
+Defines classes used to generate the 'Support' Django Admin.
 
 There should be an Admin class for each Model that can
 be modified by an admin user.
@@ -14,6 +14,9 @@ Available functions:
 - None for this module -- TBD (would like added to manage in Django Admin)
 """
 
-# from django.contrib import admin
+from django.contrib import admin
+from support.models import Support, SupportType, Priority
 
-# Register your models here.
+admin.site.register(Support)
+admin.site.register(SupportType)
+admin.site.register(Priority)

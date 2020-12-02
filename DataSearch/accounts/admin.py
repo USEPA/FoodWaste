@@ -4,22 +4,29 @@
 # young.daniel@epa.gov
 
 """
-Defines classes used to generate 'Accounts' Django Admin portion of website.
+Django Admin Accounts.
 
-There should be Admin class for each Model that can be modified by admin user.
+This file defines classes that are used to generate the 'Accounts' Django Admin
+portion of the website. There should be an Admin class for each Model that can
+be modified by an admin user.
 
 Available functions:
 - None for this module -- TBD (would like added to manage in Django Admin)
 """
 
 from django.contrib import admin
-from accounts.models import UserProfile
+from accounts.models import UserProfile, Country, State, Sector, Role
+
+admin.site.register(Country)
+admin.site.register(State)
+admin.site.register(Sector)
+admin.site.register(Role)
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    """Assigns 'USER ID' number, once user registers with HELP."""
+    """Assigns 'USER ID' number, once user registers with DataSearch."""
 
-    list_display = ("user_id", )
+    list_display = ("user_id",)
     search_fields = ("user__username",)
     exclude = ('created_by', 'last_modified_by',)
     list_filter = ("user_id",)

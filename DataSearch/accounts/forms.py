@@ -13,8 +13,8 @@ Available functions:
 - create new user profile
 """
 
-from django.contrib.auth.models import User
 from django import forms
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.hashers import check_password, make_password
 from accounts.models import Role, Sector, State, Country
@@ -161,7 +161,7 @@ class ProfileUpdateForm(forms.ModelForm):
         return str(self.first_name)
 
     def __init__(self, *args, **kw):
-        """The __init__ method represents a constructor in Python."""
+        """Construct the Profile Update Form."""
         super(ProfileUpdateForm, self).__init__(*args, **kw)
         profile = self.instance.userprofile
         self.fields['affiliation'].initial = profile.affiliation
@@ -201,10 +201,7 @@ class ProfileUpdateForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        """
-        :param commit:
-        :return:
-        """
+        """Save a modified user profile object."""
         user = self.instance
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
@@ -300,9 +297,7 @@ class ProfileCreationForm(forms.ModelForm):
         fields = ('username',)
 
     def clean_username(self):
-        """
-        :return:
-        """
+        """Clean the provided username."""
         username = self.cleaned_data["username"]
         try:
             User.objects.get(username=username)
@@ -313,9 +308,7 @@ class ProfileCreationForm(forms.ModelForm):
             "different username."))
 
     def clean_password2(self):
-        """
-        :return:
-        """
+        """Clean and verify two passwords match."""
         password1 = self.cleaned_data.get("password1", )
         password2 = self.cleaned_data["password2"]
         if password1 != password2:
@@ -337,8 +330,10 @@ class ProfileCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         """
+        Save the form contained in self to create a new user.
+
         :param commit:
-        :return:
+        :return: the user that was just created
         """
         user = User.objects.create_user(self.clean_username(),
                                         self.cleaned_data["email"],

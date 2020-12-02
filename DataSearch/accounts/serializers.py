@@ -11,8 +11,8 @@ Available functions:
 - Serialized for users
 """
 
-from django.contrib.auth.models import User
 from rest_framework import serializers
+from accounts.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):

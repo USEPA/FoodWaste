@@ -26,7 +26,7 @@ class TeamAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         """Custom save method to attach created_by user."""
         try:
-            temp_obj = obj.created_by
+            obj.created_by
         except BaseException:
             obj.created_by = request.user
         obj.last_modified_by = request.user

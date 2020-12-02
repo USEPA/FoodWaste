@@ -11,8 +11,8 @@ Available functions:
 - TBD
 """
 
-from django.contrib.auth.models import User
 from django.test import Client, TestCase
+from accounts.models import User
 from teams.forms import TeamManagementForm
 
 

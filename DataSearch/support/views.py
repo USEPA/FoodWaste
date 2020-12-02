@@ -14,24 +14,23 @@ Available functions:
 
 from decimal import getcontext
 from datetime import datetime, timedelta
-from math import *
 from os.path import join
 
-from constants.models import *
-from constants.utils import *
+# from constants.models import *
+from constants.utils import create_qt_email_message
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
+from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django.views.generic import FormView, TemplateView
 
 from DataSearch.settings import MANUAL_NAME, DOWNLOADS_DIR
-from .forms import *
-from .models import *
+from .forms import SupportForm, SupportAdminForm, SupportTypeForm, PriorityForm
+from .models import SupportType, Support, SupportAttachment, Priority
 
 getcontext().prec = 9
 
@@ -180,7 +179,7 @@ class SuggestionEditView(FormView):
 
     @method_decorator(login_required)
     def get(self, request, support_type_name, obj_id):
-        """Add docstring."""  # TODO add docstring.
+        """Handle GET requests from user, return the edit form."""
         user = request.user
         form_class = SupportForm if not user.is_staff else SupportAdminForm
         support = get_object_or_404(Support, id=obj_id)
@@ -336,26 +335,6 @@ def file_upload_support(request, obj_id):
     return HttpResponseRedirect(url)
 
 
-# NOTE: This function isn't used, except inside the tests.py file...
-# def create_help_request(request):
-#    if request.method == 'POST':
-#        form = SupportForm(data=request.POST, files=request.FILES)
-#        if form.is_valid():
-#            if not settings.EMAIL_DISABLED:
-#                send_mail('DataSearch Support Request',
-#                          'A DataSearch Support Request Has Been ' + \
-#                          'Submitted. ' + \
-#                          'Here is the description of the issue: %s' % \
-#                          str(support.the_description), support.weblink ,
-#                          ['qatrack@epa.gov'], fail_silently=False)
-#            url = reverse('support:edit_support',
-#                          kwargs={'obj_id': support.id})
-#            return HttpResponseRedirect(url)
-#    else:
-#        form = SupportForm(initial={'weblink': user.email})
-#    return render(request, 'main/create_help_request.html', locals())
-
-
 @login_required
 def edit_support_admin(request, obj_id):
     """Edit ticket using Django admin."""
@@ -443,186 +422,10 @@ def delete_support_attachment(request, obj_id):
     return render(request, 'show/show_support.html', locals())
 
 
-@login_required
-def result_search_support(request):
-    """Search tickets."""
-    query = Q()
-    query_show = ''
-    x = int(0)
-    y = int(0)
-    title = 'Search Support - With Results Shown'
-
-    if request is None:
-        return Support.objects.get(id=1)
-
-    if 'a' in request.GET:
-        a = request.GET['a']
-        if a:
-            query = query & (Q(name__startswith=a))
-            query_show = query_show + 'User Compound Library Name = ' + \
-                str(a) + ' '
-
-    if 'b' in request.GET:
-        b = request.GET['b']
-        if b:
-            query = query & (Q(cas_number__startswith=b))
-            query_show = query_show + 'CAS Number = ' + str(b) + ' '
-
-    if 'c' in request.GET:
-        c = request.GET['c']
-        if c:
-            query = query & (Q(formula__startswith=c))
-            query_show = query_show + 'Molecular Formula = ' + str(c) + ' '
-
-    count_per_page = 50
-
-    if 'w' in request.GET:
-        w = request.GET['w']
-        if 'next' in request.GET:
-            next = request.GET['next']
-            page = int(page) + 1  # TODO: "page" is not defined
-            pg = int(page)
-        if 'previous' in request.GET:
-            previous = request.GET['previous']
-            page = int(page) - 1  # TODO: "page" is not defined
-            if page == 0:
-                page = 1
-            pg = int(page)
-        if 'start' in request.GET:
-            start = request.GET['start']
-            pg = int(page)  # TODO: "page" is not defined
-
-        if pg > 1:  # TODO: "pg" is not defined
-            y = pg * count_per_page  # TODO: "pg" is not defined
-
-            if y < count_per_page:
-                x = 0
-            else:
-                x = y - count_per_page
-        else:
-            pg = 1
-            y = count_per_page
-            x = 0
-    else:
-        pg = 1
-        y = count_per_page
-        x = 0
-
-    query = query & (Q(make_public='Y'))
-
-    if query:
-        the_count = Support.objects.filter(query).count()
-        max_page_number = int(floor(the_count / 50)) + 1
-        if max_page_number <= pg:  # TODO: "pg" is not defined
-            if the_count > count_per_page - 1:
-                y = int(the_count)
-                x = int(y - count_per_page)
-            else:
-                y = int(the_count)
-                x = 0
-
-        objs = Support.objects.filter(query)[x:y]
-    else:
-        objs = ''
-
-    return render(request, 'main/support.html', locals())
-
-
-@login_required
-def search_support_for_last_30(request):
-    """Search new tickets last 30-days."""
-    user = request.user
-    query = Q()
-    query_show = 'Support Requests Received For Last 30 Days'
-
-    title = 'Support Requests Received Last 30 Days - With Results Shown'
-    d = datetime.today() - timedelta(days=30)
-    if user.is_staff:
-        query = Q(created__gte=d)
-    else:
-        query = Q(created__gte=d) & Q(user=user)
-
-    if query:
-        the_count = Support.objects.filter(query).count()
-        objs = Support.objects.filter(query)
-    else:
-        objs = ''
-
-    return render(request, 'list/list_support_issues.html', locals())
-
-
-@login_required
-def search_support_for_last_60(request):
-    """Search new tickets last 60-days.."""
-    user = request.user
-    query = Q()
-    query_show = 'Support Requests Received For Last 60 Days'
-
-    title = 'Support Requests Received Last 60 Days - With Results Shown'
-    d = datetime.today() - timedelta(days=60)
-    if user.is_staff:
-        query = Q(created__gte=d)
-    else:
-        query = Q(created__gte=d) & Q(user=user)
-
-    if query:
-        the_count = Support.objects.filter(query).count()
-        objs = Support.objects.filter(query)
-    else:
-        objs = ''
-
-    return render(request, 'list/list_support_issues.html', locals())
-
-
-@login_required
-def search_support_for_last_90(request):
-    """Search new tickets last 90-days."""
-    user = request.user
-    query = Q()
-    query_show = 'Support Requests Received For Last 90 Days'
-
-    title = 'Support Requests Received Last 90 Days - With Results Shown'
-    d = datetime.today() - timedelta(days=90)
-    if user.is_staff:
-        query = Q(created__gte=d)
-    else:
-        query = Q(created__gte=d) & Q(user=user)
-
-    if query:
-        the_count = Support.objects.filter(query).count()
-        objs = Support.objects.filter(query)
-    else:
-        objs = ''
-
-    return render(request, 'list/list_support_issues.html', locals())
-
-
-@login_required
-def search_support_for_last_180(request):
-    """Search new tickets last 180-days."""
-    user = request.user
-    query = Q()
-    query_show = 'Support Requests Received For Last 180 Days'
-
-    title = 'Support Requests Received Last 180 Days - With Results Shown'
-    d = datetime.today() - timedelta(days=180)
-    if user.is_staff:
-        query = Q(created__gte=d)
-    else:
-        query = Q(created__gte=d) & Q(user=user)
-
-    if query:
-        the_count = Support.objects.filter(query).count()
-        objs = Support.objects.filter(query)
-    else:
-        objs = ''
-
-    return render(request, 'list/list_support_issues.html', locals())
-
-
 # End Support
 
 # Start SupportType
+
 
 @login_required
 def create_support_type(request):
@@ -691,7 +494,7 @@ def edit_support_type(request, obj_id):
 
 @login_required
 def delete_support_type(request, obj_id):
-    """Add docstring."""  # TODO add docstring.
+    """Remove an available support type from the database."""
     title = 'Delete SupportType'
     user = request.user
     support_type = get_object_or_404(SupportType, id=obj_id)
@@ -705,7 +508,7 @@ def delete_support_type(request, obj_id):
 
 @login_required
 def list_support_types(request):
-    """Add docstring."""  # TODO add docstring.
+    """Return a view containing the list of available support types."""
     user = request.user
     title = 'SupportType List'
     support_types = SupportType.objects.all().order_by('ordering')
@@ -715,113 +518,27 @@ def list_support_types(request):
 @login_required
 @never_cache
 def show_support_type(request, obj_id):
-    """Add docstring."""  # TODO add docstring.
+    """Return a view showing details of a selected support type."""
     user = request.user
-
     obj = get_object_or_404(SupportType, id=obj_id)
     title = 'Show SupportType'
-
     support_types = SupportType.objects.all().order_by('ordering')
     return render(request, 'show/show.html', locals())
-
-
-def search_support_type(request):
-    """Add docstring."""  # TODO add docstring.
-    title = 'Search For SupportType - With Results Shown'
-    return render(request, 'main/search_support_type.html', locals())
-
-
-def result_search_support_type(request):
-    """Add docstring."""  # TODO add docstring.
-    query = Q()
-    query_show = ''
-    x = int(0)
-    y = int(0)
-    title = 'Search SupportType - With Results Shown'
-
-    if request is None:
-        return SupportType.objects.get(id=1)
-
-    if 'a' in request.GET:
-        a = request.GET['a']
-        if a:
-            query = query & (Q(name__startswith=a))
-            query_show = query_show + 'User Compound Library Name = ' + \
-                str(a) + ' '
-
-    if 'b' in request.GET:
-        b = request.GET['b']
-        if b:
-            query = query & (Q(cas_number__startswith=b))
-            query_show = query_show + 'CAS Number = ' + str(b) + ' '
-
-    if 'c' in request.GET:
-        c = request.GET['c']
-        if c:
-            query = query & (Q(formula__startswith=c))
-            query_show = query_show + 'Molecular Formula = ' + str(c) + ' '
-
-    count_per_page = 50
-
-    if 'w' in request.GET:
-        w = request.GET['w']
-        if 'next' in request.GET:
-            next = request.GET['next']
-            page = int(page) + 1  # TODO: "page" is not defined
-            pg = int(page)
-        if 'previous' in request.GET:
-            previous = request.GET['previous']
-            page = int(page) - 1  # TODO: "page" is not defined
-            if page == 0:
-                page = 1
-            pg = int(page)
-        if 'start' in request.GET:
-            start = request.GET['start']
-            pg = int(page)  # TODO: "page" is not defined
-
-        if pg > 1:  # TODO: "pg" is not defined
-            y = pg * count_per_page  # TODO: "pg" is not defined
-
-            if y < count_per_page:
-                x = 0
-            else:
-                x = y - count_per_page
-        else:
-            pg = 1
-            y = count_per_page
-            x = 0
-    else:
-        pg = 1
-        y = count_per_page
-        x = 0
-
-    query = query & (Q(make_public='Y'))
-
-    if query:
-        the_count = SupportType.objects.filter(query).count()
-        max_page_number = int(floor(the_count / 50)) + 1
-        if max_page_number <= pg:  # TODO: "pg" is not defined
-            if the_count > count_per_page - 1:
-                y = int(the_count)
-                x = int(y - count_per_page)
-            else:
-                y = int(the_count)
-                x = 0
-
-        objs = SupportType.objects.filter(query)[x:y]
-    else:
-        objs = ''
-
-    return render(request, 'main/search_support_type.html', locals())
 
 
 # End SupportType
 
 # Start Priority
 
+
 @login_required
 def create_priority(request):
-    """Add docstring."""  # TODO add docstring.
+    """
+    Create a new priority object in the database.
+
+    This method handles both POST (handling user data to create the object),
+    and GET (providing user the form to create a new object) requests.
+    """
     user = request.user
     title = 'Create a New Priority'
     priorities = Priority.objects.all()
@@ -850,7 +567,12 @@ def create_priority(request):
 
 @login_required
 def edit_priority(request, obj_id):
-    """Add docstring."""  # TODO add docstring.
+    """
+    Edit a priority object.
+
+    GET: Return a view to allow the user to edit a selected priority object.
+    POST: Save the user's changes to the selected priority object.
+    """
     user = request.user
 
     title = 'Update Priority'
@@ -886,7 +608,7 @@ def edit_priority(request, obj_id):
 
 @login_required
 def delete_priority(request, obj_id):
-    """Add docstring."""  # TODO add docstring.
+    """Delete priority objects from the database."""
     title = 'Delete Priority'
     user = request.user
     priority = get_object_or_404(Priority, id=obj_id)
@@ -900,7 +622,7 @@ def delete_priority(request, obj_id):
 
 @login_required
 def list_priorities(request):
-    """Add docstring."""  # TODO add docstring.
+    """Return a view containing a list of available Priority objects."""
     user = request.user
     title = 'Priority List'
     priorities = Priority.objects.all().order_by('ordering')
@@ -910,102 +632,8 @@ def list_priorities(request):
 @login_required
 @never_cache
 def show_priority(request, obj_id):
-    """Add docstring."""  # TODO add docstring.
+    """Return a view showing the details of a selected priority."""
     user = request.user
-
     obj = get_object_or_404(Priority, id=obj_id)
     title = 'Show Priority'
-
     return render(request, 'show/show.html', locals())
-
-
-def search_priority(request):
-    """Add docstring."""  # TODO add docstring.
-    title = 'Search For Priority - With Results Shown'
-    return render(request, 'main/search_priority.html', locals())
-
-
-def result_search_priority(request):
-    """Add docstring."""  # TODO add docstring.
-    query = Q()
-    query_show = ''
-    x = int(0)
-    y = int(0)
-    title = 'Search Priority - With Results Shown'
-
-    if request is None:
-        return Priority.objects.get(id=1)
-
-    if 'a' in request.GET:
-        a = request.GET['a']
-        if a:
-            query = query & (Q(name__startswith=a))
-            query_show = query_show + 'User Compound Library Name = ' + \
-                str(a) + ' '
-
-    if 'b' in request.GET:
-        b = request.GET['b']
-        if b:
-            query = query & (Q(cas_number__startswith=b))
-            query_show = query_show + 'CAS Number = ' + str(b) + ' '
-
-    if 'c' in request.GET:
-        c = request.GET['c']
-        if c:
-            query = query & (Q(formula__startswith=c))
-            query_show = query_show + 'Molecular Formula = ' + str(c) + ' '
-
-    count_per_page = 50
-
-    if 'w' in request.GET:
-        w = request.GET['w']
-        if 'next' in request.GET:
-            next = request.GET['next']
-            page = int(page) + 1  # TODO: "page" is not defined
-            pg = int(page)
-        if 'previous' in request.GET:
-            previous = request.GET['previous']
-            page = int(page) - 1  # TODO: "page" is not defined
-            if page == 0:
-                page = 1
-            pg = int(page)
-        if 'start' in request.GET:
-            start = request.GET['start']
-            pg = int(page)  # TODO: "page" is not defined
-
-        if pg > 1:  # TODO: "pg" is not defined
-            y = pg * count_per_page  # TODO: "pg" is not defined
-
-            if y < count_per_page:
-                x = 0
-            else:
-                x = y - count_per_page
-        else:
-            pg = 1
-            y = count_per_page
-            x = 0
-    else:
-        pg = 1
-        y = count_per_page
-        x = 0
-
-    query = query & (Q(make_public='Y'))
-
-    if query:
-        the_count = Priority.objects.filter(query).count()
-        max_page_number = int(floor(the_count / 50)) + 1
-        if max_page_number <= pg:  # TODO: "pg" is not defined
-            if the_count > count_per_page - 1:
-                y = int(the_count)
-                x = int(y - count_per_page)
-            else:
-                y = int(the_count)
-                x = 0
-
-        objs = Priority.objects.filter(query)[x:y]
-    else:
-        objs = ''
-
-    return render(request, 'main/search_priority.html', locals())
-
-    # End Priority

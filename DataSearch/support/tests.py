@@ -30,7 +30,7 @@ class TestSupport(TestCase):
     """Test the functions related to UsernameReminderRequestView."""
 
     def setUp(self):
-        """Add docstring."""  # TODO add docstring.
+        """Prepare objects for testing the Support module."""
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -68,16 +68,16 @@ class TestSupport(TestCase):
     #    data = replace_none_empty_str(data)
     #    response = self.client.post("/support/create/suggestion/", data)
 
-    # def test_Support_Sudggestion_Edit_View_two(self):
-    #    """Test the view for the Sudggestion Edit view."""
+    # def test_Support_Suggestion_Edit_View_two(self):
+    #    """Test the view for the Suggestion Edit view."""
     #    data = SUPPORT_PASS_ONE.__dict__
     #    data = replace_none_empty_str(data)
     #    response = self.client.get("/support/edit/suggestion/1/", data)
 
     # self.assertContains(response, 'Suggestions', 2, 200)
 
-    # def test_Support_Sudggestion_Edit_View_one(self):
-    #    """Test the view for the Sudggestion Edit view."""
+    # def test_Support_Suggestion_Edit_View_one(self):
+    #    """Test the view for the Suggestion Edit view."""
     #    data = SUPPORT_PASS_ONE.__dict__
     #    data = replace_none_empty_str(data)
     #    response = self.client.post("/support/edit/suggestion/1/", data)
@@ -104,8 +104,8 @@ class TestSupport(TestCase):
 #     response = self.client.post("/support/show/suggestion/1")
 #     self.assertContains(response, 'Show Support', 1, 301)
 
-# def test_Support_Sudggestion_Edit_View_three(self):
-#     """Test the view for the Sudggestion Edit view"""
+# def test_Support_Suggestion_Edit_View_three(self):
+#     """Test the view for the Suggestion Edit view"""
 #     results = Sediment.__str__(self)
 
 # def test_model_environment_with_environment(self):

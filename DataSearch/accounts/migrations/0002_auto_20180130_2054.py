@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-# pylint: C0301
-"""
-docstring
-"""
+# pylint: skip-file
+
 from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
 
-
 class Migration(migrations.Migration):
-    """Add method docstring."""  # TODO add docstring.
+    """State, country migration."""
 
     dependencies = [
         ('accounts', '0001_initial'),

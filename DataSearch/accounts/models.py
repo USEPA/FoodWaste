@@ -16,6 +16,7 @@ Available functions:
 - Profile information associated with a User object.
 """
 
+# pylint: disable=imported-auth-user
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -25,15 +26,11 @@ class CountryBaseManager(models.Manager):
     """
     CountryBaseManager.
 
-    Manager class to facilitate natural key lookups when
-    loading initial data.
+    Manager class to facilitate natural key lookups when loading initial data.
     """
 
     def get_by_natural_key(self, country):
-        """
-        :param country:
-        :return:
-        """
+        """Define the natural key for country bases."""
         return self.get(country=country)
 
 
@@ -47,9 +44,7 @@ class Country(models.Model):
     objects = CountryBaseManager()
 
     def natural_key(self):
-        """
-        :return:
-        """
+        """Define the natural key for countries."""
         # NOTE: DO NOT REMOVE THE PARENTHESES, IT BREAKS MIGRATIONS
         return (self.country,)
 
@@ -67,7 +62,7 @@ class State(models.Model):
         Country, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        """Method to stringify a State."""
+        """Stringify a State."""
         return self.state
 
 
@@ -77,14 +72,12 @@ class Sector(models.Model):
     sector = models.CharField(blank=True, null=True, max_length=255)
 
     def natural_key(self):
-        """
-        :return:
-        """
+        """Define the natural key for sectors."""
         # NOTE: DO NOT REMOVE THE PARENTHESES, IT BREAKS MIGRATIONS
         return (self.sector,)
 
     def __str__(self):
-        """Method to stringify a Sector."""
+        """Stringify a Sector."""
         return self.sector
 
 
@@ -94,14 +87,12 @@ class Role(models.Model):
     role = models.CharField(blank=True, null=True, max_length=255)
 
     def natural_key(self):
-        """
-        :return:
-        """
+        """Define the natural key for roles."""
         # NOTE: DO NOT REMOVE THE PARENTHESES, IT BREAKS MIGRATIONS
         return (self.role,)
 
     def __str__(self):
-        """Method to stringify a Role."""
+        """Stringify a Role."""
         return self.role
 
 
@@ -134,15 +125,15 @@ class UserProfile(models.Model):
                                 on_delete=models.CASCADE)
 
     def __str__(self):
-        """Method to stringify a User Profile."""
+        """Stringify a User Profile with user first and last name."""
         return self.user.last_name + ', ' + self.user.first_name
 
 
 # These calls create a user profile object whenever a user is created
 def create_user_profile(sender, instance, created, **kwargs):
-    # py-lint: disable=unused-argument
+    # pylint: disable=unused-argument
     """
-    Function to create associated user profile whenever a new user is created.
+    Create associated user profile whenever a new user is created.
 
     :param sender:
     :param instance:

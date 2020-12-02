@@ -60,7 +60,7 @@ from django.test.client import Client
 from django.test.html import HTMLParseError, parse_html
 from django.test.signals import setting_changed, template_rendered
 from django.test.utils import (
-    CaptureQueriesContext, ContextList, compare_xml, modify_settings,
+    CaptureQueriesContext, ContextList, compare_xml,  # modify_settings,
     override_settings,
 )
 from django.utils.decorators import classproperty
@@ -73,9 +73,9 @@ class FooTest(TestCase):
 
     fixtures = ['testdata_01.json']
 
-
-__all__ = ('TestCase', 'TransactionTestCase',
-           'SimpleTestCase', 'skipffdbfeature', 'skipunlessdbfeature')
+    __all__ = (
+        'TestCase', 'TransactionTestCase', 'SimpleTestCase',
+        'skipffdbfeature', 'skipunlessdbfeature')
 
 
 def to_list(value):
@@ -91,14 +91,17 @@ def assert_and_parse_html(self, html, user_msg, msg):
     """Django test case for accounts."""
     try:
         dom = parse_html(html)
+        return dom
     except HTMLParseError as err:
         standardmsg = '%s\n%s' % (msg, err)
         self.fail(self._formatMessage(user_msg, standardmsg))
-    return dom
+        return None
 
 
 class _AssertNumQueriesContext(CaptureQueriesContext):
-    """Add docstring."""  # Not Necessary in this File.
+    """Add docstring."""
+
+    # NOTE: Jake didn't write this code, not confident documenting it.
 
     def __init__(self, test_case, num, conn):
         self.test_case = test_case
@@ -123,7 +126,9 @@ class _AssertNumQueriesContext(CaptureQueriesContext):
 
 
 class _AssertTemplateUsedContext:
-    """Add docstring."""  # Not Necessary in this File.
+    """Add docstring."""
+
+    # NOTE: Jake didn't write this code, not confident documenting it.
 
     def __init__(self, test_case, template_name):
         self.test_case = test_case
@@ -134,7 +139,7 @@ class _AssertTemplateUsedContext:
 
     def on_template_render(self, sender, signal, template, context, **kwargs):
         """
-        Arguments:
+        Arguments.
 
             sender {[type]} -- [description]
             signal {[type]} -- [description]
@@ -174,14 +179,18 @@ class _AssertTemplateUsedContext:
 
 
 class _AssertTemplateNotUsedContext(_AssertTemplateUsedContext):
-    """Add docstring."""  # Not Necessary in this File.
+    """Add docstring."""
+
+    # NOTE: Jake didn't write this code, not confident documenting it.
 
     def test(self):
-        """Add docstring."""  # Not Necessary in this File.
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         return self.template_name not in self.rendered_template_names
 
     def message(self):
-        """Add docstring."""  # Not Necessary in this File.
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         return '%s was rendered.' % self.template_name
 
 
@@ -230,54 +239,53 @@ class SimpleTestCase(unittest.TestCase):
                 conn.chunked_cursor = _CursorFailure(
                     cls.__name__, conn.chunked_cursor)
 
+    @classmethod
+    def teardownclass(cls):
+        """Remove any used objects and close connections when done testing."""
+        if not cls.allow_database_queries:
+            for alias in connections:
+                conn = connections[alias]
+                conn.cursor = conn.cursor.wrapped
+                conn.chunked_cursor = conn.chunked_cursor.wrapped
+        if hasattr(cls, '_cls_modified_context'):
+            cls._cls_modified_context.disable()
+            delattr(cls, '_cls_modified_context')
+        if hasattr(cls, '_cls_overridden_context'):
+            cls._cls_overridden_context.disable()
+            delattr(cls, '_cls_overridden_context')
+        super().teardownclass()
 
-def teardownclass(cls):
-    """Add docstring."""  # Not Necessary in this File.
-    if not cls.allow_database_queries:
-        for alias in connections:
-            conn = connections[alias]
-            conn.cursor = conn.cursor.wrapped
-            conn.chunked_cursor = conn.chunked_cursor.wrapped
-    if hasattr(cls, '_cls_modified_context'):
-        cls._cls_modified_context.disable()
-        delattr(cls, '_cls_modified_context')
-    if hasattr(cls, '_cls_overridden_context'):
-        cls._cls_overridden_context.disable()
-        delattr(cls, '_cls_overridden_context')
-    super().teardownclass()
+    def __call__(self, result=None):
+        """
+        Wrap the default __call__ method perform common Django test set up.
 
+        This means that user-defined Test Cases are not required
+        to include a call to super().setUp().
+        """
+        testmethod = getattr(self, self._testMethodName)
+        skipped = (
+                getattr(self.__class__, "__unittest_skip__", False) or
+                getattr(testmethod, "__unittest_skip__", False)
+        )
 
-def __call__(self, result=None):
-    """
-    Wrapper around default __call__ method perform common Django test set up.
-
-    This means that user-defined Test Cases are not required to include a call
-    to super().setUp().
-    """
-    testmethod = getattr(self, self._testMethodName)
-    skipped = (
-            getattr(self.__class__, "__unittest_skip__", False) or
-            getattr(testmethod, "__unittest_skip__", False)
-    )
-
-    if not skipped:
-        try:
-            self._pre_setup()
-        except Exception:
-            result.addError(self, sys.exc_info())
-            return
-    super().__call__(result)
-    if not skipped:
-        try:
-            self._post_teardown()
-        except Exception:
-            result.addError(self, sys.exc_info())
-            return
+        if not skipped:
+            try:
+                self._pre_setup()
+            except Exception:
+                result.addError(self, sys.exc_info())
+                return
+        super().__call__(result)
+        if not skipped:
+            try:
+                self._post_teardown()
+            except Exception:
+                result.addError(self, sys.exc_info())
+                return
 
 
 def _pre_setup(self):
     """
-    Perform pre-test setup:
+    Perform pre-test setup.
 
     * Create a test client.
     * Clear the mail test outbox.
@@ -390,8 +398,8 @@ def assertredirects(self, response, expected_url, status_code=302,
 
     self.assertEqual(
         url, expected_url,
-        msg_prefix +
-        "Response redirected to '%s', expected '%s'" % (url, expected_url)
+        msg_prefix + "Response redirected to '%s', expected '%s'" %
+        (url, expected_url)
     )
 
 
@@ -447,8 +455,7 @@ def assertcontains(self, response, text, count=None, status_code=200,
         self.assertEqual(
             real_count, count,
             msg_prefix + "Found %d instances of %s in response (expected "
-                         "%d)" % (real_count, text_repr, count)
-        )
+            "%d)" % (real_count, text_repr, count))
     else:
         self.assertTrue(real_count != 0,
                         msg_prefix + "could not find %s in response" %
@@ -590,39 +597,35 @@ def assertformseterror(self, response, formset, form_index, field, errors,
                         % (formset, form_index, i, field)
                     )
             elif form_index is not None:
-                non_field_errors = \
-                    context[formset].forms[form_index].non_field_errors()
+                non_field_errors = context[formset].forms[
+                    form_index].non_field_errors()
                 self.assertFalse(
                     non_field_errors,
                     msg_prefix + "The formset '%s', form %d in context %d "
                     "does not contain any non-field "
-                    "errors." % (formset, form_index, i)
-                )
+                    "errors." % (formset, form_index, i))
                 self.assertTrue(
                     err in non_field_errors,
                     msg_prefix + "The formset '%s', form %d in context %d "
                     "does not contain the non-field error "
                     "'%s' (actual errors: %s)" % (
-                        formset, form_index, i, err, repr(non_field_errors))
-                )
+                        formset, form_index, i, err, repr(non_field_errors)))
             else:
                 non_form_errors = context[formset].non_form_errors()
                 self.assertFalse(
                     non_form_errors,
                     msg_prefix + "The formset '%s' in context %d does not "
-                    "contain any non-form errors." % (formset, i)
-                )
+                    "contain any non-form errors." % (formset, i))
                 self.assertTrue(
                     err in non_form_errors,
                     msg_prefix + "The formset '%s' in context %d does not "
                     "contain the non-form error '%s' ("
                     "actual errors: %s)" % (
-                        formset, i, err, repr(non_form_errors))
-                )
+                        formset, i, err, repr(non_form_errors)))
     if not found_formset:
         self.fail(
-            msg_prefix +
-            "The formset '%s' was not used to render the response" % formset)
+            msg_prefix + "The formset '%s' was not used " +
+            "to render the response" % formset)
 
 
 def _assert_template_used(self, response, template_name, msg_prefix):
@@ -633,15 +636,15 @@ def _assert_template_used(self, response, template_name, msg_prefix):
     if msg_prefix:
         msg_prefix += ": "
 
-    bool_hasattr = hasattr(response, 'templates')
-    if template_name is not None and response is not None and not bool_hasattr:
+    no_templates = not hasattr(response, 'templates')
+    if template_name is not None and response is not None and no_templates:
         raise ValueError(
             "assertTemplateUsed() and assertTemplateNotUsed() are only "
             "usable on responses fetched using the Django test Client."
         )
 
-    bool_hasattr = hasattr(response, 'templates')
-    if not bool_hasattr or (response is None and template_name):
+    no_templates = not hasattr(response, 'templates')
+    if no_templates or (response is None and template_name):
         if response:
             template_name = response
             response = None
@@ -674,8 +677,7 @@ def asserttemplateused(self, response=None, template_name=None,
         template_name in template_names,
         msg_prefix + "Template '%s' was not a template used to render"
         " the response. Actual template(s) used: %s"
-        % (template_name, ', '.join(template_names))
-    )
+        % (template_name, ', '.join(template_names)))
 
     if count is not None:
         self.assertEqual(
@@ -703,8 +705,7 @@ def asserttemplatenotused(self, response=None, template_name=None,
     return self.assertFalse(
         template_name in template_names,
         msg_prefix + "Template '%s' was used unexpectedly in rendering "
-        "the response" % template_name
-    )
+        "the response" % template_name)
 
 
 @contextmanager
@@ -835,7 +836,7 @@ def asserthtmlnotequal(self, html1, html2, msg=None):
 
 
 def assertinhtml(self, needle, haystack, count=None, msg_prefix=''):
-    """Add docstring."""  # Not Necessary in this File.
+    """Assert that the given string is in the given html content."""
     needle = assert_and_parse_html(
         self, needle, None, 'First argument is not valid HTML:')
     haystack = assert_and_parse_html(
@@ -843,9 +844,9 @@ def assertinhtml(self, needle, haystack, count=None, msg_prefix=''):
     real_count = haystack.count(needle)
     if count is not None:
         self.assertEqual(
-            real_count, count,
-            msg_prefix + "Found %d instances of '%s' in response " +
-            "(expected %d)" % (real_count, needle, count))
+            real_count, count, msg_prefix +
+            "Found %d instances of '%s' in response (expected %d)" % (
+                real_count, needle, count))
     else:
         self.assertTrue(
             real_count != 0,
@@ -859,6 +860,7 @@ def assertjsonequal(self, raw, expected_data, msg=None):
     Usual JSON non-significant whitespace rules apply as the heavyweight
     is delegated to the json library.
     """
+    data = None
     try:
         data = json.loads(raw)
     except ValueError:
@@ -879,6 +881,7 @@ def assertjsonnotequal(self, raw, expected_data, msg=None):
     Usual JSON non-significant whitespace rules apply as the heavyweight
     is delegated to the json library.
     """
+    data = None
     try:
         data = json.loads(raw)
     except ValueError:
@@ -964,7 +967,7 @@ class TransactionTestCase(SimpleTestCase):
 
     def _pre_setup(self):
         """
-        Perform pre-test setup:
+        Perform pre-test setup.
 
         * If the class has an 'available_apps' attribute, restrict the app.
           registry to these applications, then fire the post_migrate signal --
@@ -1034,9 +1037,9 @@ class TransactionTestCase(SimpleTestCase):
 
             # If we need to provide replica initial data from migrated apps,
             # then do so.
-            bool_hasattr = hasattr(
+            test_serialized_ctn = self.serialized_rollback and hasattr(
                 connections[db_name], "_test_serialized_contents")
-            if self.serialized_rollback and bool_hasattr:
+            if test_serialized_ctn:
                 if self.available_apps is not None:
                     apps.unset_available_apps()
                 connections[db_name].creation.deserialize_db_from_string(
@@ -1048,16 +1051,15 @@ class TransactionTestCase(SimpleTestCase):
             if self.fixtures:
                 # We have to use this slightly awkward syntax due to the fact
                 # that we're using *args and **kwargs together.
-                call_command(
-                    'loaddata', *self.fixtures,
-                    **{'verbosity': 0, 'database': db_name})
+                call_command('loaddata', *self.fixtures,
+                             **{'verbosity': 0, 'database': db_name})
 
     def _should_reload_connections(self):
         return True
 
     def _post_teardown(self):
         """
-        Perform post-test things:
+        Perform post-test things.
 
         * Flush the contents of the database to leave a clean slate. If the
           class has an 'available_apps' attribute, do not fire post_migrate.
@@ -1090,38 +1092,39 @@ class TransactionTestCase(SimpleTestCase):
         for db_name in self._databases_names(include_mirrors=False):
             # Flush the database.
             inhibit_post_migrate = (
-                self.available_apps is not None or
-                (  # Inhibit the post_migrate signal when using serialized
-                   # rollback to avoid trying to recreate the
-                   # serialized data.
-                      self.serialized_rollback and
-                      hasattr(connections[db_name],
-                              '_test_serialized_contents')
-                )
+                    self.available_apps is not None or
+                    (  # Inhibit the post_migrate signal when using serialized
+                       # rollback to avoid trying to recreate the
+                       # serialized data.
+                        self.serialized_rollback and
+                        hasattr(connections[db_name],
+                                '_test_serialized_contents')
+                    )
             )
             call_command('flush', verbosity=0, interactive=False,
                          database=db_name, reset_sequences=False,
                          allow_cascade=self.available_apps is not None,
                          inhibit_post_migrate=inhibit_post_migrate)
 
-    def assert_queryset_equal(self, queryset, values,
-                              transform=repr, ordered=True, msg=None):
-        """Add docstring."""  # Not Necessary in this File.
+    def assert_queryset_equal(self, queryset, values, transform=repr,
+                              ordered=True, msg=None):
+        """Verify that the given queryset and list of values are equal."""
         items = map(transform, queryset)
         if not ordered:
             return self.assertEqual(Counter(items), Counter(values), msg=msg)
         values = list(values)
         # For example queryset.iterator() could be passed as queryset, but it
         # does not have 'ordered' attribute.
-        if len(values) > 1 and hasattr(queryset,
-                                       'ordered') and not queryset.ordered:
+        not_ordered = not queryset.ordered
+        if len(values) > 1 and hasattr(queryset, 'ordered') and not_ordered:
             raise ValueError("Trying to compare non-ordered queryset "
                              "against more than one ordered values")
         return self.assertEqual(list(items), values, msg=msg)
 
-    def assert_num_queries(self, num, func=None, *args,
-                           using=DEFAULT_DB_ALIAS, **kwargs):
-        """Add docstring."""  # Not Necessary in this File.
+    def assert_num_queries(self, num, func=None,
+                           *args, using=DEFAULT_DB_ALIAS, **kwargs):
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         conn = connections[using]
 
         context = _AssertNumQueriesContext(self, num, conn)
@@ -1169,7 +1172,7 @@ class TestCase(TransactionTestCase):
 
     @classmethod
     def setupclass(cls):
-        """Add docstring."""  # Not Necessary
+        """Prepare objects for testing."""
         super().setupclass()
         if not conns_support_trans():
             return
@@ -1191,7 +1194,7 @@ class TestCase(TransactionTestCase):
 
     @classmethod
     def teardownclass(cls):
-        """Add docstring."""  # Not Necessary in this File.
+        """Tear down the class when testing has finished."""
         if conns_support_trans():
             cls._rollback_atomics(cls.cls_atomics)
             for conn in connections.all():
@@ -1241,13 +1244,18 @@ class CheckCondition:
     """Descriptor class for deferred condition checking."""
 
     def __init__(self, *conditions):
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         self.conditions = conditions
 
     def add_condition(self, condition, reason):
-        """Add docstring."""  # Not Necessary in this File.
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         return self.__class__(*self.conditions + ((condition, reason),))
 
     def __get__(self, instance, cls=None):
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         # Trigger access for all bases.
         if any(getattr(base, '__unittest_skip__', False) for base in
                cls.__bases__):
@@ -1262,14 +1270,17 @@ class CheckCondition:
 
 
 def _deferredskip(condition, reason):
-    """Add docstring."""  # Not Necessary in this File.
+    """Add docstring."""
+    # NOTE: Jake didn't write this code, not confident documenting it.
     def decorator(test_func):
-        """Add docstring."""  # Not Necessary in this File.
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         if not (isinstance(test_func, type) and
                 issubclass(test_func, unittest.TestCase)):
             @wraps(test_func)
             def skip_wrapper(*args, **kwargs):
-                """Add docstring."""  # Not Necessary in this File.
+                """Add docstring."""
+                # NOTE: Jake didn't write this code, not documenting it.
                 if condition():
                     raise unittest.SkipTest(reason)
                 return test_func(*args, **kwargs)
@@ -1282,8 +1293,8 @@ def _deferredskip(condition, reason):
             # avoid triggering the descriptor.
             skip = test_func.__dict__.get('__unittest_skip__')
             if isinstance(skip, CheckCondition):
-                test_item.__unittest_skip__ = skip.add_condition(
-                    condition, reason)
+                test_item.__unittest_skip__ = skip.add_condition(condition,
+                                                                 reason)
             elif skip is not True:
                 test_item.__unittest_skip__ = CheckCondition(
                     (condition, reason))
@@ -1294,28 +1305,31 @@ def _deferredskip(condition, reason):
     def skipffdbfeature(*features):
         """Skip a test if a database has at least one of the named features."""
 
-    return _deferredskip(lambda: any(getattr(
-        connection.features, feature, False) for feature in features),
-                         "Database has feature(s) %s" % ", ".join(features)
-                         )
+    return _deferredskip(
+        lambda: any(getattr(connection.features, feature, False)
+                    for feature in connection.features),
+        "Database has feature(s) %s" % ", ".join(connection.features))
 
     def skipunlessdbfeature(*features):
         """Skip a test unless a database has all the named features."""
 
     return _deferredskip(
         lambda: not all(getattr(
-            connection.features, feature, False) for feature in features),
-        "Database does not support feature(s): %s" % ", ".join(features)
+            connection.features, feature, False)
+            for feature in connection.features),
+        "Database does not support feature(s): %s" %
+        ", ".join(connection.features)
     )
 
     def skipunlessanydbfeature(*features):
         """Skip a test unless a database has any of the named features."""
 
     return _deferredskip(
-        lambda: not any(getattr(
-            connection.features, feature, False) for feature in features),
-        "Database does not support any of the feature(s): %s" % ", ".join(
-            features)
+        lambda: not any(
+            getattr(connection.features, feature, False)
+            for feature in connection.features),
+        "Database does not support any of the " +
+        "feature(s): %s" % ", ".join(connection.features)
     )
 
 
@@ -1328,6 +1342,7 @@ class QuietWSGIRequestHandler(WSGIRequestHandler):
     """
 
     def log_message(*args):
+        """Do nothing."""
         pass
 
 
@@ -1340,13 +1355,16 @@ class FSFilesHandler(WSGIHandler):
     """
 
     def __init__(self, application):
+        """Construct the FS Files Handler object."""
         self.application = application
         self.base_url = urlparse(self.get_base_url())
         super().__init__()
 
     def _should_handle(self, path):
         """
-        Check if the path should be handled. Ignore the path if:
+        Check if the path should be handled.
+
+        Ignore the path if:
 
         * The host is provided as part of the base_url
         * The request's path isn't under the media path (or equal)
@@ -1359,6 +1377,7 @@ class FSFilesHandler(WSGIHandler):
         return url2pathname(relative_url)
 
     def get_response(self, request):
+        """Return a response if the request should be handled here."""
         from django.http import Http404
 
         if self._should_handle(request.path):
@@ -1369,7 +1388,8 @@ class FSFilesHandler(WSGIHandler):
         return super().get_response(request)
 
     def serve(self, request):
-        """Add docstring."""  # Not Necessary in this File.
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         os_rel_path = self.file_path(request.path)
         os_rel_path = posixpath.normpath(unquote(os_rel_path))
         # Emulate behavior of django.contrib.staticfiles.views.serve() when it
@@ -1380,6 +1400,7 @@ class FSFilesHandler(WSGIHandler):
                      document_root=self.get_base_dir())
 
     def __call__(self, environ, start_response):
+        """Override the default call method to enforce _should_handle."""
         if not self._should_handle(get_path_info(environ)):
             return self.application(environ, start_response)
         return super().__call__(environ, start_response)
@@ -1395,12 +1416,12 @@ class _StaticFilesHandler(FSFilesHandler):
 
     @staticmethod
     def get_base_dir():
-        """Add docstring."""  # Not Necessary in this File.
+        """Get the root static files path."""
         return settings.STATIC_ROOT
 
     @staticmethod
     def get_base_url():
-        """Add docstring."""  # Not Necessary in this File.
+        """Get the static files URL."""
         return settings.STATIC_URL
 
 
@@ -1414,12 +1435,12 @@ class _MediaFilesHandler(FSFilesHandler):
 
     @staticmethod
     def get_base_dir():
-        """Add docstring."""  # Not Necessary in this File.
+        """Get the root media files path."""
         return settings.MEDIA_ROOT
 
     @staticmethod
     def get_base_url():
-        """Add docstring."""  # Not Necessary in this File.
+        """Get the media files URL."""
         return settings.MEDIA_URL
 
 
@@ -1428,6 +1449,7 @@ class LiveServerThread(threading.Thread):
 
     def __init__(self, host, static_handler,
                  connections_override=None, port=0):
+        """Construct Live Server Thread object."""
         self.httpd = self._create_server()
         self.host = host
         self.port = port
@@ -1439,7 +1461,9 @@ class LiveServerThread(threading.Thread):
 
     def run(self):
         """
-        Setup live server databases then loop over handling HTTP requests.
+        Run tests.
+
+        Set up live server databases then loop over handling HTTP requests.
         """
         if self.connections_override:
             # Override this thread's database connections with the ones
@@ -1467,7 +1491,8 @@ class LiveServerThread(threading.Thread):
                                   allow_reuse_address=False)
 
     def terminate(self):
-        """Add docstring."""  # Not Necessary in this File.
+        """Add docstring."""
+        # NOTE: Jake didn't write this code, not confident documenting it.
         if hasattr(self, 'httpd'):
             # Stop the WSGI server.
             self.httpd.shutdown()
@@ -1494,11 +1519,12 @@ class LiveServerTestCase(TransactionTestCase):
 
     @classproperty
     def live_server_url(self):
-        """Add docstring."""  # Not Necessary in this File.
+        """Format a string for the live server url."""
         return 'http://%s:%s' % (self.host, self.server_thread.port)
 
     @classmethod
     def setupclass(cls):
+        """Prepare objects for testing."""
         super().setupclass()
         connections_override = {}
 
@@ -1537,7 +1563,7 @@ class LiveServerTestCase(TransactionTestCase):
 
     @classmethod
     def teardownclass(cls):
-        """Add docstring."""  # Not Necessary in this File.
+        """Tear down classes after testing has ended."""
         cls._teardownclass()
         cls._live_server_modified_settings.disable()
         super().teardownclass()

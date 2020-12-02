@@ -48,8 +48,9 @@ class TeamMembershipModifySerializer(serializers.ModelSerializer):
     can_edit = serializers.BooleanField(
         required=False, default=serializers.CreateOnlyDefault(True))
 
-    def validate(self, data):
+    def validate(self, *args, **kwargs):
         """Make sure we do not already have an owner."""
+        data = kwargs.get('data', [])
         if "is_owner" in data and data["is_owner"]:
             current_owner = TeamMembership.objects.filter(
                 team=data["team"], is_owner=True).first()

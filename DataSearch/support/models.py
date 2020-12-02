@@ -20,22 +20,34 @@ from django.db.models import Q, Avg, Max, Min, Count, Sum
 
 
 def get_support_storage_path(instance, filename):
-    """Add docstring."""  # TODO add docstring.
+    """
+    Return the physical path to where support files will be stored.
+
+    :param instance: an object that contains the user information
+    :param filename: a string representing the filename
+    :return: a string representing a file path
+    """
     return '%s/support/%s' % (instance.user.username, filename)
 
 
 def get_instruction_storage_path(instance, filename):
-    """Add docstring."""  # TODO add docstring.
+    """
+    Return the physical path to where instruction files will be stored.
+
+    :param instance: an object that contains the user information
+    :param filename: a string representing the filename
+    :return: a string representing a file path
+    """
     return '%s/instructions/%s' % (instance.user.username, filename)
 
 
 def get_support_attachment_storage_path(instance, filename):
-    """Add docstring."""  # TODO add docstring.
+    """Return the physical path to where support attachments will be stored."""
     return 'support/%s/%s' % (instance.support_id, filename)
 
 
 class SupportType(models.Model):
-    """Add docstring."""  # TODO add docstring.
+    """Class representing the types of support requests available."""
 
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -54,17 +66,17 @@ class SupportType(models.Model):
         null=True, blank=True, max_digits=10, decimal_places=1)
 
     class Meta:
-        """Add docstring."""  # TODO add docstring.
+        """Define special ordering."""
 
         ordering = ["ordering", ]
 
     def __str__(self):
-        """Add docstring."""  # TODO add docstring.
+        """Overwrite the default stringify by returning the object's name."""
         return self.the_name or ''
 
 
 class Priority(models.Model):
-    """Add docstring."""  # TODO add docstring.
+    """Class representing the priority of a support request."""
 
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -83,17 +95,17 @@ class Priority(models.Model):
         null=True, blank=True, max_digits=10, decimal_places=1)
 
     class Meta:
-        """Add docstring."""  # TODO add docstring.
+        """Define special ordering."""
 
         ordering = ["ordering", ]
 
     def __str__(self):
-        """Add docstring."""  # TODO add docstring.
+        """Overwrite the default stringify by returning the object's name."""
         return self.the_name or ''
 
 
 class Support(models.Model):
-    """Add docstring."""  # TODO add docstring.
+    """The main support class, allows users to request support for the app."""
 
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -143,17 +155,17 @@ class Support(models.Model):
     review_notes = models.TextField(null=True, blank=True)
 
     class Meta:
-        """Add docstring."""  # TODO add docstring.
+        """Define special ordering."""
 
         ordering = ["ordering", ]
 
     def __str__(self):
-        """Add docstring."""  # TODO add docstring.
+        """Overwrite the default stringify by returning the object's name."""
         return self.the_name or ''
 
 
 class SupportAttachment(models.Model):
-    """Add docstring."""  # TODO add docstring.
+    """Class representing an attachment for a support request."""
 
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -174,32 +186,33 @@ class SupportAttachment(models.Model):
     the_size = models.CharField(blank=True, null=True, max_length=255)
 
     class Meta:
-        """Add docstring."""  # TODO add docstring.
+        """Define special ordering."""
 
         ordering = ['the_name', ]
 
     def icon_to_use(self):
-        """Add docstring."""  # TODO add docstring.
+        """Define what icon to use for an attachment based on file format."""
+        # TODO: "settings" is not defined
         if str(self.attachment).endswith('pdf'):
-            icon_src = settings.STATIC_URL + "img/pdf-icon.jpg"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/pdf-icon.jpg"
         elif str(self.attachment).endswith('xls'):
-            icon_src = settings.STATIC_URL + "img/xlsx.jpg"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/xlsx.jpg"
         elif str(self.attachment).endswith('xlsx'):
-            icon_src = settings.STATIC_URL + "img/xlsx.jpg"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/xlsx.jpg"
         elif str(self.attachment).endswith('doc'):
-            icon_src = settings.STATIC_URL + "img/word.png"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/word.png"
         elif str(self.attachment).endswith('docx'):
-            icon_src = settings.STATIC_URL + "img/docx.png"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/docx.png"
         elif str(self.attachment).endswith('doc'):
-            icon_src = settings.STATIC_URL + "img/docx.png"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/docx.png"
         elif str(self.attachment).endswith('html'):
-            icon_src = settings.STATIC_URL + "img/html.png"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/html.png"
         elif str(self.attachment).endswith('txt'):
-            icon_src = settings.STATIC_URL + "img/txt.jpg"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/txt.jpg"
         elif str(self.attachment).endswith('csv'):
-            icon_src = settings.STATIC_URL + "img/csv.png"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/csv.png"
         elif str(self.attachment).endswith('psd'):
-            icon_src = settings.STATIC_URL + "img/psd.jpg"  # TODO: "settings" is not defined
+            icon_src = settings.STATIC_URL + "img/psd.jpg"
         else:
             icon_src = settings.STATIC_URL + "uploads/" + str(self.attachment)
         return icon_src
