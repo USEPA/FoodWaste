@@ -289,8 +289,11 @@ def export(request, *args, **kwargs):
                 with tempfile.SpooledTemporaryFile() as tmp:
                     archive.writestr(temp_file_name, resp.content)
 
-        username = User.objects.filter(
-            id=user_id).values('username').first()['username']
+        user = User.objects.filter(
+            id=user_id).values('username').first()
+        username = 'username'
+        if user:
+            username = user.get('username', 'username')
 
         archive.close()
         response = HttpResponse(

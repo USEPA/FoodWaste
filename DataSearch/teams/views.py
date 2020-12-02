@@ -144,11 +144,11 @@ class TeamEditView(FormView):
             'team_id' in kwargs else None
         if ctx['team_id'] is not None:
             if can_user_edit_team(request.user, ctx['team_id']):
+                ctx['team_data'] = APITeamDetailView.as_view()(
+                    request, team_id=ctx['team_id'],
+                    format='json').rendered_content
+                ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
                 return render(request, self.template, ctx)
-            ctx['team_data'] = APITeamDetailView.as_view()(
-                request, team_id=ctx['team_id'],
-                format='json').rendered_content
-            ctx['team'] = JSONParser().parse(BytesIO(ctx['team_data']))
         return HttpResponseRedirect('/teams/list/')
 
     @method_decorator(login_required)

@@ -4,7 +4,7 @@
 {% block content %}
 <div class="white-box">
     <h4 class="separator">Edit the team name for '{{team.name}}'</h4>
-    <form class="form-horizontal" method="post" action="{% url 'team_edit' team.id %}">
+    <form class="form-horizontal" method="post" action="/teams/team/{{team_id}}/edit">
         {% csrf_token %}
 
         <div class="form-group">
