@@ -24,7 +24,7 @@ class AttachmentTest(TestCase):
         # Django 1.7 requires an explicit setup() when running tests in PTVS.
         @classmethod
         def setUpClass(cls):
-            """Add method docstring."""  # TODO add docstring.
+            """Prepare objects for testing."""
             super(AttachmentTest, cls).setUpClass()
             django.setup()
 
@@ -45,7 +45,7 @@ class ExistingDataSourceTest(TestCase):
         # Django 1.7 requires an explicit setup() when running tests in PTVS.
         @classmethod
         def setUpClass(cls):
-            """Add method docstring."""  # TODO add docstring.
+            """Prepare objects for testing."""
             super(ExistingDataSourceTest, cls).setUpClass()
             django.setup()
 
@@ -64,7 +64,7 @@ class ExistingDataTest(TestCase):
         # Django 1.7 requires an explicit setup() when running tests in PTVS.
         @classmethod
         def setUpClass(cls):
-            """Add method docstring."""  # TODO add docstring.
+            """Prepare objects for testing."""
             super(ExistingDataTest, cls).setUpClass()
             django.setup()
 

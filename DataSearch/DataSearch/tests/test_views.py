@@ -33,7 +33,7 @@ class TestViewAuthenticated(TestCase):
         # Django 1.7 requires an explicit setup() when running tests in PTVS.
         @classmethod
         def setUpClass(cls):
-            """TODO."""
+            """Prepare objects for testing."""
             super(TestViewAuthenticated, cls).setUpClass()
             django.setup()
 

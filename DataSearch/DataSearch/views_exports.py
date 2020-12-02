@@ -83,7 +83,7 @@ def export_pdf_single(request, *args, **kwargs):
 
 
 def add_attachments_to_zip(archive, attachment_ids):
-    """Add docstring."""  # TODO
+    """Add applicable attachments to the provided zip archive."""
     for a_id in attachment_ids:
         # Get the actual file from server file system
         attachment = Attachment.objects.get(id=a_id)
@@ -271,7 +271,7 @@ def export(request, *args, **kwargs):
             data_ids = get_existing_data_team(
                 team_id).values_list('id', flat=True)
 
-        # TODO: Determine file type to set the method type
+        # Determine file type to set the method type
         if 'docx' in request.path:
             export_funct = export_doc_single
         elif 'pdf' in request.path:

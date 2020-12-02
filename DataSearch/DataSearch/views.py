@@ -154,7 +154,7 @@ class ExistingDataList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        """Add method docstring."""  # TODO add docstring.
+        """Get a list Existing Data objects based on user or team ID."""
         path = self.request.path.split('/')
         p_id = path[len(path) - 1]
         p_type = path[len(path) - 2]

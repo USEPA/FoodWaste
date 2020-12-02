@@ -28,7 +28,7 @@ class TestFlowsa(TestCase):
         # Django 1.7 requires an explicit setup() when running tests in PTVS.
         @classmethod
         def setUpClass(cls):
-            """TODO."""
+            """Prepare objects for testing."""
             super(TestFlowsa, cls).setUpClass()
             django.setup()
 

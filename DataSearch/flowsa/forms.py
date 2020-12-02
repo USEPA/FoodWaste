@@ -11,10 +11,10 @@ from flowsa.models import Upload
 
 
 class UploadForm(ModelForm):
-    """Add docstring."""  # TODO add docstring.
+    """Form that handles FLOWSA attachment uploads."""
 
     class Meta:
-        """Add docstring."""  # TODO add docstring.
+        """Meta class to specify the base model and fields to implement."""
 
         model = Upload
         fields = ('file', )

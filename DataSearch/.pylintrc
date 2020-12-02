@@ -12,7 +12,6 @@ ignore=migrations,CVS,conf.py,__init__.py,__init__,site-packages
 # Add files or directories matching the regex patterns to the blacklist. The
 # regex matches against base names, not paths.
 ignore-patterns=wfastcgi.py
-# TODO: Exclude all migration files, figure out the pattern to match [####]_[anychars].py
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
