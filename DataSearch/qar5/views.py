@@ -71,8 +71,8 @@ class QappList(LoginRequiredMixin, ListView):
         """
         Custom method override to send data to the template.
 
-        - Specifically, want to send the user or team information for this
-          list of data.
+        Specifically, include the user or team information
+        for this list of data.
         """
         context = super().get_context_data(**kwargs)
         path = self.request.path.split('/')
@@ -85,7 +85,7 @@ class QappList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        """Add method docstring."""  # TODO add docstring.
+        """Get a list of QAPP objects based on the provided user or team ID."""
         path = self.request.path.split('/')
         p_id = path[len(path) - 1]
         p_type = path[len(path) - 2]
@@ -225,7 +225,12 @@ class QappDetail(LoginRequiredMixin, DetailView):
     template_name = 'qapp_detail.html'
 
     def get_context_data(self, **kwargs):
-        """Add method docstring."""  # TODO add docstring.
+        """
+        Get details for the given QAPP object.
+
+        Verify all data is availablke and check if the
+        requesting user has edit permissions.
+        """
         context = super().get_context_data(**kwargs)
         context['project_leads_list'] = QappLead.objects.filter(
             qapp=context['object'])

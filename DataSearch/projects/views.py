@@ -104,7 +104,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
     template_name = 'project_list.html'
 
     def get_queryset(self):
-        """Add method docstring."""  # TODO add docstring.
+        """Return a list of projects for the requesting user."""
         return get_projects_for_user(self.request.user)
 
 
@@ -208,7 +208,12 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     template_name = 'project_detail.html'
 
     def get_context_data(self, **kwargs):
-        """Add method docstring."""  # TODO add docstring.
+        """
+        Get the view's context data.
+
+        Add an edit message to the returned context if the requesting user
+        does not have Project edit permissions.
+        """
         context = super().get_context_data(**kwargs)
         if not check_can_edit(context['object'], self.request.user):
             context['edit_message'] = \

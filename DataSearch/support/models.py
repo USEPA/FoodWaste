@@ -12,11 +12,9 @@ Available functions:
 
 from decimal import *
 from constants.models import *
-from django.contrib.auth.models import User, AnonymousUser
-from django.urls import reverse
+from django.contrib.auth.models import User
 from django.db import models
-# from django.apps import get_model
-from django.db.models import Q, Avg, Max, Min, Count, Sum
+from DataSearch import settings
 
 
 def get_support_storage_path(instance, filename):
@@ -192,7 +190,6 @@ class SupportAttachment(models.Model):
 
     def icon_to_use(self):
         """Define what icon to use for an attachment based on file format."""
-        # TODO: "settings" is not defined
         if str(self.attachment).endswith('pdf'):
             icon_src = settings.STATIC_URL + "img/pdf-icon.jpg"
         elif str(self.attachment).endswith('xls'):

@@ -67,8 +67,6 @@ def export_pdf_single(request, *args, **kwargs):
     template_name = 'export/qar5_pdf_template.html'
     # Get all required data before populating the PDF Export Template
 
-    # TODO: Rewrite this method to check if user has access via
-    # ownership, super status, or team membership
     qapp_id = kwargs.get('pk', None)
     qapp_info = get_qapp_info(request.user, qapp_id)
     qapp_info['qapp'] = qapp_info['qapp']

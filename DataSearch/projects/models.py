@@ -22,7 +22,7 @@ from teams.models import Team
 
 
 class Office(models.Model):
-    """ TODO """
+    """EPA Office"""
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -37,7 +37,7 @@ class Office(models.Model):
 
 
 class CenterOffice(models.Model):
-    """ TODO """
+    """EPA Center/Office"""
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -54,7 +54,7 @@ class CenterOffice(models.Model):
 
 
 class Division(models.Model):
-    """ TODO """
+    """EPA Division"""
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -73,7 +73,7 @@ class Division(models.Model):
 
 
 class Branch(models.Model):
-    """ TODO """
+    """EPA Branch"""
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -94,7 +94,7 @@ class Branch(models.Model):
 
 
 class OrdRap(models.Model):
-    """ TODO """
+    """EPA ORD RAP"""
     name = models.CharField(null=True, blank=True, max_length=255)
 
     def __str__(self):
@@ -103,7 +103,7 @@ class OrdRap(models.Model):
 
 
 class Project(models.Model):
-    """TODO Docstring"""
+    """EPA Project"""
 
     office = models.ForeignKey(
         Office, on_delete=models.CASCADE, null=True, blank=True)
