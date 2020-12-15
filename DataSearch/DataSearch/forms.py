@@ -7,28 +7,13 @@
 """Definition of forms."""
 
 from django.forms import CharField, ModelForm, TextInput, \
-    Textarea, PasswordInput, ModelMultipleChoiceField, SelectMultiple, \
+    Textarea, ModelMultipleChoiceField, SelectMultiple, \
     BooleanField, RadioSelect, FileField, ClearableFileInput, \
-    ModelChoiceField, Select, DateTimeField, inlineformset_factory
-from django.forms.widgets import DateTimeInput
-from django.contrib.auth.forms import AuthenticationForm
+    ModelChoiceField, Select
 from django.utils.translation import ugettext_lazy as _
-from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES, YES_OR_NO
+from constants.models import YES_OR_NO
 from DataSearch.models import ExistingData, ExistingDataSource
 from teams.models import TeamMembership, Team
-
-
-class BootstrapAuthenticationForm(AuthenticationForm):
-    """Authentication form which uses boostrap CSS."""
-
-    username = CharField(max_length=254,
-                         widget=TextInput({
-                             'class': 'form-control',
-                             'placeholder': 'User name'}))
-    password = CharField(label=_("Password"),
-                         widget=PasswordInput({
-                             'class': 'form-control',
-                             'placeholder': 'Password'}))
 
 
 class ExistingDataForm(ModelForm):

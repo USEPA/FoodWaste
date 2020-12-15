@@ -9,8 +9,6 @@
 
 
 import os
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.dispatch import receiver
 from constants.utils import get_flowsa_storage_path, upload_storage

@@ -74,7 +74,7 @@ class ExistingData(models.Model):
                                          through='DataAttachmentMap')
 
     def get_fields(self):
-        """Method used in the template to iterate and display all fields."""
+        """Return an iterable to display all fields."""
         return [(field.name, field.value_to_string(self))
                 for field in ExistingData._meta.fields]
 
@@ -109,4 +109,6 @@ class ExistingDataSharingTeamMap(models.Model):
     can_edit = models.BooleanField(blank=False)
 
     class Meta:
+        """Defines the fields Data and Team as unique together."""
+
         unique_together = ('data', 'team')

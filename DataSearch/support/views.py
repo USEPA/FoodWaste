@@ -13,14 +13,12 @@ Available functions:
 """
 
 from decimal import getcontext
-from datetime import datetime, timedelta
 from os.path import join
 
 # from constants.models import *
 from constants.utils import create_qt_email_message
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
@@ -372,7 +370,6 @@ def edit_support_admin(request, obj_id):
 @login_required
 def delete_support(request, support_type_name, obj_id):
     """Delete ticket."""
-    title = 'Delete Support Issue'
     user = request.user
     support = get_object_or_404(Support, id=obj_id)
 
@@ -495,7 +492,6 @@ def edit_support_type(request, obj_id):
 @login_required
 def delete_support_type(request, obj_id):
     """Remove an available support type from the database."""
-    title = 'Delete SupportType'
     user = request.user
     support_type = get_object_or_404(SupportType, id=obj_id)
 
@@ -609,7 +605,6 @@ def edit_priority(request, obj_id):
 @login_required
 def delete_priority(request, obj_id):
     """Delete priority objects from the database."""
-    title = 'Delete Priority'
     user = request.user
     priority = get_object_or_404(Priority, id=obj_id)
 

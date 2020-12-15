@@ -22,7 +22,8 @@ from teams.models import Team
 
 
 class Office(models.Model):
-    """EPA Office"""
+    """EPA Office."""
+
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -37,7 +38,8 @@ class Office(models.Model):
 
 
 class CenterOffice(models.Model):
-    """EPA Center/Office"""
+    """EPA Center/Office."""
+
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -54,7 +56,8 @@ class CenterOffice(models.Model):
 
 
 class Division(models.Model):
-    """EPA Division"""
+    """EPA Division."""
+
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -73,7 +76,8 @@ class Division(models.Model):
 
 
 class Branch(models.Model):
-    """EPA Branch"""
+    """EPA Branch."""
+
     date_created = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     last_modified = models.DateTimeField(
@@ -94,7 +98,8 @@ class Branch(models.Model):
 
 
 class OrdRap(models.Model):
-    """EPA ORD RAP"""
+    """EPA ORD RAP."""
+
     name = models.CharField(null=True, blank=True, max_length=255)
 
     def __str__(self):
@@ -103,7 +108,7 @@ class OrdRap(models.Model):
 
 
 class Project(models.Model):
-    """EPA Project"""
+    """EPA Project."""
 
     office = models.ForeignKey(
         Office, on_delete=models.CASCADE, null=True, blank=True)
@@ -132,10 +137,10 @@ class Project(models.Model):
     def save_model(self, request, obj, form, change):
         """
         Overwrite the default save_model method.
-        So we can automatically set the created_by field as current user.
+
+        Automatically set the created_by field as current user.
         """
         # Only set prepared_by when it's the first save (create)
-        user = request.user
         if not obj.pk:
             obj.created_by = request.user
         return super().save_model(request, obj, form, change)

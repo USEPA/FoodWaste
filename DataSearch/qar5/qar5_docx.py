@@ -7,10 +7,9 @@
 
 from docx import Document
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
-from docx.enum.style import WD_BUILTIN_STYLE, WD_STYLE_TYPE
+from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT, WD_ROW_HEIGHT_RULE
-from docx.enum.text import WD_COLOR_INDEX, WD_LINE_SPACING, \
-    WD_PARAGRAPH_ALIGNMENT
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
@@ -19,7 +18,6 @@ from io import BytesIO
 from os import path
 import tempfile
 from zipfile import ZipFile
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.templatetags.static import static
 from django.utils.text import slugify
@@ -29,7 +27,7 @@ from qar5.views import get_qar5_for_user, get_qar5_for_team, get_qapp_info
 
 
 def export_doc(request, *args, **kwargs):
-    """Function to export a multiple QAPP objects as Word Docx files."""
+    """Export a multiple QAPP objects as Word Docx files."""
     if 'user' in request.path:
         user_id = kwargs.get('pk', None)
         team_id = qapp_id = None
@@ -55,7 +53,7 @@ def export_doc(request, *args, **kwargs):
             filename = resp['filename']
             if filename:
                 temp_file_name = '%d_%s' % (id, filename)
-                with tempfile.SpooledTemporaryFile() as tmp:
+                with tempfile.SpooledTemporaryFile():
                     archive.writestr(temp_file_name, resp.content)
 
         archive.close()
@@ -68,20 +66,20 @@ def export_doc(request, *args, **kwargs):
 
 
 def add_custom_heading(document, text, level):
-    """Helper method to easily add centered headers to a docx file."""
+    """Add centered headers to a docx file."""
     heading_style = 'custom_header_%d' % level
     paragraph = document.add_paragraph(text, heading_style)
     return paragraph
 
 
 def add_center_heading(document, text, level):
-    """Helper method to easily add centered headers to a docx file."""
+    """Add centered headers to a docx file."""
     paragraph = add_custom_heading(document, text, level)
     paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
 
 def set_table_row_height(table):
-    """Helper method to set minimum row height and alignment for a table."""
+    """Set minimum row height and alignment for a table."""
     for row in table.rows:
         row.height_rule = WD_ROW_HEIGHT_RULE.AT_LEAST
         row.height = Inches(0.35)
@@ -91,7 +89,7 @@ def set_table_row_height(table):
 
 def add_custom_headers(document):
     """
-    Helper method to create and inject custom headers into a docx.
+    Create and inject custom headers into a docx.
 
     This functionality is necessary so the cover page isn't added
     to the auto-generated Table of Contents.
@@ -116,7 +114,7 @@ def add_custom_headers(document):
 
 
 def create_toc(document):
-    """Helper method to set up the Table of Contents page."""
+    """Set up the Table of Contents page."""
     add_custom_heading(document, 'A.2 Table of Contents', level=2)
     paragraph = document.add_paragraph()
     run = paragraph.add_run()
@@ -144,12 +142,12 @@ def create_toc(document):
     r_element.append(instrText)
     r_element.append(fldChar2)
     r_element.append(fldChar4)
-    p_element = paragraph._p
+    # p_element = paragraph._p
 
 
 # py-lint: disable=no-member
 def export_doc_single(request, *args, **kwargs):
-    """Function to export a single QAPP object as a Word Docx file."""
+    """Export a single QAPP object as a Word Docx file."""
     qapp_id = kwargs.get('pk', None)
     qapp_info = get_qapp_info(request.user, qapp_id)
     qapp_info['qapp'] = qapp_info['qapp']
@@ -393,7 +391,6 @@ def export_doc_single(request, *args, **kwargs):
     # Section B
     if qapp_info['section_b']:
         for sectionb in qapp_info['section_b']:
-            tempbreakhere = True
             sectionb_type = sectionb.sectionb_type.name
             document.add_heading('Section B - %s' % sectionb_type, level=1)
             section_b_info = SECTION_B_INFO[sectionb_type]

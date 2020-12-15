@@ -11,8 +11,6 @@ from wkhtmltopdf.views import PDFTemplateResponse
 from zipfile import ZipFile
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.template.loader import get_template
 from django.utils.text import slugify
 from constants.qar5_sectionb import SECTION_B_INFO
 from qar5.views import get_qapp_info, get_qar5_for_team, get_qar5_for_user
@@ -20,9 +18,7 @@ from qar5.views import get_qapp_info, get_qar5_for_team, get_qar5_for_user
 
 @login_required
 def export_pdf(request, *args, **kwargs):
-    """Function to export multiple QAPP objects as PDF documents."""
-    template_name = 'export/qar5_pdf_template.html'
-    template = get_template(template_name)
+    """Export multiple QAPP objects as PDF documents."""
     if 'user' in request.path:
         user_id = kwargs.get('pk', None)
         team_id = qapp_id = None
@@ -50,7 +46,7 @@ def export_pdf(request, *args, **kwargs):
             if filename:
                 temp_file_name = '%d_%s' % (id, filename)
                 resp.render()
-                with tempfile.SpooledTemporaryFile() as tmp:
+                with tempfile.SpooledTemporaryFile():
                     archive.writestr(temp_file_name, resp.content)
 
         archive.close()
@@ -63,7 +59,7 @@ def export_pdf(request, *args, **kwargs):
 
 
 def export_pdf_single(request, *args, **kwargs):
-    """Function to export a single QAPP object as a PDF document."""
+    """Export a single QAPP object as a PDF document."""
     template_name = 'export/qar5_pdf_template.html'
     # Get all required data before populating the PDF Export Template
 

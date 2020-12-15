@@ -7,17 +7,15 @@
 """Definition of forms."""
 
 from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
-    Textarea, PasswordInput, ModelMultipleChoiceField, SelectMultiple, \
-    BooleanField, RadioSelect, FileField, ClearableFileInput, \
-    ModelChoiceField, Select, DateTimeField, inlineformset_factory, \
-    CheckboxInput
+    Textarea, ModelMultipleChoiceField, SelectMultiple, \
+    BooleanField, FileField, ClearableFileInput, \
+    ModelChoiceField, Select, DateTimeField, CheckboxInput
 from django.forms.widgets import DateTimeInput
-from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
-from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES, YES_OR_NO
+from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES
 from constants.qar5 import SECTION_A_INFO
 from qar5.models import Division, Qapp, QappApproval, QappLead, \
-    QappApprovalSignature, SectionA, SectionB, SectionC, SectionD, Revision, \
+    QappApprovalSignature, SectionA, SectionB, SectionD, Revision, \
     SectionBType, References
 from teams.models import Team, TeamMembership
 
@@ -279,7 +277,7 @@ class SectionBForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         """
-        Custom override method for init to receive dynamic sets of labels.
+        Override method for init to receive dynamic sets of labels.
 
         This allows us to pass in each Section B type while reusing a single
         form class.

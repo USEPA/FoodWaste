@@ -19,7 +19,7 @@ Available functions:
 
 from io import BytesIO
 from os import path
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMultiAlternatives
@@ -77,7 +77,8 @@ def is_epa_email(email):
     # who would do this anyway? Users.
     illegal_end_chars = r"[a-z][A-Z][0-9]\."
 
-    if any(elem in illegal_end_chars for elem in ending):  # checks if string has any of the illgal chars
+    # checks if string has any of the illgal chars
+    if any(elem in illegal_end_chars for elem in ending):
         return False
     # print(ending)
     # print(illegal_end_chars)
@@ -90,8 +91,9 @@ def non_epa_email_message(emails):
 
     And that they must be sent manually.
     """
-    return "Email list may only contain @epa.gov addresses. Please sendnon-EPA emails directly from Outlook. \
-            Offending email(s): " + ', '.join(emails)
+    return "Email list may only contain @epa.gov addresses. " + \
+        "Please sendnon-EPA emails directly from Outlook. " + \
+        "Offending email(s): " + ', '.join(emails)
 
 
 def create_qt_email_message(email_subject, text_content, from_email, to_emails,
@@ -109,11 +111,14 @@ def create_qt_email_message(email_subject, text_content, from_email, to_emails,
         else:
             blind_carbon_copy = [settings.BCC_EMAIL]
 
-    html_content = settings.EMAIL_DISCLAIMER + text_content.replace("\r\n", "<br>").replace("\n", "<br>")
-    text_content_modified = settings.EMAIL_DISCLAIMER_PLAIN + "\r\n\r\n" + text_content
+    html_content = settings.EMAIL_DISCLAIMER + text_content.replace(
+        "\r\n", "<br>").replace("\n", "<br>")
+    text_content_modified = settings.EMAIL_DISCLAIMER_PLAIN + \
+        "\r\n\r\n" + text_content
 
     the_email = EmailMultiAlternatives(
-        email_subject, text_content_modified, from_email, to_emails, cc=carbon_copy, bcc=blind_carbon_copy)
+        email_subject, text_content_modified, from_email,
+        to_emails, cc=carbon_copy, bcc=blind_carbon_copy)
     the_email.attach_alternative(html_content, "text/html")
 
     return the_email
@@ -129,18 +134,24 @@ def get_rap_fields(fields='default'):
             ['hsrp', 'hsrp_rap_numbers'], ['hsre', 'hsrp_rap_extensions'],
             ['shc', 'shc_rap_numbers']]
 
-    return ['ace_rap_numbers', 'css_rap_numbers', 'sswr_rap_numbers', 'hhra_rap_numbers',
-            'hsrp_rap_numbers', 'hsrp_rap_extensions', 'shc_rap_numbers']
+    return ['ace_rap_numbers', 'css_rap_numbers', 'sswr_rap_numbers',
+            'hhra_rap_numbers', 'hsrp_rap_numbers',
+            'hsrp_rap_extensions', 'shc_rap_numbers']
 
 
 def sort_rap_numbers(rap_list):
-    """Sorts the rap numbers first by it's first digit then alphanumerically."""
+    """
+    Sort RAP Numbers.
+
+    Sorts the rap numbers first by it's first digit then alphanumerically.
+    """
     def _get_numeric(the_str):
         try:
             val = float(the_str.split('.')[0])  # e.g. the 16 in 16.2.2
             return val
         except ValueError:
-            return float("inf")  # woah if not numeric assign infinity e.g. like CIVA-2.5
+            # woah if not numeric assign infinity e.g. like CIVA-2.5
+            return float("inf")
 
     arr = [(row, _get_numeric(row)) for row in rap_list]
     return [row[0] for row in sorted(arr, key=itemgetter(1, 0))]

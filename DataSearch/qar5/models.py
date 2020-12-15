@@ -7,12 +7,12 @@
 
 """Definition of models."""
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from accounts.models import User
 from constants.qar5 import SECTION_C_INFO
 from constants.utils import get_attachment_storage_path
-from teams.models import Team, User
+from teams.models import Team
 
 
 class Division(models.Model):
@@ -62,10 +62,10 @@ class Qapp(models.Model):
     def save_model(self, request, obj, form, change):
         """
         Overwrite the default save_model method.
-        So we can automatically set the prepared_by field as current user.
+
+        Automatically sets the prepared_by field as current user.
         """
         # Only set prepared_by when it's the first save (create)
-        user = request.user
         if not obj.pk:
             obj.prepared_by = request.user
         return super().save_model(request, obj, form, change)
@@ -93,6 +93,7 @@ class QappSharingTeamMap(models.Model):
 class QappLead(models.Model):
     """
     Class representing a QAPP project lead.
+
     Project has a one-to-many relationship with ProjectLead(s).
     """
 
@@ -155,9 +156,12 @@ class SectionA(models.Model):
 
 class SectionBTypeMap(models.Model):
     """
+    Section A to Section B Type Map.
+
     Mapping for many-to-many relationship between
     Section A and its Section B Types.
     """
+
     sectiona = models.ForeignKey(
         SectionA, blank=False, on_delete=models.CASCADE)
     sectionb_type = models.ForeignKey(
@@ -216,7 +220,8 @@ class SectionB(models.Model):
     b6_2 = models.TextField(blank=True, null=True)
 
     class Meta:
-        """Meta data definitions for SectionB class"""
+        """Meta data definitions for SectionB class."""
+
         # Tell the model that these two fields are unique together.
         # This is similar to declaring a composite primary key:
         unique_together = ('qapp', 'sectionb_type')
@@ -233,8 +238,9 @@ class SectionC(models.Model):
 
     def __init__(self, *args, **kwargs):
         """
-        Extending init method so we can replace __category__ with the
-        appropriate category, A or B.
+        Extend init method.
+
+        Replace __category__ with the appropriate category, A or B.
         """
         qa_category = kwargs.pop('qa_category', None)
         super(SectionC, self).__init__(*args, **kwargs)

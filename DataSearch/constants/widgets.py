@@ -18,7 +18,11 @@ from django import forms
 
 
 class ListTextWidget(forms.TextInput):
-    """Custom widget to allow a user to select a dropdown option, or type in a custom option."""
+    """
+    Custom list text widget.
+
+    Allows a user to select a dropdown option, or type in a custom option.
+    """
 
     def __init__(self, data_list, name, *args, **kwargs):
         """Drop down for selection."""
@@ -29,7 +33,8 @@ class ListTextWidget(forms.TextInput):
 
     def render(self, name, value, attrs=None, renderer=None):
         """Drop down for selection."""
-        text_html = super(ListTextWidget, self).render(name, value, attrs=attrs)
+        text_html = super(ListTextWidget, self).render(
+            name, value, attrs=attrs)
         data_list = '<datalist id="list__%s">' % self._name
         for item in self._list:
             data_list += '<option value="%s">' % item

@@ -15,7 +15,6 @@ import django
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.test.client import RequestFactory
-from DataSearch.models import Attachment
 from accounts.models import User
 from flowsa.models import Upload
 from flowsa.views import FlowsaIndex
@@ -115,9 +114,11 @@ class TestFlowsa(TestCase):
 
     def test_flowsa_download_all(self):
         """
+        Test flowsa download all.
+
         Test the flowsa file download method for all the user's upload files.
         """
-        response = self.client.get(f'/flowsa/download_files/')
+        response = self.client.get('/flowsa/download_files/')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(b'This is a test file.' in response.content)
         self.assertTrue(response.content.startswith(b'PK'))

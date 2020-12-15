@@ -4,12 +4,12 @@
 # # young.daniel@epa.gov
 # # py-lint: disable=C0301
 
-# """
-# Project test cases.
+"""
+Project test cases.
 
-# Available functions:
-# - TBD
-# """
+Available functions:
+- TBD
+"""
 
 # from django.contrib.auth.models import User
 # from django.test import Client, TestCase

@@ -6,10 +6,6 @@
 
 
 """Definition of views."""
-from datetime import datetime
-from io import BytesIO
-from os import path
-from zipfile import ZipFile, ZIP_DEFLATED
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -71,6 +67,7 @@ class FlowsaDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('flowsa:flowsa_index')
 
     def dispatch(self, *args, **kwargs):
+        """Delete the FLOWSA Upload only if the requesting user is allowed."""
         pk = kwargs.get('pk')
         instance = Upload.objects.filter(id=pk).first()
         if instance:
@@ -81,7 +78,7 @@ class FlowsaDelete(LoginRequiredMixin, DeleteView):
 
 
 def flowsa_download(request, *args, **kwargs):
-    """Method for downloading a previously uploaded file."""
+    """Download a previously uploaded file."""
     upload_id = kwargs.get('pk', None)
     if upload_id is None:
         # Export all uploads for this user:

@@ -10,8 +10,6 @@ Models related to app support.
 Available functions:
 """
 
-from decimal import *
-from constants.models import *
 from django.contrib.auth.models import User
 from django.db import models
 from DataSearch import settings

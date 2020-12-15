@@ -10,16 +10,14 @@
 from docx import Document
 from io import BytesIO
 from openpyxl import Workbook
-from os import path, remove
+from os import path
 import tempfile
 from wkhtmltopdf.views import PDFTemplateResponse
 from xhtml2pdf import pisa
 from zipfile import ZipFile
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.loader import get_template
-from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from DataSearch.models import ExistingData, Attachment, DataAttachmentMap
 from DataSearch.settings import APP_DISCLAIMER
@@ -27,7 +25,7 @@ from DataSearch.views import get_existing_data_team, get_existing_data_user
 
 
 def export_pdf_single(request, *args, **kwargs):
-    """Function to export Existing  Data as a PDF document."""
+    """Export Existing Data as a PDF document."""
     data_id = kwargs.get('pk', None)
     if data_id:
         data = ExistingData.objects.get(id=data_id)
@@ -98,7 +96,7 @@ def add_attachments_to_zip(archive, attachment_ids):
 
 
 def export_excel_single(request, *args, **kwargs):
-    """Function to export Existing Existing Data as an Excel sheet."""
+    """Export Existing Existing Data as an Excel sheet."""
     data_id = kwargs.get('pk', None)
     if data_id:
         data = ExistingData.objects.get(id=data_id)
@@ -158,7 +156,7 @@ def export_excel_single(request, *args, **kwargs):
 
 # py-lint: disable=no-member
 def export_doc_single(request, *args, **kwargs):
-    """Function to export a single DataSearch object as a Word Docx file."""
+    """Export a single DataSearch object as a Word Docx file."""
     data_id = kwargs.get('pk', None)
     data = ExistingData.objects.filter(id=data_id).first()
 
@@ -168,7 +166,6 @@ def export_doc_single(request, *args, **kwargs):
     filename = '%s.docx' % slugify(data.source_title)
 
     document = Document()
-    styles = document.styles
     document.add_heading(
         'Existing Data Search: %s' % data.source_title, level=1)
 
@@ -234,7 +231,7 @@ def export_doc_single(request, *args, **kwargs):
     fake_response['Content-Disposition'] = 'attachment; filename=%s' % filename
     document.save(fake_response)
 
-    with tempfile.SpooledTemporaryFile() as tmp:
+    with tempfile.SpooledTemporaryFile():
         archive.writestr(filename, fake_response.content)
 
     archive.close()
@@ -249,10 +246,7 @@ def export_doc_single(request, *args, **kwargs):
 
 
 def export(request, *args, **kwargs):
-    """
-    Function to export multiple Existing Data as
-    a zip file of the provided formats.
-    """
+    """Export multiple Existing Data as a zip file of the provided formats."""
     if 'user' in request.path:
         user_id = kwargs.get('pk', None)
         team_id = data_id = None
@@ -286,7 +280,7 @@ def export(request, *args, **kwargs):
             filename = resp['filename']
             if filename:
                 temp_file_name = '%d_%s' % (id, filename)
-                with tempfile.SpooledTemporaryFile() as tmp:
+                with tempfile.SpooledTemporaryFile():
                     archive.writestr(temp_file_name, resp.content)
 
         user = User.objects.filter(

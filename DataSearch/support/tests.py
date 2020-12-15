@@ -19,11 +19,11 @@ Available functions:
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
-from django.core.mail import EmailMultiAlternatives
+# from django.core.mail import EmailMultiAlternatives
 # from GSC_SSSENR.utils import replace_none_empty_str
-from support.views import index, SuggestionEditView, create_help_request
-from support.forms import SupportForm
-from support.test_data.support_forms import SUPPORT_PASS_ONE
+from support.views import create_help_request  # index, SuggestionEditView,
+# from support.forms import SupportForm
+# from support.test_data.support_forms import SUPPORT_PASS_ONE
 
 
 class TestSupport(TestCase):
@@ -60,7 +60,7 @@ class TestSupport(TestCase):
 
     def test_support_post_one(self):
         """Tests the support ticket post method on an invalid form."""
-        response = self.client.post("/support/create/suggestion/", {})
+        self.client.post("/support/create/suggestion/", {})
 
     # def test_support_post_two(self):
     #    """Tests the support ticket post method on an Valid form."""
@@ -84,7 +84,7 @@ class TestSupport(TestCase):
 
     def test_model_environment_with_environment(self):
         """Tests the environment of model if it has a environment."""
-        results = self.client.post(create_help_request)
+        self.client.post(create_help_request)
 
     # def test_suggestion_edit_view(self):
     #     """Tests the view for suggestion edit"""

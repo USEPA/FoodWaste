@@ -13,18 +13,15 @@ Available functions:
 - Project Management Form
 """
 
-from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.shortcuts import render
-from django.views.generic import FormView, ListView, DetailView, \
+from django.views.generic import ListView, DetailView, \
     UpdateView, CreateView
-from accounts.models import User
 from projects.forms import ProjectForm
 from projects.models import Project, ProjectSharingTeamMap, CenterOffice, \
     Division, Branch
@@ -35,8 +32,9 @@ from teams.models import TeamMembership
 
 def is_user_project_lead(user, project=None):
     """
-    Utility method to check if a User is the lead for the given project,
-    or if the User is project lead for any project (when project=None)
+    Check if a User is the lead for the given project.
+
+    Also checks if the User is project lead for any project when project=None.
     """
     if project:
         return Project.objects.filter(
@@ -46,7 +44,7 @@ def is_user_project_lead(user, project=None):
 
 def get_projects_for_user(user):
     """
-    Method to get all Projects belonging to a user.
+    Get all Projects belonging to a user.
 
     - of which the provided user is a member.
     - logic filters for the user's non-member teams
@@ -67,7 +65,7 @@ def get_projects_for_user(user):
 
 def check_can_edit(project, user):
     """
-    Method used to check if the provided user can edit the provided project.
+    Check if the provided user can edit the provided project.
 
     All of the user's member teams are checked as well as the user's
     super user status or project ownership status.
@@ -226,7 +224,6 @@ class APICentersListView(LoginRequiredMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         """Return all teams the current user is a member of."""
-        user = self.request.user
         pk = kwargs.get('pk', None)
         centers = CenterOffice.objects.filter(office_id=pk).all()
         serializer = CenterSerializer(centers, many=True)
@@ -238,7 +235,6 @@ class APIDivisionsListView(LoginRequiredMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         """Return all teams the current user is a member of."""
-        user = self.request.user
         pk = kwargs.get('pk', None)
         divisions = Division.objects.filter(center_office_id=pk).all()
         serializer = DivisionSerializer(divisions, many=True)
@@ -250,7 +246,6 @@ class APIBranchesListView(LoginRequiredMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         """Return all teams the current user is a member of."""
-        user = self.request.user
         pk = kwargs.get('pk', None)
         branches = Branch.objects.filter(division_id=pk).all()
         serializer = BranchSerializer(branches, many=True)

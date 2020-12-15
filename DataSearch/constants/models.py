@@ -4,12 +4,12 @@
 # young.daniel@epa.gov
 # py-lint: disable=C0301
 
-'''
+"""
 Models for the DataSearch application for constants.
 
 Available functions:
 -
-'''
+"""
 
 SUBJECT_CHOICES = (('General Inquiry', 'General Inquiry'),
                    ('Send Me More Info', 'Send Me More Info'),

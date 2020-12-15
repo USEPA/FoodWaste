@@ -14,6 +14,7 @@ Available functions:
 from django.db import models
 from accounts.models import User
 
+
 # Create your models here.
 class Team(models.Model):
     """Team object allows groups of users to share projects."""

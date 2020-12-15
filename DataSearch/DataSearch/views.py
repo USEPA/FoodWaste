@@ -12,8 +12,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, \
-    JsonResponse
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -31,7 +30,7 @@ from teams.models import Team, TeamMembership
 @staff_member_required
 def web_dev_tools(request, *args, **kwargs):
     """
-    Method to redirect a user to a webpage.
+    Go to the web developer page with custom admin functionality.
 
     - Includes various custom admin functionality.
     - Includes button to remove extra new line characters/spaces from QAPP data
@@ -43,12 +42,10 @@ def web_dev_tools(request, *args, **kwargs):
 @staff_member_required
 def clean_qapps(request, *args, **kwargs):
     """
-    Method to clean QAPP Data, which includes:
-    - Removing extra new line characters and spaces.
-    - Converting QA_Category to the proper value.
+    Clean QAPP Data.
 
-    These issues have been fixed in the constants, but may need to be
-    cleaned up in existing db entries.
+    - Remove extra new line characters and spaces.
+    - Convert QA_Category to the proper value.
     """
     # TODO: Fix all default data of all sections of all qapps
     sections_a = SectionA.objects.all()
@@ -68,20 +65,18 @@ def clean_qapps(request, *args, **kwargs):
 
 
 def get_existing_data_all():
-    """Method to get all data regardless of user or team."""
+    """Get all data regardless of user or team."""
     return ExistingData.objects.all()
 
 
 def get_existing_data_user(user_id):
-    """
-    Method to get all Existing Data created by a User.
-    """
+    """Get all Existing Data created by a User."""
     user = User.objects.get(id=user_id)
     return ExistingData.objects.filter(created_by=user)
 
 
 def get_existing_data_team(team_id):
-    """Method to get all data belonging to a team."""
+    """Get all data belonging to a team."""
     team = Team.objects.filter(id=team_id).first()
     if team:
         include_data = ExistingDataSharingTeamMap.objects.filter(
@@ -93,8 +88,7 @@ def get_existing_data_team(team_id):
 
 def check_can_edit(data, user):
     """
-    Method used to check if the provided user can
-    edit the provided Data Search instance.
+    Check if the provided user can edit the provided Data Search instance.
 
     All of the user's member teams are checked as well as the user's
     super user status or Data Search instance ownership status.
@@ -114,13 +108,13 @@ def check_can_edit(data, user):
 
 
 class ExistingDataIndex(LoginRequiredMixin, TemplateView):
-    """Class to return the first page of the Existing Data flow."""
+    """Return the first page of the Existing Data flow."""
 
     template_name = 'DataSearch/existing_data_index.html'
 
     def get_context_data(self, **kwargs):
         """
-        Custom method override to send data to the template.
+        Override method to send data to the template.
 
         - Specifically, want to send a list of users and teams to select from.
         """
@@ -139,7 +133,7 @@ class ExistingDataList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Custom method override to send data to the template.
+        Override method to send data to the template.
 
         - Specifically, send the user or team information for this list of data
         """
@@ -173,7 +167,7 @@ class ExistingDataDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         """
-        Custom method override to send data to the template.
+        Override method to send data to the template.
 
         - Send the user or team information for this list of data.
         """
@@ -202,6 +196,8 @@ class ExistingDataEdit(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         """
+        GET method for the ExistingData Edit View.
+
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
@@ -237,6 +233,8 @@ class ExistingDataEdit(LoginRequiredMixin, UpdateView):
 
 def existing_form_process_teams_attachments(request, form, instance=None):
     """
+    Process forms for existing Teams' Attachments.
+
     Custom method with shared code when saving an Existing Data instance.
     Assume form.is_valid() check passed outside this method.
     """
@@ -289,13 +287,13 @@ class ExistingDataCreate(LoginRequiredMixin, CreateView):
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        """Return a view with an empty form for creating a new Existing Data"""
+        """Return a view with an empty form to creating a new Existing Data."""
         return render(request, "DataSearch/existing_data_create.html",
                       {'form': ExistingDataForm(user=request.user)})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        """Process the post request with a new Existing Data form filled out"""
+        """Process the post request with a new completed Existing Data form."""
         form = ExistingDataForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             obj = existing_form_process_teams_attachments(request, form, None)
@@ -312,6 +310,7 @@ class ExistingDataDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('tracking_tool')
 
     def dispatch(self, *args, **kwargs):
+        """."""
         pk = kwargs.get('pk')
         instance = ExistingData.objects.filter(id=pk).first()
         if instance:
@@ -322,7 +321,7 @@ class ExistingDataDelete(LoginRequiredMixin, DeleteView):
 
 
 def home(request):
-    """Renders the home page."""
+    """Render the home page."""
     assert isinstance(request, HttpRequest)
     # ################################################
     # NOTE: REMOVE THIS AFTER DOCX EXPORT IS DONE!
@@ -339,7 +338,7 @@ def home(request):
 
 
 def contact(request):
-    """Renders the contact page."""
+    """Render the contact page."""
     assert isinstance(request, HttpRequest)
     return render(
         request,
@@ -354,7 +353,8 @@ def contact(request):
 
 def attachments_download(request, *args, **kwargs):
     """
-    Method for downloading attachments for a provided existing data search.
+    Download attachments for a provided existing data search.
+
     - pk for existing data (required)
     - id for attachment (optional)
     """
@@ -380,7 +380,8 @@ def attachments_download(request, *args, **kwargs):
 
 def attachment_delete(request, *args, **kwargs):
     """
-    Method for deleting an attachment for a provided existing data search.
+    Delete an attachment for a provided existing data search.
+
     - pk for existing data (required)
     - id for attachment (required)
     """

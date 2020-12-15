@@ -392,6 +392,8 @@ class APITeamDetailView(APIView):
     @classmethod
     def get_object(cls, p_id, user):
         """
+        Get Team details.
+
         Retrieve a team and its membership based on the provided user and p_id.
         """
         try:
@@ -418,6 +420,7 @@ class APITeamDetailView(APIView):
     def put(self, request, team_id, *args, **kwargs):
         """
         Update an existing team.
+
         :param request:
         :param team_id:
         :param format:

@@ -5,41 +5,28 @@
 
 """Definition of qar5 views."""
 
-from datetime import datetime
-from io import BytesIO
-from openpyxl import Workbook
-from os import getcwd, path, remove
-import tempfile
-from wkhtmltopdf.views import PDFTemplateResponse
-from zipfile import ZipFile
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.staticfiles.finders import find
-from django.http import FileResponse, HttpResponseRedirect, HttpRequest, \
-    HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpRequest
 from django.shortcuts import render
-from django.template.loader import get_template, render_to_string
-from django.templatetags.static import static
-from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, \
     TemplateView, UpdateView, DeleteView
 from constants.qar5 import SECTION_A_INFO, SECTION_C_DEFAULTS, \
     C3_QUALITY_METRICS, SECTION_D_INFO, SECTION_E_INFO, SECTION_F_INFO
 from constants.qar5_sectionb import SECTION_B_INFO
-from DataSearch.settings import DATETIME_FORMAT, DEBUG, STATIC_ROOT
 from qar5.forms import QappForm, QappApprovalForm, QappLeadForm, \
     QappApprovalSignatureForm, SectionAForm, SectionBForm, \
     SectionDForm, RevisionForm, ReferencesForm
 from qar5.models import Qapp, QappApproval, QappLead, QappApprovalSignature, \
-    SectionA, SectionB, SectionBType, SectionC, SectionD, \
+    SectionA, SectionB, SectionC, SectionD, \
     QappSharingTeamMap, Revision, References
 from teams.models import Team, TeamMembership
 
 
 def get_qapp_all():
-    """Method to get all data regardless of user or team."""
+    """Get all QAPP data regardless of user or team."""
     return Qapp.objects.all()
 
 
@@ -50,9 +37,9 @@ class QappIndex(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        Custom method override to send data to the template.
+        Override default method to send data to the template.
 
-        - Specifically, want to send a list of users and teams to select from.
+        Specifically, want to send a list of users and teams to select from.
         """
         context = super().get_context_data(**kwargs)
         context['users'] = User.objects.all()
@@ -69,15 +56,15 @@ class QappList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Custom method override to send data to the template.
+        Override the default method to send data to the template.
 
         Specifically, include the user or team information
         for this list of data.
         """
         context = super().get_context_data(**kwargs)
-        path = self.request.path.split('/')
-        p_id = path[len(path) - 1]
-        p_type = path[len(path) - 2]
+        t_path = self.request.path.split('/')
+        p_id = t_path[len(t_path) - 1]
+        p_type = t_path[len(t_path) - 2]
         if p_type == 'user':
             context['p_user'] = User.objects.get(id=p_id)
         elif p_type == 'team':
@@ -86,9 +73,9 @@ class QappList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Get a list of QAPP objects based on the provided user or team ID."""
-        path = self.request.path.split('/')
-        p_id = path[len(path) - 1]
-        p_type = path[len(path) - 2]
+        t_path = self.request.path.split('/')
+        p_id = t_path[len(t_path) - 1]
+        p_type = t_path[len(t_path) - 2]
         if p_type == 'user':
             return get_qar5_for_user(p_id)
         if p_type == 'team':
@@ -98,7 +85,7 @@ class QappList(LoginRequiredMixin, ListView):
 
 def check_can_edit(qapp, user):
     """
-    Method used to check if the provided user can edit the provided qapp.
+    Check if the provided user can edit the provided qapp.
 
     All of the user's member teams are checked as well as the user's
     super user status or qapp ownership status.
@@ -126,6 +113,8 @@ class QappEdit(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         """
+        GET QAPP Edit page.
+
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
@@ -275,7 +264,7 @@ class ProjectLeadCreate(LoginRequiredMixin, CreateView):
 
         if check_can_edit(qapp, request.user):
             if form.is_valid():
-                obj = form.save(commit=True)
+                form.save(commit=True)
                 return HttpResponseRedirect(
                     '/qar5/detail/%s' % qapp_id)
             ctx = {'form': form, 'qapp_id': qapp_id}
@@ -292,9 +281,11 @@ class ProjectLeadDelete(LoginRequiredMixin, DeleteView):
     template_name = 'SectionA/confirm_delete.html'
 
     def get_success_url(self):
+        """Return the user to the detail page on successful Delete."""
         return '/qar5/detail/%s' % self.object.qapp.id
 
     def dispatch(self, *args, **kwargs):
+        """Ensure the user has permissions before deleting project leads."""
         pk = kwargs.get('pk')
         instance = QappLead.objects.filter(id=pk).first()
         if instance:
@@ -313,6 +304,8 @@ class ProjectLeadEdit(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         """
+        GET Project Lead Edit page.
+
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
@@ -377,7 +370,7 @@ class ProjectApprovalCreate(LoginRequiredMixin, CreateView):
 
         if check_can_edit(qapp, request.user):
             if form.is_valid():
-                obj = form.save(commit=True)
+                form.save(commit=True)
                 return HttpResponseRedirect('/qar5/detail/%s' % qapp_id)
 
             ctx = {'form': form, 'qapp_id': qapp_id}
@@ -396,6 +389,8 @@ class ProjectApprovalEdit(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         """
+        GET Project Approval Edit page.
+
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
@@ -437,6 +432,8 @@ class ProjectApprovalSignatureCreate(LoginRequiredMixin, CreateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         """
+        GET Project Approval Signature Create page.
+
         Return a view with an empty form for creating a new Approval
         Signature.
         """
@@ -462,7 +459,7 @@ class ProjectApprovalSignatureCreate(LoginRequiredMixin, CreateView):
 
         if check_can_edit(approval.qapp, request.user):
             if form.is_valid():
-                obj = form.save(commit=True)
+                form.save(commit=True)
                 return HttpResponseRedirect(
                     '/qar5/detail/%s' % qapp_id)
             ctx = {'form': form, 'qapp_id': qapp_id}
@@ -479,9 +476,11 @@ class ProjectApprovalSignatureDelete(LoginRequiredMixin, DeleteView):
     template_name = 'SectionA/confirm_delete.html'
 
     def get_success_url(self):
+        """Return the user to the detail page on successful Delete."""
         return '/qar5/detail/%s' % self.object.qapp_approval.qapp.id
 
     def dispatch(self, *args, **kwargs):
+        """Ensure the user has permissions before deleting signatures."""
         pk = kwargs.get('pk')
         instance = QappApprovalSignature.objects.filter(id=pk).first()
         if instance:
@@ -501,8 +500,10 @@ class ProjectApprovalSignatureEdit(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         """
-        Override default get request so we can verify the user has
-        edit privileges, either through super status or team membership.
+        Override default GET request.
+
+        Verify the user has edit privileges, either through super
+        status or team membership.
         """
         pk = kwargs.get('pk')
         object = self.model.objects.filter(id=pk).first()
@@ -699,7 +700,7 @@ class SectionCView(LoginRequiredMixin, TemplateView):
         """Return the index page for QAPP Section C."""
         assert isinstance(request, HttpRequest)
         qapp_id = request.GET.get('qapp_id', None)
-        qapp = Qapp.objects.get(id=qapp_id)
+        Qapp.objects.get(id=qapp_id)
 
         return render(request, self.template_name,
                       {'title': 'QAPP Section C', 'qapp_id': qapp_id,
@@ -865,7 +866,7 @@ class RevisionCreate(LoginRequiredMixin, CreateView):
         # datetime_obj = datetime.strptime(datetime_str, DATETIME_FORMAT)
         # form.data['effective_date'] = datetime_obj
         if form.is_valid():
-            obj = form.save(commit=True)
+            form.save(commit=True)
             return HttpResponseRedirect(
                 '/qar5/SectionF?qapp_id=%s' % qapp_id)
 
@@ -874,9 +875,7 @@ class RevisionCreate(LoginRequiredMixin, CreateView):
 
 
 def get_qar5_for_user(user_id, qapp_id=None):
-    """
-    Method to get all qapps created by a User.
-    """
+    """Get all qapps created by a User."""
     user = User.objects.get(id=user_id)
     if qapp_id:
         return Qapp.objects.filter(id=qapp_id)
@@ -884,7 +883,7 @@ def get_qar5_for_user(user_id, qapp_id=None):
 
 
 def get_qar5_for_team(team_id, qapp_id=None):
-    """Method to get all data belonging to a team."""
+    """Get all data belonging to a team."""
     team = Team.objects.get(id=team_id)
     include_qapps = QappSharingTeamMap.objects.filter(
         team=team).values_list('qapp', flat=True)
@@ -897,7 +896,7 @@ def get_qar5_for_team(team_id, qapp_id=None):
 
 
 def get_qapp_info(user, qapp_id):
-    """Method to return all pieces of a qapp in a dictionary."""
+    """Return all pieces of a qapp in a dictionary."""
     ctx = {}
     ctx['qapp'] = get_qar5_for_user(user.id, qapp_id).first()
 

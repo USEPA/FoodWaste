@@ -15,9 +15,10 @@ import django
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase
-from constants.utils import split_email_list, is_epa_email, non_epa_email_message, \
-    create_qt_email_message, xstr, sort_rap_numbers, get_rap_fields, is_float, \
-    get_attachment_storage_path, get_flowsa_storage_path, get_scifinder_storage_path, \
+from constants.utils import split_email_list, is_epa_email, \
+    non_epa_email_message, create_qt_email_message, xstr, sort_rap_numbers, \
+    get_rap_fields, is_float, get_attachment_storage_path, \
+    get_flowsa_storage_path, get_scifinder_storage_path, \
     download_files, download_file
 from accounts.models import User
 from DataSearch.models import Attachment
@@ -32,7 +33,7 @@ class TestUtils(TestCase):
         # Django 1.7 requires an explicit setup() when running tests in PTVS.
         @classmethod
         def setUpClass(cls):
-        """Prepare objects for testing."""
+            """Prepare objects for testing."""
             super(TestUtils, cls).setUpClass()
             django.setup()
 
@@ -42,7 +43,8 @@ class TestUtils(TestCase):
         self.client.login(username='dyoung11', password='Evelynj1!')
         self.user = User.objects.get(id=1)
         self.file = SimpleUploadedFile('test.txt', b'This is a test file.')
-        self.excel_file = SimpleUploadedFile('test.xlsx', b'This is a test file.')
+        self.excel_file = SimpleUploadedFile(
+            'test.xlsx', b'This is a test file.')
         self.attachment_excel = Attachment.objects.create(
             name=self.test_str, file=self.excel_file, uploaded_by=self.user)
         self.attachment_1 = Attachment.objects.create(
@@ -57,58 +59,112 @@ class TestUtils(TestCase):
 
     def test_split_email_list_pass_one(self):
         """Runs the char split on an email that will be equal."""
-        self.assertEqual(split_email_list("t;e,s\tt@t|est.com"), ['t', 'e', 's', 't@t', 'est.com'])
+        self.assertEqual(split_email_list(
+            "t;e,s\tt@t|est.com"), ['t', 'e', 's', 't@t', 'est.com'])
 
     def test_split_email_list_fail_one(self):
         """Runs the char split on an email that will not be equal."""
-        self.assertNotEqual(split_email_list("t;e,s\tt@t|est.com"), ['t', 'e', 's', 't@test.com'])
+        self.assertNotEqual(split_email_list(
+            "t;e,s\tt@t|est.com"), ['t', 'e', 's', 't@test.com'])
 
     def test_is_epa_email_pass_one(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """
+        test_is_epa_email_pass_one.
+
+        Runs the test to check if an email address is in the right
+        format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@epa.gov"), True)
 
     def test_is_epa_email_fail_one(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """
+        test_is_epa_email_fail_one.
+
+        Runs the test to check if an email address is in the right
+        format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@test.com"), False)
 
     def test_is_epa_email_fail_two(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """
+        test_is_epa_email_fail_two.
+
+        Runs the test to check if an email address is in the right
+        format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@test.gov"), False)
 
     def test_is_epa_email_fail_three(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """
+        test_is_epa_email_fail_three.
+
+        Runs the test to check if an email address is in
+        the right format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@epa.com"), False)
 
     def test_is_epa_email_fail_seven(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """
+        test_is_epa_email_fail_seven.
+
+        Runs the test to check if an email address is in the right
+        format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@Aepa.gov"), False)
 
     def test_is_epa_email_fail_eight(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """test_is_epa_email_fail_eight.
+
+        Runs the test to check if an email address is in
+        the right format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@repa.govR"), False)
 
     def test_is_epa_email_fail_nine(self):
-        """Runs the test to check if an email address is in the right format to be an epa email address."""
+        """
+        test_is_epa_email_fail_nine.
+
+        Runs the test to check if an email address is in the right
+        format to be an epa email address.
+        """
         self.assertEqual(is_epa_email("test@4epa.gov"), False)
 
     def test_non_epa_email_message_fail_one(self):
-        """Runs the test to check if an email address is not EPA that it sends the correct message."""
+        """
+        test_non_epa_email_message_fail_one.
+
+        Runs the test to check if an email address is not EPA
+        that it sends the correct message.
+        """
         self.assertIn(
-            """Email list may only contain @epa.gov addresses.""", non_epa_email_message("test@test.com"), msg=None)
+            """Email list may only contain @epa.gov addresses.""",
+            non_epa_email_message("test@test.com"), msg=None)
 
     def test_create_qt_email_message(self):
         """Returns EmailMultiAlternatives object."""
         to_emails = ["testTo@test.com"]
         self.assertIsInstance(
-            create_qt_email_message("email Subject", "text content", "testFrom@test.com", to_emails, None, None),
+            create_qt_email_message(
+                "email Subject", "text content", "testFrom@test.com",
+                to_emails, None, None),
             EmailMultiAlternatives, msg=None)
 
     def test_xstr_one(self):
-        """Test the method that Checks for and replaces None objects with empty strings."""
+        """
+        test_xstr_one.
+
+        Test the method that Checks for and replaces
+        None objects with empty strings.
+        """
         self.assertEqual(xstr(None), "")
 
     def test_xstr_two(self):
-        """Test the method that Checks for and replaces None objects with empty strings."""
+        """
+        test_xstr_two.
+
+        Test the method that Checks for and replaces
+        None objects with empty strings.
+        """
         self.assertEqual(xstr("test"), "test")
 
     def test_sort_rap_numbers(self):
@@ -140,8 +196,10 @@ class TestUtils(TestCase):
         fields = "notform"
         results = get_rap_fields(fields)
         # print(results)
-        self.assertEqual(results, ['ace_rap_numbers', 'css_rap_numbers', 'sswr_rap_numbers', 'hhra_rap_numbers',
-                                   'hsrp_rap_numbers', 'hsrp_rap_extensions', 'shc_rap_numbers'])
+        self.assertEqual(results, [
+            'ace_rap_numbers', 'css_rap_numbers', 'sswr_rap_numbers',
+            'hhra_rap_numbers', 'hsrp_rap_numbers',
+            'hsrp_rap_extensions', 'shc_rap_numbers'])
 
     def test_is_float_one(self):
         """Test the is float method with a float."""
@@ -158,19 +216,19 @@ class TestUtils(TestCase):
         self.assertEqual(results, False)
 
     def test_get_attachment_storage_path(self):
-        """Test that the DataSearch Attachment storage path is returned as expected."""
+        """Test that the DataSearch Attachment path is returned properly."""
         response = get_attachment_storage_path(
             instance=self.attachment_1, filename=self.test_str)
         self.assertTrue('dyoung11/attachments/' in response)
 
     def test_get_flowsa_storage_path(self):
-        """Test that the Flowsa Upload storage path is returned as expected."""
+        """Test that the Flowsa Upload storage path is returned properly."""
         response = get_flowsa_storage_path(
             instance=self.flowsa_upload, filename=self.test_str)
         self.assertTrue('dyoung11/flowsa/' in response)
 
     def test_get_scifinder_storage_path(self):
-        """Test that the Scifinder Upload storage path is returned as expected."""
+        """Test that the Scifinder Upload storage path is returned properly."""
         response = get_scifinder_storage_path(
             instance=self.scifinder_upload, filename=self.test_str)
         self.assertTrue('dyoung11/scifinder/' in response)
