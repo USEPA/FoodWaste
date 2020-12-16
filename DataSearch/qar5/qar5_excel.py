@@ -69,7 +69,6 @@ def export_excel_single(request, *args, **kwargs):
 
     filename = '%s.xlsx' % slugify(qapp_info['qapp'].title)
 
-    # TODO: Build the excel sheet to be exported
     workbook = Workbook()
     sheet = workbook.active
     row = 1

@@ -345,7 +345,6 @@ def contact(request):
         'main/contact.html',
         {
             'title': 'Contact',
-            'message': 'Your contact page.',
             'year': datetime.now().year,
         }
     )

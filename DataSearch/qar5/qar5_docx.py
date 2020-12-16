@@ -274,12 +274,10 @@ def export_doc_single(request, *args, **kwargs):
     row_cells[4].merge(row_cells[5])
     row_cells[6].merge(row_cells[11])
 
-    # TODO: Center text in this row:
     row_cells = table.rows[4 + iter_count].cells
     row_cells[0].text = 'If Extramural, Contractor Project Approvals'
     row_cells[0].merge(row_cells[11])
 
-    # TODO: Iterate through Contractor Project Approvals:
     # Start with row 5 + iter_count++
     for sig in qapp_info.get('signatures', []):
         if sig.contractor:
@@ -308,7 +306,6 @@ def export_doc_single(request, *args, **kwargs):
     # #################################################
 
     create_toc(document)
-    # TODO: DAT-32 Add 'Definitions and Acronyms' Below the ToC
     document.add_heading('Definitions and Acronyms', level=2)
 
     if qapp_info['section_a']:
@@ -350,8 +347,6 @@ def export_doc_single(request, *args, **kwargs):
         row_cells[1].text = str(rev.effective_date)
         row_cells[2].text = rev.description
         iter_count += 1
-
-    # TODO: Paragraphs aren't formatting properly, still double spaces...
 
     # Section A
     document.add_heading('Section A - Executive Summary', level=1)
