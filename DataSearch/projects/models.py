@@ -163,3 +163,10 @@ class ProjectSharingTeamMap(models.Model):
         on_delete=models.CASCADE)
     # Indicates if the team can edit the project.
     can_edit = models.BooleanField(blank=False, default=True)
+
+    def __str__(self):
+        """Override str method to display name instead of stringified obj."""
+        edit_msg = 'cannot edit'
+        if self.can_edit:
+            edit_msg = 'can edit'
+        return f'Team "{self.team}" {edit_msg} project "{self.project}"'

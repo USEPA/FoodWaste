@@ -85,6 +85,8 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """Override default init to add custom queryset for teams."""
         try:
+            can_edit = kwargs.pop('can_edit')
+            kwargs.update(initial={'can_edit': can_edit})
             current_user = kwargs.pop('user')
             super(ProjectForm, self).__init__(*args, **kwargs)
             team_ids = TeamMembership.objects.filter(

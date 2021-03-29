@@ -63,30 +63,32 @@ def get_projects_for_user(user):
     return Project.objects.exclude(id__in=exclude_data)
 
 
-def check_can_edit(project, user):
+def check_user_teams_can_edit(project, user):
+    """Check if the given team can edit the given project."""
+    user_teams = TeamMembership.objects.filter(
+        member=user).values_list('team', flat=True)
+    for team in user_teams:
+        data_team_map = ProjectSharingTeamMap.objects.filter(
+            project=project, team=team).first()
+        if data_team_map and data_team_map.can_edit:
+            return True
+    return False
+
+
+def check_user_can_edit(project, user):
     """
     Check if the provided user can edit the provided project.
 
     All of the user's member teams are checked as well as the user's
     super user status or project ownership status.
     """
+    # Check if the user is super or owns the project
     # Check if any of the user's teams have edit privilege:
-    user_teams = TeamMembership.objects.filter(
-        member=user).values_list('team', flat=True)
+    # Check if the project is owned by the user
+    return user.is_superuser or check_user_teams_can_edit(project, user) \
+        or project.created_by == user or project.project_lead == user
 
-    for team in user_teams:
-        data_team_map = ProjectSharingTeamMap.objects.filter(
-            project=project, team=team).first()
-        if data_team_map and data_team_map.can_edit:
-            return True
 
-    # Check if the user is super or owns the project:
-    if user.is_superuser:
-        return True
-
-    # Since this is the last check, the project is either owned by
-    # the user, or the user does not have edit privilege at all:
-    return project.created_by == user or project.project_lead == user
 
 
 class ProjectListView(LoginRequiredMixin, ListView):
@@ -122,10 +124,12 @@ class ProjectEditView(LoginRequiredMixin, UpdateView):
         """
         pk = kwargs.get('pk')
         proj = Project.objects.filter(id=pk).first()
-        if check_can_edit(proj, request.user):
-            # TODO: Fix return form:
+        if check_user_can_edit(proj, request.user):
+            team_can_edit = check_user_teams_can_edit(proj, request.user)
+            form = ProjectForm(instance=proj, can_edit=team_can_edit)
             return render(request, self.template_name,
-                          {'object': proj, 'form': ProjectForm(instance=proj)})
+                          {'object': proj, 'form': form,
+                           'can_edit': team_can_edit})
 
         reason = 'You don\'t have edit permissions for this Project!'
         return HttpResponseRedirect('/projects/detail/%s' % pk, 401, reason)
@@ -213,7 +217,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         does not have Project edit permissions.
         """
         context = super().get_context_data(**kwargs)
-        if not check_can_edit(context['object'], self.request.user):
+        if not check_user_can_edit(context['object'], self.request.user):
             context['edit_message'] = \
                 'You don\'t have edit permissions for this Project!'
         return context

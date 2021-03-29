@@ -13,7 +13,7 @@ Available functions:
 
 from django.contrib import admin
 from projects.models import Branch, CenterOffice, Division, Office, \
-    OrdRap, Project
+    OrdRap, Project, ProjectSharingTeamMap
 
 admin.site.register(Office)
 
@@ -26,3 +26,5 @@ admin.site.register(Branch)
 admin.site.register(OrdRap)
 
 admin.site.register(Project)
+
+admin.site.register(ProjectSharingTeamMap)

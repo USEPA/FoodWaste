@@ -7,11 +7,12 @@ extension-pkg-whitelist=
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths. These directory exclusions don't seem to work.
-ignore=migrations,CVS,conf.py,__init__.py,__init__,site-packages
+ignore=migrations,CVS,conf.py
 
 # Add files or directories matching the regex patterns to the blacklist. The
 # regex matches against base names, not paths.
-ignore-patterns=wfastcgi.py
+ignore-patterns=
+# TODO: Exclude all migration files, figure out the pattern to match [####]_[anychars].py
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
@@ -301,7 +302,7 @@ indent-after-paren=4
 indent-string='    '
 
 # Maximum number of characters on a single line. Default was 100, PEP8 suggests 79
-max-line-length=120
+max-line-length=80
 
 # Maximum number of lines in a module. Default was 1000
 max-module-lines=2500
@@ -440,7 +441,7 @@ dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
 
 # Argument names that match this expression will be ignored. Default to name
 # with leading underscore
-ignored-argument-names=_.*|^ignored_|^unused_
+ignored-argument-names=_.*|^ignored_|^unused_|arg|args|kwargs
 
 # Tells whether we should check for unused import in __init__ files.
 init-import=no
