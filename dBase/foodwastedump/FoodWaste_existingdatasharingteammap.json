@@ -1,0 +1,141 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.11
+-- Dumped by pg_dump version 10.11
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: FoodWaste_existingdatasharingteammap; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."FoodWaste_existingdatasharingteammap" (
+    id integer NOT NULL,
+    added_date timestamp with time zone NOT NULL,
+    can_edit boolean NOT NULL,
+    data_id integer NOT NULL,
+    team_id integer NOT NULL
+);
+
+
+ALTER TABLE public."FoodWaste_existingdatasharingteammap" OWNER TO postgres;
+
+--
+-- Name: FoodWaste_existingdatasharingteammap_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."FoodWaste_existingdatasharingteammap_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."FoodWaste_existingdatasharingteammap_id_seq" OWNER TO postgres;
+
+--
+-- Name: FoodWaste_existingdatasharingteammap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."FoodWaste_existingdatasharingteammap_id_seq" OWNED BY public."FoodWaste_existingdatasharingteammap".id;
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."FoodWaste_existingdatasharingteammap" ALTER COLUMN id SET DEFAULT nextval('public."FoodWaste_existingdatasharingteammap_id_seq"'::regclass);
+
+
+--
+-- Data for Name: FoodWaste_existingdatasharingteammap; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."FoodWaste_existingdatasharingteammap" (id, added_date, can_edit, data_id, team_id) FROM stdin;
+1	2019-10-25 11:33:12.790042-04	t	1	4
+3	2019-10-25 12:23:33.362041-04	t	3	4
+4	2019-10-30 06:23:24.155733-04	t	4	4
+5	2019-10-30 06:32:37.226485-04	t	5	4
+6	2019-10-30 06:47:29.847967-04	t	6	4
+8	2019-10-30 14:41:06.788324-04	t	8	4
+10	2019-11-01 06:11:49.756253-04	t	10	4
+11	2019-11-01 08:59:06.817628-04	t	11	4
+12	2019-11-04 10:40:33.89557-05	t	12	4
+13	2019-11-06 10:54:23.393119-05	t	13	18
+14	2019-12-18 06:27:34.658056-05	t	14	4
+15	2019-12-18 06:45:10.735473-05	t	15	4
+16	2019-12-19 06:41:07.734487-05	t	16	4
+17	2020-01-07 07:50:38.222305-05	t	17	21
+18	2020-01-08 04:47:55.068133-05	t	18	4
+19	2020-01-08 06:42:34.429908-05	t	19	4
+20	2020-01-28 13:43:36.492337-05	t	20	4
+21	2020-01-29 09:32:20.190349-05	t	21	4
+\.
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."FoodWaste_existingdatasharingteammap_id_seq"', 21, true);
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap FoodWaste_existingdatasharingteammap_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."FoodWaste_existingdatasharingteammap"
+    ADD CONSTRAINT "FoodWaste_existingdatasharingteammap_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap_data_id_9177d03c; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "FoodWaste_existingdatasharingteammap_data_id_9177d03c" ON public."FoodWaste_existingdatasharingteammap" USING btree (data_id);
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap_team_id_1c14a1f5; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "FoodWaste_existingdatasharingteammap_team_id_1c14a1f5" ON public."FoodWaste_existingdatasharingteammap" USING btree (team_id);
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap FoodWaste_existingda_data_id_9177d03c_fk_FoodWaste; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."FoodWaste_existingdatasharingteammap"
+    ADD CONSTRAINT "FoodWaste_existingda_data_id_9177d03c_fk_FoodWaste" FOREIGN KEY (data_id) REFERENCES public."FoodWaste_existingdata"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: FoodWaste_existingdatasharingteammap FoodWaste_existingda_team_id_1c14a1f5_fk_teams_tea; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."FoodWaste_existingdatasharingteammap"
+    ADD CONSTRAINT "FoodWaste_existingda_team_id_1c14a1f5_fk_teams_tea" FOREIGN KEY (team_id) REFERENCES public.teams_team(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
