@@ -28,9 +28,9 @@ xhtml2pdf>=0.2.5                  # Package for saving html templates as PDF fil
 
 #---------------------------------------------------------------------------------------#
 # Used for code management
-coverage>=5.3                     # Measures code coverage, typically during test execution.
+coverage>=5.5                     # Measures code coverage, typically during test execution.
 django-docs>=0.3.1                # Allows to serve Sphinx generated docs directly from Django.
-duecredit>=0.8.0                  # Citation of scientific software and methods, and limited visibility of donation requests for open-source software.
-pycodestyle>=2.6.0                # Tool to check your Python code against some of the style conventions in PEP 8.
-pydocstyle>=5.1.1                 # Static analysis tool for checking compliance with Python docstring conventions in PEP 257.
-pylint_django>=2.3.0              # pylint_django.checkers.db_performance looks for migrations which add new model fields and these fields have a default value.
+duecredit>=0.9.1                  # Citation of scientific software and methods, and limited visibility of donation requests for open-source software.
+pycodestyle>=2.7.0                # Tool to check your Python code against some of the style conventions in PEP 8.
+pydocstyle>=6.1.1                 # Static analysis tool for checking compliance with Python docstring conventions in PEP 257.
+pylint-django>=2.4.4              # pylint_django.checkers.db_performance looks for migrations which add new model fields and these fields have a default value.
