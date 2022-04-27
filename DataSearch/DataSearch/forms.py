@@ -10,7 +10,7 @@ from django.forms import CharField, ModelForm, TextInput, \
     Textarea, ModelMultipleChoiceField, SelectMultiple, \
     BooleanField, RadioSelect, FileField, ClearableFileInput, \
     ModelChoiceField, Select
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from constants.models import YES_OR_NO
 from DataSearch.models import ExistingData, ExistingDataSource
 from teams.models import TeamMembership, Team

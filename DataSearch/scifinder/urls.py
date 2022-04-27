@@ -6,21 +6,21 @@
 
 """Definition of urls for DataSearch."""
 
-from django.conf.urls import url
+from django.urls import re_path
 from scifinder.views import ScifinderDelete, ScifinderIndex, \
     scifinder_download
 
 app_name = 'scifinder'
 
 urlpatterns = [
-    url(r'^$', ScifinderIndex.as_view(), name='scifinder_index'),
-    url(r'^download_file/(?P<pk>\d+)/?$',
-        scifinder_download,
-        name='scifinder_download'),
-    url(r'^download_files/?$',
-        scifinder_download,
-        name='scifinder_downloads'),
-    url(r'^delete_file/(?P<pk>\d+)/?$',
-        ScifinderDelete.as_view(),
-        name='scifinder_delete'),
+    re_path(r'^$', ScifinderIndex.as_view(), name='scifinder_index'),
+    re_path(r'^download_file/(?P<pk>\d+)/?$',
+            scifinder_download,
+            name='scifinder_download'),
+    re_path(r'^download_files/?$',
+            scifinder_download,
+            name='scifinder_downloads'),
+    re_path(r'^delete_file/(?P<pk>\d+)/?$',
+            ScifinderDelete.as_view(),
+            name='scifinder_delete'),
 ]

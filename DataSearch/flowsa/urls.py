@@ -6,21 +6,21 @@
 
 """Definition of urls for DataSearch."""
 
-from django.conf.urls import url
+from django.urls import re_path
 from flowsa.views import FlowsaDelete, FlowsaIndex, \
     flowsa_download
 
 app_name = 'flowsa'
 
 urlpatterns = [
-    url(r'^$', FlowsaIndex.as_view(), name='flowsa_index'),
-    url(r'^download_file/(?P<pk>\d+)/?$',
-        flowsa_download,
-        name='flowsa_download'),
-    url(r'^download_files/?$',
-        flowsa_download,
-        name='flowsa_downloads'),
-    url(r'^delete_file/(?P<pk>\d+)/?$',
-        FlowsaDelete.as_view(),
-        name='flowsa_delete'),
+    re_path(r'^$', FlowsaIndex.as_view(), name='flowsa_index'),
+    re_path(r'^download_file/(?P<pk>\d+)/?$',
+            flowsa_download,
+            name='flowsa_download'),
+    re_path(r'^download_files/?$',
+            flowsa_download,
+            name='flowsa_downloads'),
+    re_path(r'^delete_file/(?P<pk>\d+)/?$',
+            FlowsaDelete.as_view(),
+            name='flowsa_delete'),
 ]
