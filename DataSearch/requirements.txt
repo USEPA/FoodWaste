@@ -13,7 +13,7 @@ click==8.1.2
 colorama==0.4.4
 cryptography==37.0.0
 cssselect2==0.6.0
-Django==4.0.4
+Django==4.0.6
 django-phonenumber-field==6.1.0
 django-wkhtmltopdf==3.4.0
 djangorestframework==3.13.1
