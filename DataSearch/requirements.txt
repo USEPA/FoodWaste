@@ -46,7 +46,7 @@ pyhanko-certvalidator==0.20.0
 pylint==2.16.1
 pylint-django==2.5.3
 pylint-plugin-utils==0.7
-pypdf==3.4.0
+pypdf==3.9.0
 pypng==0.20220715.0
 python-bidi==0.4.2
 python-docx==0.8.11
