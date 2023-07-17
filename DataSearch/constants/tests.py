@@ -19,7 +19,7 @@ from constants.utils import split_email_list, is_epa_email, \
     get_rap_fields, is_float, get_attachment_storage_path, \
     get_flowsa_storage_path, get_scifinder_storage_path, \
     download_files, download_file
-from accounts.models import User
+from django.contrib.auth.models import User
 from DataSearch.models import Attachment
 from flowsa.models import Upload as FlowsaUpload
 from scifinder.models import Upload as ScifinderUpload

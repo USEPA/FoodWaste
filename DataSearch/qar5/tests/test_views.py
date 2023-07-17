@@ -10,7 +10,7 @@ These will pass when you run "manage.py test".
 """
 
 # from unittest import TestCase
-from accounts.models import User
+from django.contrib.auth.models import User
 from datetime import datetime
 import django
 from django.db.models.query import QuerySet, EmptyQuerySet

@@ -101,7 +101,6 @@ urlpatterns = [
             name='tracking_tool'),
 
     # Begin other module import URLs.
-    re_path(r'^accounts/', include('accounts.urls')),
     re_path(r'^flowsa/', include('flowsa.urls', namespace='flowsa')),
     re_path(r'^projects/', include('projects.urls')),
     re_path(r'^qar5/', include('qar5.urls')),

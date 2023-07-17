@@ -23,7 +23,7 @@ import os
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-SITE_NAME = 'https://134.67.216.106/accounts/login'
+SITE_NAME = 'https://134.67.216.106/'
 
 EMAIL_DISCLAIMER = '<p style="font-weight:bold;color:red">Please do not reply to this email. Thank you.</p>'  # noqa
 EMAIL_DISCLAIMER_PLAIN = 'Please do not reply to this email. Thank you.'
@@ -71,7 +71,6 @@ INSTALLED_APPS = [
     # auth
     'django_auth_adfs',
     # Add your apps here to enable them.
-    'accounts',
     'constants',
     'DataSearch',
     'flowsa',

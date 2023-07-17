@@ -15,7 +15,7 @@ from django.db.models.query import QuerySet, EmptyQuerySet
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
-from accounts.models import User
+from django.contrib.auth.models import User
 from DataSearch.forms import ExistingDataForm
 from DataSearch.models import Attachment, ExistingData, ExistingDataSource, \
     ExistingDataSharingTeamMap

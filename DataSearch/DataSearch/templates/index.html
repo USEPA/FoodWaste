@@ -1,16 +1,8 @@
 {% extends "main/base.html" %} {% block content %}
 
 <h2>
-  {% if user.is_authenticated %} Existing Data and Information Search Tool {% else %}
-  <a href="/accounts/login/">Existing Data and Information Search Tool</a>
-  {% endif %}
+  Existing Data and Information Search Tool
 </h2>
-
-{% if not user.is_authenticated %}
-<div class="button-group">
-  <button class="usa-button" onclick="window.location='accounts/register/'">New Users Click Here...</button>
-</div>
-{% endif %}
 
 <p>
   The database will enable ORD OLEM team members to review and export, as .pdf, .xlxs, and .csv files, existing data

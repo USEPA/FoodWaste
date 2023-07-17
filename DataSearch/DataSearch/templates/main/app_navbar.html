@@ -45,7 +45,6 @@
       Welcome {% if user.first_name %} {{user.first_name|safe}} {% else %} {{user.username|safe}} {% endif %}
     </button>
     <ul id="extended-nav-welcome" class="menu menu__subnav is-wide" data-once="navigation" hidden="true">
-      <li class="menu__item"><a href="{% url 'profile' %}" class="menu__link">My profile</a></li>
       {% if user.is_staff %}
       <li class="menu__item"><a href="{% url 'admin:index' %}" class="menu__link">Admin Portal</a></li>
       {% endif %}

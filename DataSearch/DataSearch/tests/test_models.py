@@ -10,7 +10,7 @@ This file demonstrates writing tests using the unittest module.
 These will pass when you run "manage.py test".
 """
 
-from accounts.models import User
+from django.contrib.auth.models import User
 import django
 from django.test import Client, TestCase
 from django.test.client import RequestFactory

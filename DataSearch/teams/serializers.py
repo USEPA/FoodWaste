@@ -16,9 +16,19 @@ Available functions:
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from django.contrib.auth.models import User
 from django.utils import timezone
-from accounts.serializers import UserSerializer
-from teams.models import Team, TeamMembership, User
+from teams.models import Team, TeamMembership
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """JSON serializer for Django Users"""
+
+    class Meta:
+        """Meta data for the User Serializer."""
+
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
