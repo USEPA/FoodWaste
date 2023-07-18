@@ -4,8 +4,10 @@
 
 <form method="post">{% csrf_token %}
     <h4>Are you sure you want to delete "{{ object }}"?</h4>
-    <button type="submit" class="btn btn-md btn-danger col-md-3 mx-2" value="Confirm">Delete</button>
-    <button type="reset" class="btn btn-md btn-warning col-md-3 mx-2" onclick="window.location='/flowsa/'">Go Back</button>
+    <div class="button-group">
+        <button type="submit" class="usa-button" value="Confirm">Delete</button>
+        <button type="reset" class="usa-button" onclick="window.location='/flowsa/'">Go Back</button>
+    </div>
 </form>
 
 {% endblock %}

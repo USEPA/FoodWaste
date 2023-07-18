@@ -13,10 +13,12 @@
 
         <div class="usa-form-group">
             <label for="" class="col-sm-12 control-label">{{form.teams.label}}</label>
-            <a href="{% url 'team_create' %}" class="col-sm-8 btn btn-sm btn-success">
-              <span class="glyphicon glyphicon-plus"></span>
-              Create Team
-            </a>
+            <div class="button-group">
+              <a href="{% url 'team_create' %}" class="col-sm-8 usa-button">
+                <span class="glyphicon glyphicon-plus"></span>
+                Create Team
+              </a>
+            </div>
             {{form.teams}}
         </div>
 

@@ -8,6 +8,7 @@
         {% if not edit_message %}
         <div class="col-md-6 mb-1">
             <label class="col-sm-8 text-right">Manage Project Leads:</label>
+            <!-- TODO: Figure out best way to do these icon buttons in USWDS -->
             <div class="col-sm-1 mr-2 float-right"><i onclick="addProjectLead({{object.id}})" class="fas fa-plus btn btn-sm btn-info"></i></div>
             <div class="col-sm-1 mr-2 float-right"><i onclick="editProjectLead(this)" class="fas fa-edit btn btn-sm btn-warning lead" disabled></i></div>
             <div class="col-sm-1 mr-2 float-right"><i onclick="removeProjectLead(this)" class="fas fa-minus btn btn-sm btn-danger lead" disabled></i></div>

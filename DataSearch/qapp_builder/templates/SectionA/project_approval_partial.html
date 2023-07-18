@@ -12,9 +12,10 @@
     </div>
     {% if not edit_message %}
     <div class="col-md-6 mt-2">
-        <button class="col-md-8 offset-md-4 btn btn-sm btn-warning mb-2" onclick="editApprovalPage({{object.id}})">
+        <button class="usa-button" onclick="editApprovalPage({{object.id}})">
             Edit Plan Title and Activity Number
         </button>
+        <!-- TODO: Figure out these small buttons, best way to do this in USWDS -->
         <div class="col-md-12 my-2">
             <label class="col-sm-8 text-right">Manage Signatures:</label>
             <div class="col-sm-1 mr-2 float-right"><i onclick="addApprovalSignature({{object.id}})" class="fas fa-plus btn btn-sm btn-info"></i></div>

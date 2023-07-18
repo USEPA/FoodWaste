@@ -23,7 +23,7 @@ class ExistingDataForm(ModelForm):
                         label=_("Share With Teams"),
                         required=False,
                         widget=SelectMultiple({
-                            'class': 'usa-input',
+                            'class': 'form-item__select',
                             'placeholder': 'Teams'
                         }))
 
@@ -62,7 +62,7 @@ class ExistingDataForm(ModelForm):
     source = ModelChoiceField(label=_("Source"),
                               queryset=ExistingDataSource.objects.all(),
                               widget=Select(
-                                  attrs={'class': 'usa-input usa-select'}),
+                                  attrs={'class': 'form-item__select'}),
                               initial=0)
 
     source_title = CharField(max_length=255,

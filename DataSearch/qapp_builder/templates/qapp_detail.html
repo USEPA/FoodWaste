@@ -1,52 +1,40 @@
 {% extends "main/base.html" %} {% block content %} {% load static %}
 
 {% include 'SectionA/detail_header_footer_partial.html' %}
-<!-- First page of Section A with QAPP details (including Project Leads) -->
-<div class="border rounded p-3 row">
-    {% include 'EPA_QAPP_Header_Partial.html' %}
-    <div class="col-md-12">
-        <div class="col-md-9">{% include 'qapp_details_partial.html' %}</div>
-        <div class="col-md-3">
-            <button onclick="window.location.href='/qapp_builder/'"
-                    class="my-2 col-md-12 btn btn-md btn-info">
-                Back to QAPP List
-            </button>
-            {% if not edit_message %}
-            <button onclick="window.location.href='/qapp_builder/edit/{{object.id}}'"
-                    class="my-2 col-md-12 btn btn-md btn-warning">
-                Edit QAPP
-            </button>
-            <button onclick="window.location.href='/qapp_builder/delete/{{object.id}}'"
-                    class="my-2 col-md-12 btn btn-md btn-danger">
-                Delete QAPP
-            </button>
-            {% endif %}
 
-            <button onclick="window.location.href='/qapp_builder/exportdoc/{{object.id}}'"
-                    class="my-2 col-md-12 btn btn-md btn-info">
-                Export to Word Doc
-            </button>
-            <button onclick="window.location.href='/qapp_builder/exportpdf/{{object.id}}'"
-                    class="my-2 col-md-12 btn btn-md btn-info">
-                Export to PDF
-            </button>
-            <button onclick="window.location.href='/qapp_builder/exportexcel/{{object.id}}'"
-                    class="my-2 col-md-12 btn btn-md btn-info">
-                Export to Excel
-            </button>
-        </div>
-    </div>
-    <div class="col-md-12 mt-4">
-        {% include 'SectionA/project_lead_partial.html' %}
-    </div>
+<!-- First page of Section A with QAPP details (including Project Leads) -->
+{% include 'EPA_QAPP_Header_Partial.html' %}
+{% include 'qapp_details_partial.html' %}
+
+<div class="button-group">
+    <button onclick="window.location.href='/qapp_builder/'" class="usa-button">
+        Back to QAPP List
+    </button>
+    {% if not edit_message %}
+    <button onclick="window.location.href='/qapp_builder/edit/{{object.id}}'" class="usa-button">
+        Edit QAPP
+    </button>
+    <button onclick="window.location.href='/qapp_builder/delete/{{object.id}}'" class="usa-button">
+        Delete QAPP
+    </button>
+    {% endif %}
 </div>
+
+<div class="button-group">
+    <button onclick="window.location.href='/qapp_builder/exportdoc/{{object.id}}'" class="usa-button">
+        Export to Word Doc
+    </button>
+    <button onclick="window.location.href='/qapp_builder/exportpdf/{{object.id}}'" class="usa-button">
+        Export to PDF
+    </button>
+    <button onclick="window.location.href='/qapp_builder/exportexcel/{{object.id}}'" class="usa-button">
+        Export to Excel
+    </button>
+</div>
+{% include 'SectionA/project_lead_partial.html' %}
 
 <!-- Project Approval Page -->
-<div class="border rounded p-3 my-4 row">
-    <div class="col-md-12">
-        {% include 'SectionA/project_approval_partial.html' %}
-    </div>
-</div>
+{% include 'SectionA/project_approval_partial.html' %}
 
 <!-- This is where A.2 Table of Contents would go in final doc. -->
 

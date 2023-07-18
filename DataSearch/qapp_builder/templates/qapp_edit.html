@@ -3,15 +3,11 @@
 {% block content %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <form method="post">
-                {% csrf_token %}
-                {{form}}
-                {% include 'edit_buttons_partial.html' %}
-            </form>
-        </div>
-    </div>
+    <form method="post">
+        {% csrf_token %}
+        {{form}}
+        {% include 'edit_buttons_partial.html' %}
+    </form>
 </div>
 
 {% endblock %}

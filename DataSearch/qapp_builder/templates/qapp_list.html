@@ -21,71 +21,68 @@
         under the CESER QAPP K-LRTD-0032360-QP-1-0.
     </p>
     <p>
-        <a class="usa-button" href="https://www.epa.gov/sites/production/files/2015-06/documents/g9-final.pdf">
-            Learn more about USEPA Existing Data &raquo;
-        </a>
+        <div class="button-group">
+            <a class="usa-button" href="https://www.epa.gov/sites/production/files/2015-06/documents/g9-final.pdf">
+                Learn more about USEPA Existing Data &raquo;
+            </a>
+        </div>
     </p>
 
     {% if user.is_authenticated %}
-    <div class="row mb-2">
-        <button class="col-sm-12 btn btn-md btn-info" onclick="window.location.href='/qapp_builder/create'">
+    <div class="button-group">
+        <button class="usa-button" onclick="window.location.href='/qapp_builder/create'">
             Create a new QAPP
         </button>
     </div>
-    <div class="row">
-        <table class="table table-bordered table-hover col-sm-12">
-            <thead class="table-secondary">
-                <tr>
-                    <th data-sortable scope="col">Division Branch</th>
-                    <th data-sortable scope="col">QAPP Title</th>
-                    <th data-sortable scope="col">QA Category</th>
-                    <th data-sortable scope="col">Revision Number</th>
-                    <th data-sortable scope="col">StRAP</th>
-                    <th data-sortable scope="col">Tracking ID</th>
-                    <!-- TODO: Show prepared by if you are admin -->
-                </tr>
-            </thead>
-            <tbody>
-                {% if qapp_list %}
-                {% for qapp_builder in qapp_list %}
-                <tr id="{{qapp_builder.id}}" onclick="rowClick('{{qapp_builder.id}}')">
-                    <td scope="row">{{qapp_builder.division_branch}}</td>
-                    <td>{{qapp_builder.title}}</td>
-                    <td>{{qapp_builder.qa_category}}</td>
-                    <td>{{qapp_builder.revision_number}}</td>
-                    <td>{{qapp_builder.strap}}</td>
-                    <td>{{qapp_builder.tracking_id}}</td>
-                </tr>
+    <table class="table table-bordered table-hover">
+        <thead class="table-secondary">
+            <tr>
+                <th data-sortable scope="col">Division Branch</th>
+                <th data-sortable scope="col">QAPP Title</th>
+                <th data-sortable scope="col">QA Category</th>
+                <th data-sortable scope="col">Revision Number</th>
+                <th data-sortable scope="col">StRAP</th>
+                <th data-sortable scope="col">Tracking ID</th>
                 <!-- TODO: Show prepared by if you are admin -->
-                {% endfor %}
-                {% else %}
-                <tr><td colspan="6">No Existing Data exist!</td></tr>
-                {% endif %}
-            </tbody>
-        </table>
+            </tr>
+        </thead>
+        <tbody>
+            {% if qapp_list %}
+            {% for qapp_builder in qapp_list %}
+            <tr id="{{qapp_builder.id}}" onclick="rowClick('{{qapp_builder.id}}')">
+                <td scope="row">{{qapp_builder.division_branch}}</td>
+                <td>{{qapp_builder.title}}</td>
+                <td>{{qapp_builder.qa_category}}</td>
+                <td>{{qapp_builder.revision_number}}</td>
+                <td>{{qapp_builder.strap}}</td>
+                <td>{{qapp_builder.tracking_id}}</td>
+            </tr>
+            <!-- TODO: Show prepared by if you are admin -->
+            {% endfor %}
+            {% else %}
+            <tr><td colspan="6">No Existing Data exist!</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <!-- NOTE: Do we prefer all four buttons on one line, or split to two? -->
+    <div class="button-group">
+        <button class="usa-button" onclick="viewEditExistingQapp(this)" disabled>
+            View or Edit Existing QAPP
+        </button>
     </div>
-
-    <div class="row">
-        <div class="col-sm-3">
-            <i class="btn btn-info btn-md" onclick="viewEditExistingQapp(this)" disabled>
-                View or Edit Existing QAPP
-            </i>
-        </div>
-        <div class="col-sm-3">
-            <button class="btn btn-info btn-md" onclick="exportAllQapp('docx')">
-                Export All QAPP to Word Doc
-            </button>
-        </div>
-        <div class="col-sm-3">
-            <button class="btn btn-info btn-md" onclick="exportAllQapp('pdf')">
-                Export All QAPP to PDF
-            </button>
-        </div>
-        <div class="col-sm-3">
-            <button class="btn btn-info btn-md" onclick="exportAllQapp('excel')">
-                Export All QAPP to Excel
-            </button>
-        </div>
+    <div class="button-group">
+        <!-- <button class="usa-button" onclick="viewEditExistingQapp(this)" disabled>
+            View or Edit Existing QAPP
+        </button> -->
+        <button class="usa-button" onclick="exportAllQapp('docx')">
+            Export All QAPP to Word Doc
+        </button>
+        <button class="usa-button" onclick="exportAllQapp('pdf')">
+            Export All QAPP to PDF
+        </button>
+        <button class="usa-button" onclick="exportAllQapp('excel')">
+            Export All QAPP to Excel
+        </button>
     </div>
     {% endif %}
 </div>

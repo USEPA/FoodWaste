@@ -25,7 +25,8 @@ class QappForm(ModelForm):
 
     division = ModelChoiceField(label=_("Division:"),
                                 queryset=Division.objects.all(),
-                                widget=Select(attrs={'class': 'usa-input'}),
+                                widget=Select(
+                                    attrs={'class': 'form-item__select'}),
                                 initial=0)
 
     division_branch = CharField(widget=TextInput({'class': 'usa-input'}),
@@ -41,12 +42,14 @@ class QappForm(ModelForm):
 
     qa_category = ChoiceField(label=_("QA Category:"),
                               choices=QA_CATEGORY_CHOICES,
-                              widget=Select(attrs={'class': 'usa-input'}),
+                              widget=Select(
+                                  attrs={'class': 'form-item__select'}),
                               required=True)
 
     intra_extra = ChoiceField(label=_("Intra/Extramural:"),
                               choices=XMURAL_CHOICES,
-                              widget=Select(attrs={'class': 'usa-input'}),
+                              widget=Select(
+                                  attrs={'class': 'form-item__select'}),
                               required=True)
 
     revision_number = CharField(label=_("Revision Number:"),
@@ -72,7 +75,7 @@ class QappForm(ModelForm):
 
     teams = ModelMultipleChoiceField(
         widget=SelectMultiple({
-            'class': 'usa-input',
+            'class': 'form-item__select',
             'placeholder': 'Teams'
         }),
         queryset=Team.objects.all(),
@@ -272,7 +275,7 @@ class SectionAForm(ModelForm):
 
     sectionb_type = ModelMultipleChoiceField(
         widget=SelectMultiple({
-            'class': 'usa-input',
+            'class': 'form-item__select',
             'placeholder': 'Section B Type'
         }),
         queryset=SectionBType.objects.all(),
@@ -295,7 +298,7 @@ class SectionBForm(ModelForm):
                             required=True,
                             label=_("Parent QAPP"),
                             widget=Select(attrs={
-                                'class': 'usa-input',
+                                'class': 'form-item__select',
                                 'readonly': 'readonly'
                             }))
 
@@ -305,7 +308,7 @@ class SectionBForm(ModelForm):
         required=True,
         label=_("Section B Type"),
         widget=Select(attrs={
-            'class': 'usa-input',
+            'class': 'form-item__select',
             'readonly': 'readonly'
         }))
 
