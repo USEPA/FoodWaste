@@ -21,7 +21,8 @@ class Attachment(models.Model):
                             upload_to=get_attachment_storage_path,
                             storage=upload_storage)
     uploaded_by = models.ForeignKey(User, blank=False,
-                                    on_delete=models.CASCADE)
+                                    on_delete=models.CASCADE,
+                                    related_name='datasearch_uploaded_by')
 
     def __str__(self):
         """Override str method to display name instead of stringified obj."""

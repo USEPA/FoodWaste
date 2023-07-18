@@ -22,7 +22,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.templatetags.static import static
 from django.utils.text import slugify
 from constants.qapp_builder_sectionb import SECTION_B_INFO
-from qapp_builder.settings import DEBUG, STATIC_ROOT
+from django.conf import settings
 from qapp_builder.views import get_qapp_for_user, get_qapp_for_team, \
     get_qapp_info
 
@@ -178,10 +178,10 @@ def export_doc_single(request, *args, **kwargs):
     run = document.add_paragraph().add_run()
 
     try:
-        if DEBUG:
-            logo = path.join(STATIC_ROOT, 'EPA_Files', 'logo.png')
+        if settings.DEBUG:
+            logo = path.join(settings.STATIC_ROOT, 'EPA_Files', 'logo.png')
             qual_assur_proj_plan = path.join(
-                STATIC_ROOT, 'images', 'quality_assurance_project_plan.PNG')
+                settings.STATIC_ROOT, 'images', 'quality_assurance_project_plan.PNG')
         else:
             logo = static('logo.png')
             qual_assur_proj_plan = static('quality_assurance_project_plan.PNG')

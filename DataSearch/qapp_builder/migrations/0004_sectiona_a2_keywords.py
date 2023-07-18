@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('qar5', '0003_sectionb_type_fixture'),
+        ('qapp_builder', '0003_sectionb_type_fixture'),
     ]
 
     operations = [

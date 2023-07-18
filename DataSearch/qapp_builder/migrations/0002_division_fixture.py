@@ -25,7 +25,7 @@ def load_fixture(_apps, _schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('qar5', '0001_initial'),
+        ('qapp_builder', '0001_initial'),
     ]
 
     operations = [
