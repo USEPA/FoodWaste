@@ -12,129 +12,104 @@
 
 <form enctype="multipart/form-data" action="/qapp_builder/SectionA?qapp_id={{qapp_id}}" method="post" role="form" id="sectiona_form">
     {% csrf_token %}
-    <div class="usa-form-group hidden">{{form.qapp}}</div>
+    <div class="hidden">{{form.qapp}}</div>
 
     <!------- Section A2 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a2.label}}
-            <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a2}}">
-                <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
-                    <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
-                </svg>
-            </span>
-        </label>
-        {{form.a2}}
-    </div>
+    <label class="usa-label">
+        {{form.a2.label}}
+        <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a2}}">
+            <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+            </svg>
+        </span>
+    </label>
+    {{form.a2}}
 
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a2_keywords.label}}
-        </label>
-        {{form.a2_keywords}}
-    </div>
+    <label class="usa-label">
+        {{form.a2_keywords.label}}
+    </label>
+    {{form.a2_keywords}}
 
     <!------- Section A3 ------->
-    <div class="usa-form-group">
-        <label>{{form.a3.label}}</label>
-        {{form.a3}}
-    </div>
+    <label class="usa-label">{{form.a3.label}}</label>
+    {{form.a3}}
 
     <!------- Section A4 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a4.label}}
-            <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a4}}">
-                <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
-                    <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
-                </svg>
-            </span>
-        </label>
-        {{form.a4}}
-    </div>
+    <label class="usa-label">
+        {{form.a4.label}}
+        <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a4}}">
+            <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+            </svg>
+        </span>
+    </label>
+    {{form.a4}}
 
     <!------- Section A4 Chart Upload ------->
-    <div class="usa-form-group">
-        <label class="usa-label" for="id_a4_chart">{{form.a4_chart.label}}</label>
-        {{form.a4_chart}}
-        <!-- <label class="custom-file-label" for="id_a4_chart">Select a file...</label> -->
-    </div>
+    <label class="usa-label" for="id_a4_chart">{{form.a4_chart.label}}</label>
+    {{form.a4_chart}}
 
 
     <!------- Section A5 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a5.label}}
-            <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a5}}">
-                <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
-                    <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
-                </svg>
-            </span>
-        </label>
-        {{form.a5}}
-    </div>
+    <label class="usa-label">
+        {{form.a5.label}}
+        <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a5}}">
+            <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+            </svg>
+        </span>
+    </label>
+    {{form.a5}}
 
     <!------- Section A6 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a6.label}}
-            <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a6}}">
-                <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
-                    <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
-                </svg>
-            </span>
-        </label>
-        {{form.a6}}
-    </div>
+    <label class="usa-label">
+        {{form.a6.label}}
+        <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a6}}">
+            <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+            </svg>
+        </span>
+    </label>
+    {{form.a6}}
 
     <!------- Section A7 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a7.label}}
-            <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a7}}">
-                <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
-                    <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
-                </svg>
-            </span>
-        </label>
-        {{form.a7}}
-    </div>
+    <label class="usa-label">
+        {{form.a7.label}}
+        <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a7}}">
+            <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+            </svg>
+        </span>
+    </label>
+    {{form.a7}}
 
     <!------- Section A8 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">
-            {{form.a8.label}}
-            <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a8}}">
-                <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
-                    <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
-                </svg>
-            </span>
-        </label>
-        {{form.a8}}
-    </div>
+    <label class="usa-label">
+        {{form.a8.label}}
+        <span class="usa-tooltip" data-position="top" title="{{SECTION_A_INFO.a8}}">
+            <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+            </svg>
+        </span>
+    </label>
+    {{form.a8}}
 
     <!------- Section A9 ------->
-    <div class="usa-form-group">
-        <label class="usa-label">{{form.a9.label}}</label>
-        {{form.a9}}
-        <div class="button-group">
-            <button type="button" class="usa-button" onclick="location.href='/qapp_builder/'">
-                GO TO QAPP Builder Tool
-            </button>
-        </div>
+    <label class="usa-label">{{form.a9.label}}</label>
+    {{form.a9}}
+    <div class="button-group">
+        <button type="button" class="usa-button" onclick="location.href='/qapp_builder/'">
+            GO TO QAPP Builder Tool
+        </button>
     </div>
 
     <!------- Section A9 Drive Path ------->
-    <div class="usa-form-group">
-        <label class="usa-label">{{form.a9_drive_path.label}}</label>
-        {{form.a9_drive_path}}
-    </div>
+    <label class="usa-label">{{form.a9_drive_path.label}}</label>
+    {{form.a9_drive_path}}
 
     <!-- Section B Type Selection -->
-    <div class="usa-form-group">
-        <label class="usa-label">{{form.sectionb_type.label}}</label>
-        {{form.sectionb_type}}
-    </div>
+    <label class="usa-label">{{form.sectionb_type.label}}</label>
+    {{form.sectionb_type}}
 
     {% include '_qapp_footer.html' %}
 </form>
