@@ -1,4 +1,4 @@
-# models.py (qar5)
+# models.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
@@ -11,8 +11,23 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from constants.qar5 import SECTION_C_INFO
-from constants.utils import get_attachment_storage_path
+from constants.utils import get_attachment_storage_path, upload_storage
 from teams.models import Team
+
+
+class Attachment(models.Model):
+    """Class representing a file attachment to an Existing Data entry."""
+
+    name = models.CharField(blank=False, null=False, max_length=255)
+    file = models.FileField(null=True, blank=True,
+                            upload_to=get_attachment_storage_path,
+                            storage=upload_storage)
+    uploaded_by = models.ForeignKey(User, blank=False,
+                                    on_delete=models.CASCADE)
+
+    def __str__(self):
+        """Override str method to display name instead of stringified obj."""
+        return self.name
 
 
 class Division(models.Model):
@@ -22,7 +37,7 @@ class Division(models.Model):
 
     def __str__(self):
         """Override str method to display name instead of stringified obj."""
-        return self.name
+        return str(self.name)
 
 
 class SectionBType(models.Model):
@@ -32,7 +47,7 @@ class SectionBType(models.Model):
 
     def __str__(self):
         """Override str method to display name instead of stringified obj."""
-        return self.name
+        return str(self.name)
 
 
 class Qapp(models.Model):
@@ -72,7 +87,7 @@ class Qapp(models.Model):
 
     def __str__(self):
         """Override str method to display name instead of stringified obj."""
-        return self.title
+        return str(self.title)
 
 
 class QappSharingTeamMap(models.Model):
@@ -102,7 +117,7 @@ class QappLead(models.Model):
 
     def __str__(self):
         """Override str method to display name instead of stringified obj."""
-        return self.name
+        return str(self.name)
 
 
 class QappApproval(models.Model):
@@ -136,7 +151,7 @@ class SectionA(models.Model):
     a2 = models.TextField(blank=False, null=False)
     # Keywords input field is new, see Jira DAT-35
     a2_keywords = models.TextField(blank=False, null=False)
-    # A3 is readonly, defaults populated in form from constants module.
+    # A3 WAS readonly, defaults populated in form from constants module.
     a3 = models.TextField(blank=False, null=False)
     # A4 is user input with an optional chart (a4_chart)
     a4 = models.TextField(blank=False, null=False)
@@ -165,7 +180,7 @@ class SectionBTypeMap(models.Model):
     sectiona = models.ForeignKey(
         SectionA, blank=False, on_delete=models.CASCADE)
     sectionb_type = models.ForeignKey(
-        SectionBType, blank=False, on_delete=models.CASCADE)
+        SectionBType, null=True, on_delete=models.SET_NULL)
 
 
 class SectionB(models.Model):
@@ -186,6 +201,8 @@ class SectionB(models.Model):
     b1_3 = models.TextField(blank=True, null=True)
     b1_4 = models.TextField(blank=True, null=True)
     b1_5 = models.TextField(blank=True, null=True)
+    b1_6 = models.TextField(blank=True, null=True)
+    b1_7 = models.TextField(blank=True, null=True)
 
     b2_1 = models.TextField(blank=True, null=True)
     b2_2 = models.TextField(blank=True, null=True)
@@ -195,6 +212,8 @@ class SectionB(models.Model):
     b2_6 = models.TextField(blank=True, null=True)
     b2_7 = models.TextField(blank=True, null=True)
     b2_8 = models.TextField(blank=True, null=True)
+    b2_9 = models.TextField(blank=True, null=True)
+    b2_10 = models.TextField(blank=True, null=True)
 
     b3_1 = models.TextField(blank=True, null=True)
     b3_2 = models.TextField(blank=True, null=True)
@@ -212,12 +231,38 @@ class SectionB(models.Model):
     b4_3 = models.TextField(blank=True, null=True)
     b4_4 = models.TextField(blank=True, null=True)
     b4_5 = models.TextField(blank=True, null=True)
+    b4_6 = models.TextField(blank=True, null=True)
+    b4_7 = models.TextField(blank=True, null=True)
+    b4_8 = models.TextField(blank=True, null=True)
 
+    # ######################################################################
+    # NOTE: With the March 2023 rework based on new templates,
+    # Measurements and Monitoring defaults have a non-standard format under
+    # section B.5 with extra subheadings under B.5.1 and B.5.2.
     b5_1 = models.TextField(blank=True, null=True)
+    b5_1_1 = models.TextField(blank=True, null=True)
+    b5_1_2 = models.TextField(blank=True, null=True)
+
     b5_2 = models.TextField(blank=True, null=True)
+    b5_2_1 = models.TextField(blank=True, null=True)
+    b5_2_2 = models.TextField(blank=True, null=True)
+    b5_2_3 = models.TextField(blank=True, null=True)
+    b5_2_4 = models.TextField(blank=True, null=True)
+    b5_2_5 = models.TextField(blank=True, null=True)
+    b5_2_6 = models.TextField(blank=True, null=True)
+    b5_2_7 = models.TextField(blank=True, null=True)
+    b5_2_8 = models.TextField(blank=True, null=True)
+    # ######################################################################
+
+    b5_3 = models.TextField(blank=True, null=True)
+    b5_4 = models.TextField(blank=True, null=True)
+    b5_5 = models.TextField(blank=True, null=True)
 
     b6_1 = models.TextField(blank=True, null=True)
     b6_2 = models.TextField(blank=True, null=True)
+    b6_3 = models.TextField(blank=True, null=True)
+    b6_4 = models.TextField(blank=True, null=True)
+    b6_5 = models.TextField(blank=True, null=True)
 
     class Meta:
         """Meta data definitions for SectionB class."""
@@ -232,19 +277,10 @@ class SectionC(models.Model):
 
     qapp = models.OneToOneField(
         Qapp, on_delete=models.CASCADE, primary_key=True)
-    c1 = SECTION_C_INFO[0]
-    c2 = SECTION_C_INFO[1]
-    # c3 = models.TextField(blank=False, null=False)
-
-    def __init__(self, *args, **kwargs):
-        """
-        Extend init method.
-
-        Replace __category__ with the appropriate category, A or B.
-        """
-        qa_category = kwargs.pop('qa_category', None)
-        super(SectionC, self).__init__(*args, **kwargs)
-        self.c1 = SECTION_C_INFO[0].replace('__category__', qa_category)
+    # c1 WAS readonly, defaults populated in form from constants module.
+    c1 = models.TextField(blank=False, null=False, default=SECTION_C_INFO[0])
+    # c2 WAS readonly, defaults populated in form from constants module.
+    c2 = models.TextField(blank=False, null=False, default=SECTION_C_INFO[1])
 
 
 class SectionD(models.Model):

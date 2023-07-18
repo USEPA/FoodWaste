@@ -1,35 +1,25 @@
-# urls.py (qar5)
+# urls.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
-# pylint: disable=invalid-name
-# We disable the invalid name because urlpatterns is the Django default
 
-"""
-URLs related to managing Products.
 
-Available functions:
-- None yet
-"""
+"""Definition of urls for qapp_builder."""
 
 from django.urls import re_path
-from qar5.views import QappCreate, QappDetail, ProjectApprovalCreate, \
+from qapp_builder.views import QappCreate, QappDetail, ProjectApprovalCreate, \
     ProjectLeadCreate, ProjectApprovalSignatureCreate, SectionAView, \
     SectionBView, SectionCView, SectionDView, SectionEView, SectionFView, \
     RevisionCreate, QappList, QappEdit, QappIndex, ProjectApprovalEdit, \
-    ProjectApprovalSignatureDelete, ProjectApprovalSignatureEdit,  \
+    ProjectApprovalSignatureDelete, ProjectApprovalSignatureEdit, \
     ProjectLeadDelete, ProjectLeadEdit
-from qar5.qar5_docx import export_doc, export_doc_single
-from qar5.qar5_excel import export_excel, export_excel_single
-from qar5.qar5_pdf import export_pdf, export_pdf_single
+from qapp_builder.qar5_docx import export_doc, export_doc_single
+from qapp_builder.qar5_pdf import export_pdf, export_pdf_single
+
 
 urlpatterns = [
     re_path(r'^$', QappIndex.as_view(), name='qapp_index'),
     # URLs for CRUD operations.
-    # Begin QAPP URLs for creating and printing QAPPs
-    # re_path(r'^list/?$',
-    #     QappList.as_view(),
-    #     name='qapp_list'),
 
     re_path(r'^create/?$',
             QappCreate.as_view(),
@@ -55,24 +45,24 @@ urlpatterns = [
             export_doc_single, name='qar5_doc'),
     re_path(r'^exportpdf/(?P<pk>\d+)/?$',
             export_pdf_single, name='qar5_pdf'),
-    re_path(r'^exportexcel/(?P<pk>\d+)/?$',
-            export_excel_single, name='qar5_excel'),
+    # re_path(r'^exportexcel/(?P<pk>\d+)/?$',
+    #         export_excel_single, name='qar5_excel'),
 
     # All QAPP Exports for User:
     re_path(r'^exportdoc/user/(?P<pk>\d+)/?$',
             export_doc, name='qar5_all_doc'),
     re_path(r'^exportpdf/user/(?P<pk>\d+)/?$',
             export_pdf, name='qar5_all_pdf'),
-    re_path(r'^exportexcel/user/(?P<pk>\d+)/?$',
-            export_excel, name='qar5_all_excel'),
+    # re_path(r'^exportexcel/user/(?P<pk>\d+)/?$',
+    #         export_excel, name='qar5_all_excel'),
 
     # All QAPP Exports for Team:
     re_path(r'^exportdoc/team/(?P<pk>\d+)/?$',
             export_doc, name='qar5_all_doc'),
     re_path(r'^exportpdf/team/(?P<pk>\d+)/?$',
             export_pdf, name='qar5_all_pdf'),
-    re_path(r'^exportexcel/team/(?P<pk>\d+)/?$',
-            export_excel, name='qar5_all_excel'),
+    # re_path(r'^exportexcel/team/(?P<pk>\d+)/?$',
+    #         export_excel, name='qar5_all_excel'),
 
     ############################################
     # Project Approval (and signatures) URLs

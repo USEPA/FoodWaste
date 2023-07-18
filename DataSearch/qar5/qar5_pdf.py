@@ -1,4 +1,4 @@
-# qar5_pdf.py (qar5)
+# qar5_pdf.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
@@ -7,13 +7,14 @@
 
 from io import BytesIO
 import tempfile
-from wkhtmltopdf.views import PDFTemplateResponse
 from zipfile import ZipFile
+from wkhtmltopdf.views import PDFTemplateResponse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils.text import slugify
 from constants.qar5_sectionb import SECTION_B_INFO
-from qar5.views import get_qapp_info, get_qar5_for_team, get_qar5_for_user
+from qapp_builder.views import get_qapp_info, get_qar5_for_team, \
+    get_qar5_for_user
 
 
 @login_required
@@ -40,11 +41,11 @@ def export_pdf(request, *args, **kwargs):
         # Create a zip archive to return multiple PDFs
         zip_mem = BytesIO()
         archive = ZipFile(zip_mem, 'w')
-        for id in qapp_ids:
-            resp = export_pdf_single(request, pk=id)
+        for q_id in qapp_ids:
+            resp = export_pdf_single(request, pk=q_id)
             filename = resp.filename
             if filename:
-                temp_file_name = '%d_%s' % (id, filename)
+                temp_file_name = '%d_%s' % (q_id, filename)
                 resp.render()
                 with tempfile.SpooledTemporaryFile():
                     archive.writestr(temp_file_name, resp.content)
@@ -88,12 +89,13 @@ def export_pdf_single(request, *args, **kwargs):
     qapp_info['section_b'] = section_b_list
 
     filename = '%s.pdf' % slugify(qapp_info['qapp'].title)
+    options = {'enable-local-file-access': ""}
     resp = PDFTemplateResponse(
         request=request,
         template=template_name,
         filename=filename,
         context=qapp_info,
         show_content_in_browser=False,
-        cmd_options={},
+        cmd_options=options,
     )
     return resp

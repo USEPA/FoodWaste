@@ -1,10 +1,15 @@
-# qar5_docx.py (qar5)
+# qar5_docx.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
 
 """Definition of qar5 docx export methods."""
 
+
+import tempfile
+from zipfile import ZipFile
+from io import BytesIO
+from os import path
 from docx import Document
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from docx.enum.style import WD_STYLE_TYPE
@@ -13,17 +18,13 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
-
-from io import BytesIO
-from os import path
-import tempfile
-from zipfile import ZipFile
 from django.http import HttpResponse, HttpResponseRedirect
 from django.templatetags.static import static
 from django.utils.text import slugify
 from constants.qar5_sectionb import SECTION_B_INFO
-from DataSearch.settings import DEBUG, STATIC_ROOT
-from qar5.views import get_qar5_for_user, get_qar5_for_team, get_qapp_info
+from qar5.settings import DEBUG, STATIC_ROOT
+from qar5.views import get_qar5_for_user, get_qar5_for_team, \
+    get_qapp_info
 
 
 def export_doc(request, *args, **kwargs):
@@ -48,11 +49,11 @@ def export_doc(request, *args, **kwargs):
 
         zip_mem = BytesIO()
         archive = ZipFile(zip_mem, 'w')
-        for id in qapp_ids:
-            resp = export_doc_single(request, pk=id)
+        for q_id in qapp_ids:
+            resp = export_doc_single(request, pk=q_id)
             filename = resp['filename']
             if filename:
-                temp_file_name = '%d_%s' % (id, filename)
+                temp_file_name = '%d_%s' % (q_id, filename)
                 with tempfile.SpooledTemporaryFile():
                     archive.writestr(temp_file_name, resp.content)
 
@@ -75,15 +76,18 @@ def add_custom_heading(document, text, level):
 def add_center_heading(document, text, level):
     """Add centered headers to a docx file."""
     paragraph = add_custom_heading(document, text, level)
+    # pylint: disable=no-member
     paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
 
 def set_table_row_height(table):
     """Set minimum row height and alignment for a table."""
     for row in table.rows:
+        # pylint: disable=no-member
         row.height_rule = WD_ROW_HEIGHT_RULE.AT_LEAST
         row.height = Inches(0.35)
         for cell in row.cells:
+            # pylint: disable=no-member
             cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 
 
@@ -95,21 +99,27 @@ def add_custom_headers(document):
     to the auto-generated Table of Contents.
     """
     custom_header_1 = document.styles.add_style(
+        # pylint: disable=no-member
         'custom_header_1', WD_STYLE_TYPE.PARAGRAPH)
     custom_header_1.font.size = Pt(14)
     custom_header_1.font.bold = True
+    # pylint: disable=no-member
     custom_header_1.font.color.theme_color = MSO_THEME_COLOR_INDEX.ACCENT_1
 
     custom_header_2 = document.styles.add_style(
+        # pylint: disable=no-member
         'custom_header_2', WD_STYLE_TYPE.PARAGRAPH)
     custom_header_2.font.size = Pt(13)
     custom_header_2.font.bold = True
+    # pylint: disable=no-member
     custom_header_2.font.color.theme_color = MSO_THEME_COLOR_INDEX.ACCENT_1
 
     custom_header_3 = document.styles.add_style(
+        # pylint: disable=no-member
         'custom_header_3', WD_STYLE_TYPE.PARAGRAPH)
     custom_header_3.font.size = Pt(11)
     custom_header_3.font.bold = True
+    # pylint: disable=no-member
     custom_header_3.font.color.theme_color = MSO_THEME_COLOR_INDEX.ACCENT_1
 
 
@@ -119,30 +129,29 @@ def create_toc(document):
     paragraph = document.add_paragraph()
     run = paragraph.add_run()
     # creates a new element
-    fldChar = OxmlElement('w:fldChar')
+    field_char = OxmlElement('w:fldChar')
     # sets attribute on element
-    fldChar.set(qn('w:fldCharType'), 'begin')
-    instrText = OxmlElement('w:instrText')
+    field_char.set(qn('w:fldCharType'), 'begin')
+    instr_text = OxmlElement('w:instrText')
     # sets attribute on element
-    instrText.set(qn('xml:space'), 'preserve')
+    instr_text.set(qn('xml:space'), 'preserve')
     # change 1-3 depending on heading levels you need
-    instrText.text = 'TOC \\o "1-3" \\h \\z \\u'
+    instr_text.text = 'TOC \\o "1-3" \\h \\z \\u'
 
-    fldChar2 = OxmlElement('w:fldChar')
-    fldChar2.set(qn('w:fldCharType'), 'separate')
-    fldChar3 = OxmlElement('w:t')
-    fldChar3.text = "Right-click to update Table of Contents."
-    fldChar2.append(fldChar3)
+    field_char2 = OxmlElement('w:fldChar')
+    field_char2.set(qn('w:fldCharType'), 'separate')
+    field_char3 = OxmlElement('w:t')
+    field_char3.text = "Right-click to update Table of Contents."
+    field_char2.append(field_char3)
 
-    fldChar4 = OxmlElement('w:fldChar')
-    fldChar4.set(qn('w:fldCharType'), 'end')
+    field_char4 = OxmlElement('w:fldChar')
+    field_char4.set(qn('w:fldCharType'), 'end')
 
     r_element = run._r
-    r_element.append(fldChar)
-    r_element.append(instrText)
-    r_element.append(fldChar2)
-    r_element.append(fldChar4)
-    # p_element = paragraph._p
+    r_element.append(field_char)
+    r_element.append(instr_text)
+    r_element.append(field_char2)
+    r_element.append(field_char4)
 
 
 # py-lint: disable=no-member

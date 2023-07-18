@@ -10,11 +10,11 @@
         <div class="border rounded p-3 row">
             {% include 'EPA_QAPP_Header_Partial.html' %}
             <div class="col-md-12">
-                <form enctype="multipart/form-data" action="/qar5/SectionB?qapp_id={{qapp_id}}" method="post" role="form" id="sectionb_form">
+                <form enctype="multipart/form-data" action="/qapp_builder/SectionB?qapp_id={{qapp_id}}" method="post" role="form" id="sectionb_form">
                     {% csrf_token %}
                     <div class="">
-                        <div class="form-group row hidden">{{form.qapp}}</div>
-                        <div class="form-group row hidden">{{form.sectionb_type}}</div>
+                        <div class="usa-form-group hidden">{{form.qapp}}</div>
+                        <div class="usa-form-group hidden">{{form.sectionb_type}}</div>
                         {% for field in form %}
                         {% if field.help_text %}
                         <div class="usa-form-group">

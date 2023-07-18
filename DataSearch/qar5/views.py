@@ -1,10 +1,14 @@
-# views.py (qar5)
+# views.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
+# py-lint: disable=C0301,E1101,R0901,W0613,W0622,C0411
 
-"""Definition of qar5 views."""
 
+"""Definition of views."""
+
+from datetime import datetime
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -13,16 +17,66 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, \
     TemplateView, UpdateView, DeleteView
-from constants.qar5 import SECTION_A_INFO, SECTION_C_DEFAULTS, \
-    C3_QUALITY_METRICS, SECTION_D_INFO, SECTION_E_INFO, SECTION_F_INFO
+from constants.qar5 import SECTION_A_INFO, SECTION_D_INFO, SECTION_E_INFO, \
+    SECTION_F_INFO, SECTION_C_INFO
 from constants.qar5_sectionb import SECTION_B_INFO
-from qar5.forms import QappForm, QappApprovalForm, QappLeadForm, \
+from qapp_builder.forms import QappForm, QappApprovalForm, QappLeadForm, \
     QappApprovalSignatureForm, SectionAForm, SectionBForm, \
-    SectionDForm, RevisionForm, ReferencesForm
-from qar5.models import Qapp, QappApproval, QappLead, QappApprovalSignature, \
-    SectionA, SectionB, SectionC, SectionD, \
+    SectionDForm, RevisionForm, ReferencesForm, SectionCForm
+from qapp_builder.models import Qapp, QappApproval, QappLead, \
+    QappApprovalSignature, SectionA, SectionB, SectionC, SectionD, \
     QappSharingTeamMap, Revision, References
 from teams.models import Team, TeamMembership
+
+
+@login_required
+@staff_member_required
+def web_dev_tools(request, *args, **kwargs):
+    """
+    Go to the web developer page with custom admin functionality.
+
+    - Includes various custom admin functionality.
+    - Includes button to remove extra new line characters/spaces from QAPP data
+    """
+    return render(request, 'web_dev.html', {})
+
+
+@login_required
+@staff_member_required
+def clean_qapps(request, *args, **kwargs):
+    """
+    Clean QAPP Data.
+
+    - Remove extra new line characters and spaces.
+    - Convert QA_Category to the proper value.
+    """
+    sections_a = SectionA.objects.all()
+    for sect in sections_a:
+        # Clean Section A
+        a3_clean = sect.a3.replace('\r\n', ' ').replace('    ', ' ')
+        a9_clean = sect.a9.replace('\r\n', ' ').replace('    ', ' ')
+        a9_clean = a9_clean.replace('QA QA', 'QA')
+        if 'B' in sect.qapp.qa_category:
+            a9_clean = a9_clean.replace('QA Category A', sect.qapp.qa_category)
+        else:
+            a9_clean = a9_clean.replace('QA Category B', sect.qapp.qa_category)
+        sect.a3 = a3_clean
+        sect.a9 = a9_clean
+        sect.save()
+    return render(request, 'web_dev.html', {})
+
+
+def contact(request):
+    """Render the contact page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'main/contact.html',
+        {
+            'title': 'Contact',
+            'year': datetime.now().year,
+        }
+    )
 
 
 def get_qapp_all():
@@ -62,9 +116,9 @@ class QappList(LoginRequiredMixin, ListView):
         for this list of data.
         """
         context = super().get_context_data(**kwargs)
-        t_path = self.request.path.split('/')
-        p_id = t_path[len(t_path) - 1]
-        p_type = t_path[len(t_path) - 2]
+        path = self.request.path.split('/qapp_builder/')
+        p_id = path[len(path) - 1]
+        p_type = path[len(path) - 2]
         if p_type == 'user':
             context['p_user'] = User.objects.get(id=p_id)
         elif p_type == 'team':
@@ -73,9 +127,9 @@ class QappList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Get a list of QAPP objects based on the provided user or team ID."""
-        t_path = self.request.path.split('/')
-        p_id = t_path[len(t_path) - 1]
-        p_type = t_path[len(t_path) - 2]
+        path = self.request.path.split('/qapp_builder/')
+        p_id = path[len(path) - 1]
+        p_type = path[len(path) - 2]
         if p_type == 'user':
             return get_qar5_for_user(p_id)
         if p_type == 'team':
@@ -118,36 +172,36 @@ class QappEdit(LoginRequiredMixin, UpdateView):
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
-        pk = kwargs.get('pk')
-        qapp = Qapp.objects.filter(id=pk).first()
+        pkey = kwargs.get('pk')
+        qapp = Qapp.objects.filter(id=pkey).first()
         if check_can_edit(qapp, request.user):
             # We need to make sure we return a QappApproval form for editing:
-            qapp_approval = QappApproval.objects.filter(qapp_id=pk).first()
+            qapp_approval = QappApproval.objects.filter(qapp_id=pkey).first()
             approval_form = QappApprovalForm(instance=qapp_approval)
             return render(request, self.template_name,
                           {'object': qapp, 'form': QappForm(instance=qapp),
                            'approval_form': approval_form})
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % pk, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % pkey, 401, reason)
 
     def form_valid(self, form, *args, **kwargs):
         """Qapp Edit Form validation and redirect."""
         # Verify the current user has permissions to modify this QAPP:
-        self.object = form.save(commit=False)
-        if not check_can_edit(self.object, self.request.user):
+        obj = form.save(commit=False)
+        if not check_can_edit(obj, self.request.user):
             reason = 'You cannot edit this QAPP.'
             return HttpResponseRedirect(
-                '/qar5/detail/%s' % self.object.id, 401, reason)
+                '/qapp_builder/detail/%s' % obj.id, 401, reason)
 
-        self.object.save()
+        obj.save()
         # Prepare and insert teams data.
         if form.cleaned_data['teams']:
             form_teams = form.cleaned_data['teams']
 
             # Remove any team maps that have been deselected:
             remove_teams = QappSharingTeamMap.objects.filter(
-                qapp=self.object).exclude(team__in=form_teams)
+                qapp=obj).exclude(team__in=form_teams)
 
             for team in remove_teams:
                 team.delete()
@@ -155,18 +209,17 @@ class QappEdit(LoginRequiredMixin, UpdateView):
             # Insert or update selected team maps:
             for team in form_teams:
                 data_team_map = QappSharingTeamMap.objects.filter(
-                    qapp=self.object, team=team).first()
+                    qapp=obj, team=team).first()
                 # Create new team map if not exists:
                 if not data_team_map:
                     data_team_map = QappSharingTeamMap()
                     data_team_map.team = team
-                    data_team_map.qapp = self.object
+                    data_team_map.qapp = obj
                 # Update (or set) the can_edit field:
                 data_team_map.can_edit = form.cleaned_data['can_edit']
                 data_team_map.save()
         # Return back to the details page:
-        return HttpResponseRedirect('/qar5/detail/' + str(self.object.id))
-        return HttpResponseRedirect('/qar5/detail/' + str(self.object.id))
+        return HttpResponseRedirect('/qapp_builder/detail/' + str(obj.id))
 
 
 class QappCreate(LoginRequiredMixin, CreateView):
@@ -202,7 +255,7 @@ class QappCreate(LoginRequiredMixin, CreateView):
                     data_team_map.save()
 
             return HttpResponseRedirect(
-                '/qar5/approval/create?qapp_id=%d' % obj.id)
+                '/qapp_builder/approval/create?qapp_id=%d' % obj.id)
 
         return render(request, 'qapp_create.html', {'form': form})
 
@@ -253,7 +306,7 @@ class ProjectLeadCreate(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, ctx)
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp_id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id, 401, reason)
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -266,12 +319,12 @@ class ProjectLeadCreate(LoginRequiredMixin, CreateView):
             if form.is_valid():
                 form.save(commit=True)
                 return HttpResponseRedirect(
-                    '/qar5/detail/%s' % qapp_id)
+                    '/qapp_builder/detail/%s' % qapp_id)
             ctx = {'form': form, 'qapp_id': qapp_id}
             return render(request, self.template_name, ctx)
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp_id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id, 401, reason)
 
 
 class ProjectLeadDelete(LoginRequiredMixin, DeleteView):
@@ -282,12 +335,12 @@ class ProjectLeadDelete(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         """Return the user to the detail page on successful Delete."""
-        return '/qar5/detail/%s' % self.object.qapp.id
+        return '/qapp_builder/detail/%s' % self.object.qapp.id
 
     def dispatch(self, *args, **kwargs):
         """Ensure the user has permissions before deleting project leads."""
-        pk = kwargs.get('pk')
-        instance = QappLead.objects.filter(id=pk).first()
+        pkey = kwargs.get('pk')
+        instance = QappLead.objects.filter(id=pkey).first()
         if instance:
             user = self.request.user
             if check_can_edit(instance.qapp, user) or user.is_superuser:
@@ -309,33 +362,33 @@ class ProjectLeadEdit(LoginRequiredMixin, UpdateView):
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
-        pk = kwargs.get('pk')
-        object = self.model.objects.filter(id=pk).first()
-        if check_can_edit(object.qapp, request.user):
+        pkey = kwargs.get('pk')
+        obj = self.model.objects.filter(id=pkey).first()
+        if check_can_edit(obj.qapp, request.user):
             return render(request, self.template_name,
-                          {'object': object,
-                           'form': self.form_class(instance=object),
-                           'qapp_id': object.qapp.id})
+                          {'object': obj,
+                           'form': self.form_class(instance=obj),
+                           'qapp_id': obj.qapp.id})
 
         reason = 'You cannot edit this data.'
         return HttpResponseRedirect(
-            '/qar5/detail/%s' % object.qapp.id, 401, reason)
+            '/qapp_builder/detail/%s' % obj.qapp.id, 401, reason)
 
     def post(self, request, *args, **kwargs):
         """Process the post request with a modified Existing Data form."""
-        pk = kwargs.get('pk')
-        instance = self.model.objects.filter(id=pk).first()
+        pkey = kwargs.get('pk')
+        instance = self.model.objects.filter(id=pkey).first()
         qapp = instance.qapp
         if check_can_edit(qapp, request.user):
             form = self.form_class(request.POST, instance=instance)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/qar5/detail/%s' % qapp.id)
+                return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp.id)
 
             return render(request, self.template_name, {'form': form})
 
         reason = 'You cannot edit this data.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp.id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp.id, 401, reason)
 
 
 class ProjectApprovalCreate(LoginRequiredMixin, CreateView):
@@ -359,7 +412,7 @@ class ProjectApprovalCreate(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, ctx)
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp_id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id, 401, reason)
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -371,13 +424,13 @@ class ProjectApprovalCreate(LoginRequiredMixin, CreateView):
         if check_can_edit(qapp, request.user):
             if form.is_valid():
                 form.save(commit=True)
-                return HttpResponseRedirect('/qar5/detail/%s' % qapp_id)
+                return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id)
 
             ctx = {'form': form, 'qapp_id': qapp_id}
             return render(request, self.template_name, ctx)
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp_id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id, 401, reason)
 
 
 class ProjectApprovalEdit(LoginRequiredMixin, UpdateView):
@@ -394,33 +447,33 @@ class ProjectApprovalEdit(LoginRequiredMixin, UpdateView):
         Override default get request so we can verify the user has
         edit privileges, either through super status or team membership.
         """
-        pk = kwargs.get('pk')
-        qapp = Qapp.objects.filter(id=pk).first()
+        pkey = kwargs.get('pk')
+        qapp = Qapp.objects.filter(id=pkey).first()
         if check_can_edit(qapp, request.user):
             # We need to make sure we return a QappApproval form for editing:
-            qapp_approval = QappApproval.objects.filter(qapp_id=pk).first()
+            qapp_approval = QappApproval.objects.filter(qapp_id=pkey).first()
             return render(request, self.template_name,
-                          {'object': qapp_approval, 'qapp_id': pk,
+                          {'object': qapp_approval, 'qapp_id': pkey,
                            'form': QappApprovalForm(instance=qapp_approval)})
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % pk, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % pkey, 401, reason)
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         """Save the changes to the form."""
-        pk = kwargs.get('pk')
-        instance = QappApproval.objects.filter(qapp_id=pk).first()
+        pkey = kwargs.get('pk')
+        instance = QappApproval.objects.filter(qapp_id=pkey).first()
         if check_can_edit(instance.qapp, request.user):
             form = QappApprovalForm(request.POST, instance=instance)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/qar5/detail/%s' % pk)
+                return HttpResponseRedirect('/qapp_builder/detail/%s' % pkey)
             return render(request, self.template_name,
-                          {'qapp_id': pk, 'form': form})
+                          {'qapp_id': pkey, 'form': form})
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % pk, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % pkey, 401, reason)
 
 
 class ProjectApprovalSignatureCreate(LoginRequiredMixin, CreateView):
@@ -447,7 +500,7 @@ class ProjectApprovalSignatureCreate(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, ctx)
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp_id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id, 401, reason)
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -461,12 +514,12 @@ class ProjectApprovalSignatureCreate(LoginRequiredMixin, CreateView):
             if form.is_valid():
                 form.save(commit=True)
                 return HttpResponseRedirect(
-                    '/qar5/detail/%s' % qapp_id)
+                    '/qapp_builder/detail/%s' % qapp_id)
             ctx = {'form': form, 'qapp_id': qapp_id}
             return render(request, self.template_name, ctx)
 
         reason = 'You cannot edit this QAPP.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp_id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp_id, 401, reason)
 
 
 class ProjectApprovalSignatureDelete(LoginRequiredMixin, DeleteView):
@@ -477,12 +530,12 @@ class ProjectApprovalSignatureDelete(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         """Return the user to the detail page on successful Delete."""
-        return '/qar5/detail/%s' % self.object.qapp_approval.qapp.id
+        return '/qapp_builder/detail/%s' % self.object.qapp_approval.qapp.id
 
     def dispatch(self, *args, **kwargs):
         """Ensure the user has permissions before deleting signatures."""
-        pk = kwargs.get('pk')
-        instance = QappApprovalSignature.objects.filter(id=pk).first()
+        pkey = kwargs.get('pk')
+        instance = QappApprovalSignature.objects.filter(id=pkey).first()
         if instance:
             qapp = instance.qapp_approval.qapp
             user = self.request.user
@@ -505,33 +558,33 @@ class ProjectApprovalSignatureEdit(LoginRequiredMixin, UpdateView):
         Verify the user has edit privileges, either through super
         status or team membership.
         """
-        pk = kwargs.get('pk')
-        object = self.model.objects.filter(id=pk).first()
-        if check_can_edit(object.qapp_approval.qapp, request.user):
+        pkey = kwargs.get('pk')
+        obj = self.model.objects.filter(id=pkey).first()
+        if check_can_edit(obj.qapp_approval.qapp, request.user):
             return render(request, self.template_name,
-                          {'object': object,
-                           'form': self.form_class(instance=object),
-                           'qapp_id': object.qapp_approval.qapp.id})
+                          {'object': obj,
+                           'form': self.form_class(instance=obj),
+                           'qapp_id': obj.qapp_approval.qapp.id})
 
         reason = 'You cannot edit this data.'
         return HttpResponseRedirect(
-            '/qar5/detail/%s' % object.qapp_approval.qapp.id, 401, reason)
+            '/qapp_builder/detail/%s' % obj.qapp_approval.qapp.id, 401, reason)
 
     def post(self, request, *args, **kwargs):
         """Process the post request with a modified Existing Data form."""
-        pk = kwargs.get('pk')
-        instance = self.model.objects.filter(id=pk).first()
+        pkey = kwargs.get('pk')
+        instance = self.model.objects.filter(id=pkey).first()
         qapp = instance.qapp_approval.qapp
         if check_can_edit(qapp, request.user):
             form = self.form_class(request.POST, instance=instance)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/qar5/detail/%s' % qapp.id)
+                return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp.id)
 
             return render(request, self.template_name, {'form': form})
 
         reason = 'You cannot edit this data.'
-        return HttpResponseRedirect('/qar5/detail/%s' % qapp.id, 401, reason)
+        return HttpResponseRedirect('/qapp_builder/detail/%s' % qapp.id, 401, reason)
 
 
 class SectionAView(LoginRequiredMixin, TemplateView):
@@ -575,7 +628,7 @@ class SectionAView(LoginRequiredMixin, TemplateView):
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
             return HttpResponseRedirect(
-                '/qar5/SectionA?qapp_id=%s' % qapp.id, 401, reason)
+                '/qapp_builder/SectionA?qapp_id=%s' % qapp.id, 401, reason)
 
         existing_section_a = SectionA.objects.filter(qapp=qapp).first()
 
@@ -589,6 +642,8 @@ class SectionAView(LoginRequiredMixin, TemplateView):
         if ctx['form'].is_valid():
             ctx['obj'] = ctx['form'].save(commit=True)
             ctx['save_success'] = 'Successfully Saved Changes!'
+        else:
+            return self.get(request, ctx)
 
         return render(request, self.template_name, ctx)
 
@@ -605,6 +660,14 @@ class SectionBView(LoginRequiredMixin, TemplateView):
         qapp_id = request.GET.get('qapp_id', None)
         qapp = Qapp.objects.get(id=qapp_id)
         sectiona = SectionA.objects.filter(qapp_id=qapp_id).first()
+
+        # TODO: Need to figure out the proper way to handle this...
+        # if not sectiona:
+        #     reason = 'Select a Section B Type and click "Save Changes" ' + \
+        #         'before moving onto the next page!'
+        #     return HttpResponseRedirect(
+        #         '/qapp_builder/SectionA?qapp_id=%s' % qapp_id, 302, reason)
+
         selected_sectionb_types = sectiona.sectionb_type.all()
 
         edit_message = ''
@@ -662,7 +725,7 @@ class SectionBView(LoginRequiredMixin, TemplateView):
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
             return HttpResponseRedirect(
-                '/qar5/SectionB?qapp_id=%s' % qapp.id, 401, reason)
+                '/qapp_builder/SectionB?qapp_id=%s' % qapp.id, 401, reason)
 
         sectionb_type_id = request.POST.get('sectionb_type')
         ctx['sectionb_type'] = qapp.sectiona.sectionb_type.filter(
@@ -700,12 +763,52 @@ class SectionCView(LoginRequiredMixin, TemplateView):
         """Return the index page for QAPP Section C."""
         assert isinstance(request, HttpRequest)
         qapp_id = request.GET.get('qapp_id', None)
-        Qapp.objects.get(id=qapp_id)
+        qapp = Qapp.objects.get(id=qapp_id)
+        existing_section_c = SectionC.objects.filter(qapp=qapp).first()
+
+        if existing_section_c:
+            form = SectionCForm(instance=existing_section_c)
+
+        else:
+            form = SectionCForm({'qapp': qapp,
+                                 'c1': SECTION_C_INFO[0].replace(
+                                     '__category__', qapp.qa_category),
+                                 'c2': SECTION_C_INFO[1]})
+
+        edit_message = ''
+        if not check_can_edit(qapp, request.user):
+            edit_message = 'You cannot edit this QAPP.'
 
         return render(request, self.template_name,
                       {'title': 'QAPP Section C', 'qapp_id': qapp_id,
-                       'SECTION_C_DEFAULTS': SECTION_C_DEFAULTS,
-                       'c3_info': C3_QUALITY_METRICS})
+                       'form': form, 'edit_message': edit_message})
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        """Process the post request with a SectionC form filled out."""
+        ctx = {'qapp_id': request.GET.get('qapp_id', None),
+               'SECTION_C_INFO': SECTION_C_INFO, 'title': 'QAPP Section C'}
+
+        qapp = Qapp.objects.get(id=ctx['qapp_id'])
+        if not check_can_edit(qapp, request.user):
+            reason = 'You cannot edit this QAPP.'
+            return HttpResponseRedirect(
+                '/qapp_builder/SectionC?qapp_id=%s' % qapp.id, 401, reason)
+
+        existing_section_c = SectionC.objects.filter(qapp=qapp).first()
+
+        # Update if existing, otherwise insert new:
+        if existing_section_c:
+            ctx['form'] = SectionCForm(instance=existing_section_c,
+                                       data=request.POST)
+        else:
+            ctx['form'] = SectionCForm(request.POST)
+
+        if ctx['form'].is_valid():
+            ctx['obj'] = ctx['form'].save(commit=True)
+            ctx['save_success'] = 'Successfully Saved Changes!'
+
+        return render(request, self.template_name, ctx)
 
 
 class SectionDView(LoginRequiredMixin, TemplateView):
@@ -745,7 +848,7 @@ class SectionDView(LoginRequiredMixin, TemplateView):
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
             return HttpResponseRedirect(
-                '/qar5/SectionD?qapp_id=%s' % qapp.id, 401, reason)
+                '/qapp_builder/SectionD?qapp_id=%s' % qapp.id, 401, reason)
 
         existing_section_d = SectionD.objects.filter(qapp=qapp).first()
 
@@ -800,7 +903,7 @@ class SectionEView(LoginRequiredMixin, TemplateView):
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
             return HttpResponseRedirect(
-                '/qar5/SectionE?qapp_id=%s' % qapp.id, 401, reason)
+                '/qapp_builder/SectionE?qapp_id=%s' % qapp.id, 401, reason)
 
         existing_references = References.objects.filter(qapp=qapp).first()
 
@@ -861,14 +964,14 @@ class RevisionCreate(LoginRequiredMixin, CreateView):
         if not check_can_edit(qapp, request.user):
             reason = 'You cannot edit this QAPP.'
             return HttpResponseRedirect(
-                '/qar5/revisions?qapp_id=%s' % qapp.id, 401, reason)
+                '/qapp_builder/revisions?qapp_id=%s' % qapp.id, 401, reason)
         # datetime_str = form.data['effective_date']
         # datetime_obj = datetime.strptime(datetime_str, DATETIME_FORMAT)
         # form.data['effective_date'] = datetime_obj
         if form.is_valid():
             form.save(commit=True)
             return HttpResponseRedirect(
-                '/qar5/SectionF?qapp_id=%s' % qapp_id)
+                '/qapp_builder/SectionF?qapp_id=%s' % qapp_id)
 
         ctx = {'form': form, 'qapp_id': qapp_id}
         return render(request, self.template_name, ctx)
@@ -912,7 +1015,7 @@ def get_qapp_info(user, qapp_id):
                 qapp_approval_id=ctx['qapp_approval'].id)
         ctx['section_a'] = SectionA.objects.filter(qapp_id=qapp_id).first()
         ctx['section_b'] = SectionB.objects.filter(qapp_id=qapp_id).all()
-        ctx['section_c'] = SectionC(qa_category=ctx['qapp'].qa_category)
+        ctx['section_c'] = SectionC.objects.filter(qapp_id=qapp_id).first()
         ctx['section_d'] = SectionD.objects.filter(qapp_id=qapp_id).first()
         ctx['references'] = References.objects.filter(qapp_id=qapp_id).first()
         ctx['revisions'] = Revision.objects.filter(qapp_id=qapp_id)

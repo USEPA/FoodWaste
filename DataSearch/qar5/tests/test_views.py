@@ -1,4 +1,4 @@
-# test_views.py (qar5)
+# test_views.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
@@ -17,9 +17,9 @@ from django.db.models.query import QuerySet, EmptyQuerySet
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
-from qar5.models import Division, Qapp, QappSharingTeamMap
-from qar5.forms import QappForm
-from qar5.views import check_can_edit, get_qapp_all, QappEdit
+from qapp_builder.models import Division, Qapp, QappSharingTeamMap
+from qapp_builder.forms import QappForm
+from qapp_builder.views import check_can_edit, get_qapp_all, QappEdit
 from teams.models import Team, TeamMembership
 
 
@@ -85,8 +85,9 @@ class TestViewAuthenticated(TestCase):
 
     def test_get_qapp_all(self):
         """
-        Test the get all qapp method. This should return the one qapp
-        that was created during setup.
+        Test the get all qapp method.
+
+        This should return the one qapp that was created during setup.
         """
         data = get_qapp_all()
         self.assertIsInstance(data, QuerySet)
@@ -95,14 +96,14 @@ class TestViewAuthenticated(TestCase):
 
     def test_qapp_index(self):
         """Test the qapp module index page."""
-        response = self.client.get('/qar5/')
+        response = self.client.get('/qapp_builder/')
         self.assertContains(response, 'QUALITY ASSURANCE PROJECT PLAN', 1, 200)
         self.assertContains(response, 'View QAPP documents for...', 1, 200)
         self.assertContains(response, 'or create a new QAPP...', 1, 200)
 
     def test_qapp_list_user(self):
         """Test the qapp list page for a User."""
-        response = self.client.get('/qar5/list/user/1/')
+        response = self.client.get('/qapp_builder/list/user/1/')
         self.assertContains(response, 'QUALITY ASSURANCE PROJECT PLAN', 1, 200)
         self.assertContains(response, 'Create a new QAPP', 1, 200)
         self.assertContains(response, 'View or Edit Existing QAPP', 1, 200)
@@ -113,7 +114,7 @@ class TestViewAuthenticated(TestCase):
 
     def test_qapp_list_team(self):
         """Test the qapp list page for a Team."""
-        response = self.client.get('/qar5/list/team/1/')
+        response = self.client.get('/qapp_builder/list/team/1/')
         self.assertContains(response, 'QUALITY ASSURANCE PROJECT PLAN', 1, 200)
         self.assertContains(response, 'Create a new QAPP', 1, 200)
         self.assertContains(response, 'View or Edit Existing QAPP', 1, 200)
@@ -139,7 +140,7 @@ class TestViewAuthenticated(TestCase):
 
     def test_qapp_edit_get_allowed(self):
         """Test the QappEdit view GET method with default (permitted) user."""
-        response = self.client.get('/qar5/edit/1/')
+        response = self.client.get('/qapp_builder/edit/1/')
         self.assertContains(response, 'Division:', 1, 200)
         self.assertContains(response, 'Division Branch:', 1, 200)
         self.assertContains(response, 'Share With Teams:', 1, 200)
@@ -150,7 +151,7 @@ class TestViewAuthenticated(TestCase):
 
     def test_qapp_edit_get_denied(self):
         """Test the QappEdit view GET method with non-permitted user."""
-        request = self.request_factory.get('/qar5/edit/1/')
+        request = self.request_factory.get('/qapp_builder/edit/1/')
         request.user = self.user2
         response = QappEdit.as_view()(pk=str(self.qapp.id), request=request)
         self.assertEqual(response.status_code, 302)
@@ -162,13 +163,12 @@ class TestViewAuthenticated(TestCase):
         data['division'] = self.division.id
         # Existing qapp has team 1, replace it with team2:
         data['teams'] = f'{self.team2.id}'
-        response = self.client.post(f'/qar5/edit/{self.qapp.id}/', data=data)
+        response = self.client.post(f'/edit/{self.qapp.id}/', data=data)
         self.assertEqual(response.status_code, 302)
 
-    # TODO: Test when user cannot edit
     # def test_qapp_edit_form_valid_fail(self):
     #     """Test the QappEdit form_valid method."""
-    #     path = '/qar5/edit/' + str(self.qapp.id)
+    #     path = '/qapp_builder/edit/' + str(self.qapp.id)
     #     request = self.request_factory.post(path, data={})
     #     request.user = self.user2
     #     response = QappEdit.as_view()(pk=str(self.qapp.id), request=request)
@@ -176,7 +176,7 @@ class TestViewAuthenticated(TestCase):
 
     def test_qapp_create_get(self):
         """Test the QappCreate view GET method."""
-        response = self.client.get('/qar5/create/')
+        response = self.client.get('/qapp_builder/create/')
         self.assertContains(response, 'Office of Research and Development', 1,
                             200)
         self.assertContains(
@@ -192,16 +192,17 @@ class TestViewAuthenticated(TestCase):
         # When posting to form, the division should be ID not an object:
         data['division'] = self.division.id
         data['teams'] = f'{self.team.id}'
-        response = self.client.post('/qar5/create/', data=data)
+        response = self.client.post('/qapp_builder/create/', data=data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Qapp.objects.count(), 2)
 
     def test_qapp_create_post_2(self):
         """
         Test Create Qapp with a non-valid form.
+
         This should render the create page again.
         """
-        response = self.client.post('/qar5/create/', data={})
+        response = self.client.post('/qapp_builder/create/', data={})
         self.assertContains(response, 'Office of Research and Development', 1,
                             200)
         self.assertContains(

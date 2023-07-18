@@ -1,7 +1,9 @@
-# forms.py (qar5)
+# forms.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
+
+
 """Definition of forms."""
 
 from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
@@ -11,10 +13,10 @@ from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
 from django.forms.widgets import DateTimeInput
 from django.utils.translation import gettext_lazy as _
 from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES
-from constants.qar5 import SECTION_A_INFO
-from qar5.models import Division, Qapp, QappApproval, QappLead, \
+from constants.qar5 import SECTION_A_INFO, SECTION_C_INFO
+from qapp_builder.models import Division, Qapp, QappApproval, QappLead, \
     QappApprovalSignature, SectionA, SectionB, SectionD, Revision, \
-    SectionBType, References
+    SectionBType, References, SectionC
 from teams.models import Team, TeamMembership
 
 
@@ -68,15 +70,14 @@ class QappForm(ModelForm):
                             label=_("QA Tracking ID:"),
                             required=True)
 
-    teams = ModelMultipleChoiceField(widget=SelectMultiple({
-        'class':
-        'usa-input',
-        'placeholder':
-        'Teams'
-    }),
-                                     queryset=Team.objects.all(),
-                                     label=_("Share With Teams"),
-                                     required=False)
+    teams = ModelMultipleChoiceField(
+        widget=SelectMultiple({
+            'class': 'usa-input',
+            'placeholder': 'Teams'
+        }),
+        queryset=Team.objects.all(),
+        label=_("Share With Teams"),
+        required=False)
 
     can_edit = BooleanField(
         required=False,
@@ -332,29 +333,52 @@ class SectionBForm(ModelForm):
         fields = '__all__'
 
 
+class SectionCForm(ModelForm):
+    """Class representing the rest of Section C."""
+
+    qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'usa-input',
+                                       'readonly': 'readonly'}))
+
+    c1 = CharField(
+        label=_("C.1 Assessments and Response Actions"),
+        required=False, widget=Textarea({'class': 'usa-input'}),
+        initial=SECTION_C_INFO[0])
+
+    c2 = CharField(
+        label=_("C.2 Reports to Management"),
+        required=False, widget=Textarea({'class': 'usa-input'}),
+        initial=SECTION_C_INFO[1])
+
+    class Meta:
+        """Meta data for SectionCForm Form."""
+
+        model = SectionC
+        fields = ('qapp', 'c1', 'c2')
+
+
 class SectionDForm(ModelForm):
     """Class representing the entirety of SectionD for a given QAPP."""
 
-    qapp = ModelChoiceField(queryset=Qapp.objects.all(),
-                            initial=0,
-                            required=True,
-                            label=_("Parent QAPP"),
-                            widget=Textarea(attrs={
-                                'class': 'usa-input',
-                                'readonly': 'readonly'
-                            }))
+    qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'usa-input',
+                                       'readonly': 'readonly'}))
 
-    d1 = CharField(label=_("D.1 Data Review, Verification, and Validation"),
-                   required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+    d1 = CharField(
+        label=_("D.1 Data Review, Verification, and Validation"),
+        required=True, widget=Textarea({'class': 'usa-input'}))
 
-    d2 = CharField(label=_("D.2 Verification and Validation Methods"),
-                   required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+    d2 = CharField(
+        label=_("D.2 Verification and Validation Methods"),
+        required=True, widget=Textarea({'class': 'usa-input'}))
 
-    d3 = CharField(label=_("D.3 Reconciliation with User Requirements"),
-                   required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+    d3 = CharField(
+        label=_("D.3 Reconciliation with User Requirements"),
+        required=True, widget=Textarea({'class': 'usa-input'}))
 
     class Meta:
         """Meta data for SectionDForm Form."""
@@ -366,17 +390,14 @@ class SectionDForm(ModelForm):
 class ReferencesForm(ModelForm):
     """Form for creating and adding References (Section E) to QAPP."""
 
-    qapp = ModelChoiceField(queryset=Qapp.objects.all(),
-                            initial=0,
-                            required=True,
-                            label=_("Parent QAPP"),
-                            widget=Textarea(attrs={
-                                'class': 'usa-input',
-                                'readonly': 'readonly'
-                            }))
-    references = CharField(label=_("References"),
-                           required=True,
-                           widget=Textarea({'class': 'usa-input'}))
+    qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'usa-input',
+                                       'readonly': 'readonly'}))
+    references = CharField(
+        label=_("References"),
+        required=True, widget=Textarea({'class': 'usa-input'}))
 
     class Meta:
         """Meta data for References Form."""
@@ -388,34 +409,31 @@ class ReferencesForm(ModelForm):
 class RevisionForm(ModelForm):
     """Form for creating and adding new Revisions (Section F) to QAPP."""
 
-    qapp = ModelChoiceField(queryset=Qapp.objects.all(),
-                            initial=0,
-                            required=True,
-                            label=_("Parent QAPP"),
-                            widget=Textarea(attrs={
-                                'class': 'usa-input',
-                                'readonly': 'readonly'
-                            }))
-    revision = CharField(label=_("Revision Number"),
-                         required=True,
-                         widget=TextInput({'class': 'usa-input'}))
+    qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
+                            required=True, label=_("Parent QAPP"),
+                            widget=Textarea(
+                                attrs={'class': 'usa-input',
+                                       'readonly': 'readonly'}))
+    revision = CharField(
+        label=_("Revision Number"),
+        required=True, widget=TextInput({'class': 'usa-input'}))
 
-    description = CharField(label=_("Description"),
-                            required=True,
-                            widget=TextInput({'class': 'usa-input'}))
+    description = CharField(
+        label=_("Description"),
+        required=True, widget=TextInput({'class': 'usa-input'}))
 
     effective_date = DateTimeField(
         label=_("Effective Date"),
-        required=True,
-        widget=DateTimeInput(attrs={'class': 'usa-input'}))
+        required=True, widget=DateTimeInput(
+            attrs={'class': 'usa-input'}))
 
-    initial_version = CharField(label=_("Initial Version"),
-                                required=True,
-                                widget=TextInput({'class': 'usa-input'}))
+    initial_version = CharField(
+        label=_("Initial Version"),
+        required=True, widget=TextInput({'class': 'usa-input'}))
 
     class Meta:
         """Meta data for Revision Form."""
 
         model = Revision
-        fields = ('qapp', 'revision', 'description', 'effective_date',
-                  'initial_version')
+        fields = ('qapp', 'revision', 'description',
+                  'effective_date', 'initial_version')

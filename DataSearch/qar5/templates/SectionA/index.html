@@ -16,7 +16,7 @@
                 <form enctype="multipart/form-data" action="/qar5/SectionA?qapp_id={{qapp_id}}" method="post" role="form" id="sectiona_form">
                     {% csrf_token %}
                     <div class="">
-                        <div class="form-group row hidden">{{form.qapp}}</div>
+                        <div class="usa-form-group row hidden">{{form.qapp}}</div>
 
                         <!------- Section A2 ------->
                         <div class="usa-form-group">
@@ -36,6 +36,7 @@
                             <div class="col-sm-8">{{form.a2_keywords}}</div>
                         </div>
 
+                        <!------- Section A3 ------->
                         <div class="usa-form-group">
                             <label for="" class="col-sm-3 control-label">{{form.a3.label}}</label>
                             <div class="col-sm-8">{{form.a3}}</div>
@@ -115,7 +116,7 @@
                                 {{form.a9}}
                                 <button type="button" class="btn btn-sm btn-info mb-2 col-sm-12"
                                         onclick="location.href='/existingdata'">
-                                    GO TO EXISTING DATA AND INFORMATION SEARCH TOOL
+                                    GO TO QAPP Builder Tool
                                 </button>
                             </div>
                         </div>
