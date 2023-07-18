@@ -2,116 +2,116 @@
 
 {% if form.errors %}
 <div class="alert alert-danger">
-  {% for field in form %} {% for error in field.errors %}
-  <h4>{{ error|escape }}</h4>
-  {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
-  <h4>{{ error|escape }}</h4>
-  {% endfor %}
+    {% for field in form %} {% for error in field.errors %}
+    <h4>{{ error|escape }}</h4>
+    {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
+    <h4>{{ error|escape }}</h4>
+    {% endfor %}
 </div>
 {% endif %}
 
 <form enctype="multipart/form-data" action="/existingdata/create/" method="post" role="form">
-  {% csrf_token %}
+    {% csrf_token %}
 
-  <div class="usa-form-group">
-    <label for="" class="usa-label">
-      {{form.teams.label}} (
-      <a href="{% url 'team_create' %}" target="_blank" rel="noopener noreferrer">
-        Create a New Team
-      </a>)
-    </label>
-    {{form.teams}}
-  </div>
-
-  <div class="usa-form-group">
-    <label for="" class="usa-label">{{form.work.label}}</label>
-    {{form.work}}
-  </div>
-
-  <div class="usa-form-group">
-    <label for="" class="usa-label">{{form.email.label}}</label>
-    {{form.email}}
-  </div>
-
-  <div class="usa-form-group">
-    <label for="" class="usa-label">{{form.phone.label}}</label>
-    {{form.phone}}
-  </div>
-
-  <div class="usa-form-group grid-container">
-    <h4>Existing Data Search</h4>
-
-    <div class="usa-form-group grid-row">
-      <label for="searchMethodSelect" class="usa-label grid-col-12">Internet/Intranet Search Method</label>
-      <select id="searchMethodSelect" class="usa-select grid-col-12">
-        <option value="google">Google Scholar</option>
-        <option value="scifinder-n">SciFinder-n</option>
-        <option value="scifinder-a">SciFinder-n Advanced</option>
-        <option value="duck">DuckDuckGo</option>
-        <option value="custom">Custom URL</option>
-      </select>
+    <div class="usa-form-group">
+        <label for="" class="usa-label">
+            {{form.teams.label}} (
+            <a href="{% url 'team_create' %}" target="_blank" rel="noopener noreferrer">
+                Create a New Team
+            </a>)
+        </label>
+        {{form.teams}}
     </div>
 
-    <div class="usa-form-group grid-row">
-      <label for="" class="usa-label grid-col-12">{{form.search.label}}</label>
-        <div class="grid-col-12">{{form.search}}</div>
-        <button id="searchLink" class="usa-button" onclick="goSearch()" disabled>Go</button>
+    <div class="usa-form-group">
+        <label for="" class="usa-label">{{form.work.label}}</label>
+        {{form.work}}
     </div>
 
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.source.label}}</label>
-      {{form.source}}
+    <div class="usa-form-group">
+        <label for="" class="usa-label">{{form.email.label}}</label>
+        {{form.email}}
     </div>
 
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.source_title.label}}</label>
-      {{form.source_title}}
+    <div class="usa-form-group">
+        <label for="" class="usa-label">{{form.phone.label}}</label>
+        {{form.phone}}
     </div>
 
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.keywords.label}}</label>
-      {{form.keywords}}
+    <div class="usa-form-group grid-container">
+        <h4>Existing Data Search</h4>
+
+        <div class="usa-form-group grid-row">
+            <label for="searchMethodSelect" class="usa-label grid-col-12">Internet/Intranet Search Method</label>
+            <select id="searchMethodSelect" class="usa-select grid-col-12">
+                <option value="google">Google Scholar</option>
+                <option value="scifinder-n">SciFinder-n</option>
+                <option value="scifinder-a">SciFinder-n Advanced</option>
+                <option value="duck">DuckDuckGo</option>
+                <option value="custom">Custom URL</option>
+            </select>
+        </div>
+
+        <div class="usa-form-group grid-row">
+            <label for="" class="usa-label grid-col-12">{{form.search.label}}</label>
+                <div class="grid-col-12">{{form.search}}</div>
+                <button id="searchLink" class="usa-button" onclick="goSearch()" disabled>Go</button>
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.source.label}}</label>
+            {{form.source}}
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.source_title.label}}</label>
+            {{form.source_title}}
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.keywords.label}}</label>
+            {{form.keywords}}
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.url.label}}</label>
+            {{form.url}}
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.disclaimer_req.label}}</label>
+            <div class="grid-col-12">{{form.disclaimer_req}}</div>
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.citation.label}}</label>
+            {{form.citation}}
+        </div>
+
+        <div class="usa-form-group hidden-div grid-row" style="display: none">
+            <label for="" class="usa-label grid-col-12">{{form.comments.label}}</label>
+            {{form.comments}}
+        </div>
     </div>
 
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.url.label}}</label>
-      {{form.url}}
+    <div class="usa-form-group">
+        <label for="id_attachments" class="usa-label">{{form.attachments.label}}</label>
+        {{form.attachments}}
     </div>
 
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.disclaimer_req.label}}</label>
-      <div class="grid-col-12">{{form.disclaimer_req}}</div>
+    <div class="usa-form-group">
+        <div class="usa-button-group">
+            <button type="submit" class="usa-button">Save</button>
+            <button type="reset" class="usa-button usa-button--accent-warm">Reset</button>
+            <button
+                type="reset"
+                onclick="window.location.href='/existingdata/'"
+                class="usa-button usa-button--secondary"
+            >
+                Cancel
+            </button>
+        </div>
     </div>
-
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.citation.label}}</label>
-      {{form.citation}}
-    </div>
-
-    <div class="usa-form-group hidden-div grid-row" style="display: none">
-      <label for="" class="usa-label grid-col-12">{{form.comments.label}}</label>
-      {{form.comments}}
-    </div>
-  </div>
-
-  <div class="usa-form-group">
-    <label for="id_attachments" class="usa-label">{{form.attachments.label}}</label>
-    {{form.attachments}}
-  </div>
-
-  <div class="usa-form-group">
-    <div class="usa-button-group">
-      <button type="submit" class="usa-button">Save</button>
-      <button type="reset" class="usa-button usa-button--accent-warm">Reset</button>
-      <button
-        type="reset"
-        onclick="window.location.href='/existingdata/'"
-        class="usa-button usa-button--secondary"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
 </form>
 
 {% endblock %}
@@ -126,55 +126,55 @@
 {% block scripts %}
 
 <script>
-  var searchUrl = '';
-  $(document).ready(function () {
-    $('#id_search').on('change textInput input', searchFieldUpdate);
-    $('#searchLink').on('click', goSearch);
-  });
-
-  var GOOGLE_URL = 'https://scholar.google.com/scholar?q=';
-  var SCIFINDER_N_URL = 'https://scifinder-n.cas.org/references';
-  var SCIFINDER_A_URL = 'https://scifinder-n.cas.org/advanced-search/references';
-  var DUCK_URL = 'https://duckduckgo.com/?q=';
-
-  function searchFieldUpdate() {
-    var searchTerm = $('#id_search').val();
-    if (searchTerm.length > 2) {
-      $('#searchLink').removeAttr('disabled');
-    } else {
-      if (!$('#searchLink').hasAttr('disabled')) {
-        $('#searchLink').addAttr('disabled');
-        hidePostSearchFields();
-      }
-      searchUrl = '';
-    }
-  }
-
-  function goSearch() {
-    var searchTerm = $('#id_search').val();
-    if (searchTerm.length > 2) {
-      var searchSelection = $('#searchMethodSelect').val();
-      if (searchSelection === 'google') searchUrl = GOOGLE_URL + searchTerm;
-      else if (searchSelection === 'scifinder-a') searchUrl = SCIFINDER_A_URL;
-      else if (searchSelection === 'scifinder-n') searchUrl = SCIFINDER_N_URL;
-      else if (searchSelection === 'duck') searchUrl = DUCK_URL + searchTerm;
-      else searchUrl = searchTerm;
-
-      showPostSearchFields();
-      window.open(searchUrl);
-    }
-  }
-
-  function hidePostSearchFields() {
-    $('.hidden-div').each(function () {
-      $(this).hide();
+    var searchUrl = '';
+    $(document).ready(function () {
+        $('#id_search').on('change textInput input', searchFieldUpdate);
+        $('#searchLink').on('click', goSearch);
     });
-  }
 
-  function showPostSearchFields() {
-    $('.hidden-div').each(function () {
-      $(this).show();
-    });
-  }
+    var GOOGLE_URL = 'https://scholar.google.com/scholar?q=';
+    var SCIFINDER_N_URL = 'https://scifinder-n.cas.org/references';
+    var SCIFINDER_A_URL = 'https://scifinder-n.cas.org/advanced-search/references';
+    var DUCK_URL = 'https://duckduckgo.com/?q=';
+
+    function searchFieldUpdate() {
+        var searchTerm = $('#id_search').val();
+        if (searchTerm.length > 2) {
+            $('#searchLink').removeAttr('disabled');
+        } else {
+            if (!$('#searchLink').hasAttr('disabled')) {
+                $('#searchLink').addAttr('disabled');
+                hidePostSearchFields();
+            }
+            searchUrl = '';
+        }
+    }
+
+    function goSearch() {
+        var searchTerm = $('#id_search').val();
+        if (searchTerm.length > 2) {
+            var searchSelection = $('#searchMethodSelect').val();
+            if (searchSelection === 'google') searchUrl = GOOGLE_URL + searchTerm;
+            else if (searchSelection === 'scifinder-a') searchUrl = SCIFINDER_A_URL;
+            else if (searchSelection === 'scifinder-n') searchUrl = SCIFINDER_N_URL;
+            else if (searchSelection === 'duck') searchUrl = DUCK_URL + searchTerm;
+            else searchUrl = searchTerm;
+
+            showPostSearchFields();
+            window.open(searchUrl);
+        }
+    }
+
+    function hidePostSearchFields() {
+        $('.hidden-div').each(function () {
+            $(this).hide();
+        });
+    }
+
+    function showPostSearchFields() {
+        $('.hidden-div').each(function () {
+            $(this).show();
+        });
+    }
 </script>
 {% endblock %}

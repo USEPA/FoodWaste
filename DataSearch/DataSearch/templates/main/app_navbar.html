@@ -1,59 +1,59 @@
 <li class="menu__item">
     <a href="{% url 'home' %}" class="menu__link">Home</a>
-  </li>
-  <li class="menu__item">
+</li>
+<li class="menu__item">
     <a href="{% url 'contact' %}" class="menu__link">Contact</a>
-  </li>
+</li>
 
-  {% if user.is_authenticated %}
-  <li class="menu__item has-subnav">
+{% if user.is_authenticated %}
+<li class="menu__item has-subnav">
     <button class="menu__link has-subnav usa-nav__link" aria-expanded="false" aria-controls="extended-nav-projects">Project</button>
     <ul id="extended-nav-projects" class="menu menu__subnav is-wide" data-once="navigation" hidden="true">
-      <li class="menu__item"><a href="/projects/" class="menu__link">Search Existing Projects</a></li>
-      <li class="menu__item"><a href="/projects/create/" class="menu__link">Create a project</a></li>
+        <li class="menu__item"><a href="/projects/" class="menu__link">Search Existing Projects</a></li>
+        <li class="menu__item"><a href="/projects/create/" class="menu__link">Create a project</a></li>
     </ul>
-  </li>
+</li>
 
-  <li class="menu__item has-subnav">
+<li class="menu__item has-subnav">
     <button class="menu__link has-subnav usa-nav__link" aria-expanded="false" aria-controls="extended-nav-activity">Project Activity</button>
     <ul id="extended-nav-activity" class="menu menu__subnav is-wide" data-once="navigation" hidden="true">
-      <li class="menu__item"><a href="{% url 'tracking_tool' %}" class="menu__link">Existing Data tracking tool</a></li>
-      <li class="menu__item"><a href="/qapp_builder/" class="menu__link">Quality Assurance Project Plan (QAPP) tool</a></li>
-      <li class="menu__item"><a href="/scifinder/" class="menu__link">SciFinder access</a></li>
-      <li class="menu__item"><a href="/flowsa/" class="menu__link">FLOWSA data file tool</a></li>
+        <li class="menu__item"><a href="{% url 'tracking_tool' %}" class="menu__link">Existing Data tracking tool</a></li>
+        <li class="menu__item"><a href="/qapp_builder/" class="menu__link">Quality Assurance Project Plan (QAPP) tool</a></li>
+        <li class="menu__item"><a href="/scifinder/" class="menu__link">SciFinder access</a></li>
+        <li class="menu__item"><a href="/flowsa/" class="menu__link">FLOWSA data file tool</a></li>
     </ul>
-  </li>
+</li>
 
-  <li class="menu__item has-subnav">
+<li class="menu__item has-subnav">
     <button class="menu__link has-subnav usa-nav__link" aria-expanded="false" aria-controls="extended-nav-teams">Teams</button>
     <ul id="extended-nav-teams" class="menu menu__subnav is-wide" data-once="navigation" hidden="true">
-      <li class="menu__item"><a href="/teams/list/" class="menu__link">Manage existing teams</a></li>
-      <li class="menu__item"><a href="/teams/team/" class="menu__link">Create a new team</a></li>
+        <li class="menu__item"><a href="/teams/list/" class="menu__link">Manage existing teams</a></li>
+        <li class="menu__item"><a href="/teams/team/" class="menu__link">Create a new team</a></li>
     </ul>
-  </li>
+</li>
 
-  <li class="menu__item has-subnav">
+<li class="menu__item has-subnav">
     <button class="menu__link has-subnav usa-nav__link" aria-expanded="false" aria-controls="extended-nav-help">Help/Suggestions</button>
     <ul id="extended-nav-help" class="menu menu__subnav is-wide" data-once="navigation" hidden="true">
-      <li class="menu__item"><a href="{% url 'support:go_to_support' %}" class="menu__link">Suggestions</a></li>
-      <li class="menu__item"><a href="{% url 'support:events' %}" class="menu__link">Upcoming Events</a></li>
+        <li class="menu__item"><a href="{% url 'support:go_to_support' %}" class="menu__link">Suggestions</a></li>
+        <li class="menu__item"><a href="{% url 'support:events' %}" class="menu__link">Upcoming Events</a></li>
     </ul>
-  </li>
+</li>
 
-  <li class="menu__item has-subnav">
+<li class="menu__item has-subnav">
     <button class="menu__link has-subnav usa-nav__link" aria-expanded="false" aria-controls="extended-nav-welcome">
-      Welcome {% if user.first_name %} {{user.first_name|safe}} {% else %} {{user.username|safe}} {% endif %}
+        Welcome {% if user.first_name %} {{user.first_name|safe}} {% else %} {{user.username|safe}} {% endif %}
     </button>
     <ul id="extended-nav-welcome" class="menu menu__subnav is-wide" data-once="navigation" hidden="true">
-      {% if user.is_staff %}
-      <li class="menu__item"><a href="{% url 'admin:index' %}" class="menu__link">Admin Portal</a></li>
-      {% endif %}
-      <li class="menu__item"><a href="{% url 'django_auth_adfs:logout' %}" class="menu__link">Logout</a></li>
+        {% if user.is_staff %}
+        <li class="menu__item"><a href="{% url 'admin:index' %}" class="menu__link">Admin Portal</a></li>
+        {% endif %}
+        <li class="menu__item"><a href="{% url 'django_auth_adfs:logout' %}" class="menu__link">Logout</a></li>
     </ul>
-  </li>
+</li>
 
-  {% else %}
-  <li class="menu__item">
+{% else %}
+<li class="menu__item">
     <a href="{% url 'django_auth_adfs:login' %}" class="menu__link">Log-in</a>
-  </li>
-  {% endif %}
+</li>
+{% endif %}

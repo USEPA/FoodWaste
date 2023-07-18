@@ -21,13 +21,13 @@
     <body>
         <div class="white-box">
             <div class="container">
-                {% include 'EPA_QAPP_Header_Partial.html' %}
+                {% include '_qapp_header.html' %}
 
                 <div class="text-center" style="margin-top: 4px;">
                     <!-- Cover page data from Qapp object: -->
                     <h4>{{qapp.division}}</h4>
                     <h4>{{qapp.division_branch}}</h4>
-                    
+
                     <br />
                     <h3>EPA Project Leads</h3>
                     {% for lead in qapp_leads %}
@@ -158,7 +158,7 @@
                     <h3 stle="color: midnightblue">Section A - Executive Summary</h3>
                     <h4 style="color: cornflowerblue">A.3 Distribution List</h4>
                     <p>{{section_a.a3}}</p>
-                    
+
                     <h4 style="color: cornflowerblue">A.4 Project Task Organization</h4>
                     <p>{{section_a.a4}}</p>
                     {{section_a.a4_chart}}

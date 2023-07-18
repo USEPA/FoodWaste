@@ -8,7 +8,7 @@
         <h3 id="save_success" class="text-success col-md-12 text-center">{{save_success}}</h3>
         {% endif %}
         <div class="border rounded p-3 row">
-            {% include 'EPA_QAPP_Header_Partial.html' %}
+            {% include '_qapp_header.html' %}
             <div class="col-md-12">
                 <form enctype="multipart/form-data" action="/qapp_builder/SectionB?qapp_id={{qapp_id}}" method="post" role="form" id="sectionb_form">
                     {% csrf_token %}
@@ -20,9 +20,11 @@
                         <div class="usa-form-group">
                             <label class="col-sm-3 control-label">
                                 {{field.label}}
-                                <a tabindex="0" data-trigger="focus" data-container="body" class="text-info fa fa-info-circle"
-                                   role="button" data-toggle="popover" title="{{field.label}}" data-placement="top"
-                                   data-content="{{field.help_text}}" onclick="delayRemoveFade()"></a>
+                                <span class="usa-tooltip" data-position="top" title="{{field.help_text}}">
+                                    <svg class="usa-icon" aria-hidden="false" focusable="false" role="img">
+                                        <use xlink:href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#info_outline"></use>
+                                    </svg>
+                                </span>
                             </label>
                             <div class="col-sm-8">{{field}}</div>
                         </div>

@@ -1,92 +1,92 @@
 ﻿{% extends "main/base.html" %} {% block content %}
 
-  {% if edit_message %}
-  <div class="usa-alert usa-alert--info">
-    <div class="usa-alert__body">
-      <p class="usa-alert__text">{{edit_message}}</p>
+    {% if edit_message %}
+    <div class="usa-alert usa-alert--info">
+        <div class="usa-alert__body">
+            <p class="usa-alert__text">{{edit_message}}</p>
+        </div>
     </div>
-  </div>
-  {% endif %}
+    {% endif %}
 
-      <form enctype="multipart/form-data" action="/existingdata/edit/{{object.id}}" method="post" role="form">
-        {% csrf_token %}
+            <form enctype="multipart/form-data" action="/existingdata/edit/{{object.id}}" method="post" role="form">
+                {% csrf_token %}
 
-        <div class="usa-form-group">
-            <label for="" class="col-sm-12 control-label">{{form.teams.label}}</label>
-            <div class="button-group">
-              <a href="{% url 'team_create' %}" class="col-sm-8 usa-button">
-                <span class="glyphicon glyphicon-plus"></span>
-                Create Team
-              </a>
-            </div>
-            {{form.teams}}
-        </div>
+                <div class="usa-form-group">
+                        <label for="" class="col-sm-12 control-label">{{form.teams.label}}</label>
+                        <div class="button-group">
+                            <a href="{% url 'team_create' %}" class="col-sm-8 usa-button">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Create Team
+                            </a>
+                        </div>
+                        {{form.teams}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.work.label}}</label>
-          {{form.work}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.work.label}}</label>
+                    {{form.work}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.email.label}}</label>
-          {{form.email}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.email.label}}</label>
+                    {{form.email}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.phone.label}}</label>
-          {{form.phone}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.phone.label}}</label>
+                    {{form.phone}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.search.label}}</label>
-          <div class="col-sm-9">
-            <div class="col-sm-11">{{form.search}}
-          </div>
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.search.label}}</label>
+                    <div class="col-sm-9">
+                        <div class="col-sm-11">{{form.search}}
+                    </div>
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.source.label}}</label>
-          {{form.source}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.source.label}}</label>
+                    {{form.source}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.source_title.label}}</label>
-          {{form.source_title}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.source_title.label}}</label>
+                    {{form.source_title}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.keywords.label}}</label>
-          {{form.keywords}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.keywords.label}}</label>
+                    {{form.keywords}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.url.label}}</label>
-          {{form.url}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.url.label}}</label>
+                    {{form.url}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.disclaimer_req.label}}</label>
-          {{form.disclaimer_req}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.disclaimer_req.label}}</label>
+                    {{form.disclaimer_req}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.citation.label}}</label>
-          {{form.citation}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.citation.label}}</label>
+                    {{form.citation}}
+                </div>
 
-        <div class="usa-form-group">
-          <label for="" class="usa-label">{{form.comments.label}}</label>
-          {{form.comments}}
-        </div>
+                <div class="usa-form-group">
+                    <label for="" class="usa-label">{{form.comments.label}}</label>
+                    {{form.comments}}
+                </div>
 
-        <div class="usa-form-group">
-          <label class="usa-label" for="id_attachments">{{form.attachments.label}}</label>
-            {{form.attachments}}
-          </div>
-        </div>
-        <div class="usa-form-group">
-          {% include 'edit_buttons_partial.html' %}
-        </div>
-      </form>
+                <div class="usa-form-group">
+                    <label class="usa-label" for="id_attachments">{{form.attachments.label}}</label>
+                        {{form.attachments}}
+                    </div>
+                </div>
+                <div class="usa-form-group">
+                    {% include 'edit_buttons_partial.html' %}
+                </div>
+            </form>
 
 {% endblock %}

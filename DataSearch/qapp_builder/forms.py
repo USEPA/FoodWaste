@@ -219,24 +219,24 @@ class SectionAForm(ModelForm):
     # A2 is new, see Jira DAT-32
     a2 = CharField(label=_("A.2 Definitions and Acronyms"),
                    required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+                   widget=Textarea({'class': 'usa-textarea'}))
 
     # Keywords is new, see Jira DAT-35
     a2_keywords = CharField(label=_("Keywords"),
                             required=True,
-                            widget=Textarea({'class': 'usa-input'}))
+                            widget=Textarea({'class': 'usa-textarea'}))
 
     a3 = CharField(label=_("A.3 Distribution List"),
                    required=False,
                    widget=Textarea({
-                       'class': 'usa-input',
+                       'class': 'usa-textarea',
                        'readonly': 'readonly'
                    }),
                    initial=SECTION_A_INFO['a3'])
 
     a4 = CharField(label=_("A.4 Project Task Organization"),
                    required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+                   widget=Textarea({'class': 'usa-textarea'}))
 
     a4_chart = FileField(label=_("Upload Organizational Chart (optional)"),
                          required=False,
@@ -247,24 +247,24 @@ class SectionAForm(ModelForm):
 
     a5 = CharField(label=_("A.5 Problem Definition Background"),
                    required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+                   widget=Textarea({'class': 'usa-textarea'}))
 
     a6 = CharField(label=_("A.6 Project Description"),
                    required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+                   widget=Textarea({'class': 'usa-textarea'}))
 
     a7 = CharField(label=_("A.7 Quality Objectives and Criteria"),
                    required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+                   widget=Textarea({'class': 'usa-textarea'}))
 
     a8 = CharField(label=_("A.8 Special Training Certification"),
                    required=True,
-                   widget=Textarea({'class': 'usa-input'}))
+                   widget=Textarea({'class': 'usa-textarea'}))
 
     a9 = CharField(label=_("A.9 Documents and Records"),
                    required=False,
                    widget=Textarea({
-                       'class': 'usa-input',
+                       'class': 'usa-textarea',
                        'readonly': 'readonly'
                    }),
                    initial=SECTION_A_INFO['a9'])
@@ -275,7 +275,7 @@ class SectionAForm(ModelForm):
 
     sectionb_type = ModelMultipleChoiceField(
         widget=SelectMultiple({
-            'class': 'form-item__select',
+            'class': 'form-item__select section-b-type-input',
             'placeholder': 'Section B Type'
         }),
         queryset=SectionBType.objects.all(),
@@ -347,12 +347,12 @@ class SectionCForm(ModelForm):
 
     c1 = CharField(
         label=_("C.1 Assessments and Response Actions"),
-        required=False, widget=Textarea({'class': 'usa-input'}),
+        required=False, widget=Textarea({'class': 'usa-textarea'}),
         initial=SECTION_C_INFO[0])
 
     c2 = CharField(
         label=_("C.2 Reports to Management"),
-        required=False, widget=Textarea({'class': 'usa-input'}),
+        required=False, widget=Textarea({'class': 'usa-textarea'}),
         initial=SECTION_C_INFO[1])
 
     class Meta:
@@ -373,15 +373,15 @@ class SectionDForm(ModelForm):
 
     d1 = CharField(
         label=_("D.1 Data Review, Verification, and Validation"),
-        required=True, widget=Textarea({'class': 'usa-input'}))
+        required=True, widget=Textarea({'class': 'usa-textarea'}))
 
     d2 = CharField(
         label=_("D.2 Verification and Validation Methods"),
-        required=True, widget=Textarea({'class': 'usa-input'}))
+        required=True, widget=Textarea({'class': 'usa-textarea'}))
 
     d3 = CharField(
         label=_("D.3 Reconciliation with User Requirements"),
-        required=True, widget=Textarea({'class': 'usa-input'}))
+        required=True, widget=Textarea({'class': 'usa-textarea'}))
 
     class Meta:
         """Meta data for SectionDForm Form."""
@@ -400,7 +400,7 @@ class ReferencesForm(ModelForm):
                                        'readonly': 'readonly'}))
     references = CharField(
         label=_("References"),
-        required=True, widget=Textarea({'class': 'usa-input'}))
+        required=True, widget=Textarea({'class': 'usa-textarea'}))
 
     class Meta:
         """Meta data for References Form."""

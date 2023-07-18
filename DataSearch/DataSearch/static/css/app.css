@@ -31,3 +31,29 @@ tr.active>td {
 tr.active>th {
   background-color: #aacdec !important;
 }
+
+.control-label {
+  text-align: right;
+}
+
+.blue-box-with-shadow {
+  background-color: #00b0f0;
+  font-family: Calibri;
+  font-size: 1.3em;
+  color: whitesmoke;
+  text-align: center;
+  padding: 5px;
+  vertical-align: middle;
+  box-shadow: -10px 10px 5px grey;
+  /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.section-b-type-input {
+  min-height: 12em;
+}

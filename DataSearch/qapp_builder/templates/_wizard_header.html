@@ -1,0 +1,48 @@
+<h3 class="site-preview-heading">Scenario Creation Progress</h3>
+<div class="usa-step-indicator" aria-label="progress">
+    <ol class="usa-step-indicator__segments">
+        {% if step_num < 4 %}
+        <li class="usa-step-indicator__segment {{step_1_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 1 <span class="usa-sr-only">{{step_1_status_span}}</span>
+            </span>
+        </li>
+        <li class="usa-step-indicator__segment {{step_2_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 2 <span class="usa-sr-only">{{step_2_status_span}}</span>
+            </span>
+        </li>
+        <li class="usa-step-indicator__segment {{step_3_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 3 <span class="usa-sr-only">{{step_3_status_span}}</span>
+            </span>
+        </li>
+        <li class="usa-step-indicator__segment {{step_4_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 4 <span class="usa-sr-only">{{step_4_status_span}}</span>
+            </span>
+        </li>
+        {% else %}
+        <li class="usa-step-indicator__segment {{step_5_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 5 <span class="usa-sr-only">{{step_5_status_span}}</span>
+            </span>
+        </li>
+        <li class="usa-step-indicator__segment {{step_6_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 6 <span class="usa-sr-only">{{step_6_status_span}}</span>
+            </span>
+        </li>
+        <li class="usa-step-indicator__segment {{step_7_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 7 <span class="usa-sr-only">{{step_7_status_span}}</span>
+            </span>
+        </li>
+        <li class="usa-step-indicator__segment {{step_8_status_css}}">
+            <span class="usa-step-indicator__segment-label">
+                Step 8 <span class="usa-sr-only">{{step_8_status_span}}</span>
+            </span>
+        </li>
+        {% endif %}
+    </ol>
+</div>

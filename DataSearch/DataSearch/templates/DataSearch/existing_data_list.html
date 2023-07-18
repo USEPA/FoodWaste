@@ -7,40 +7,40 @@
 <h4>Existing Data for {{p_user.username}} ({{p_user.first_name}} {{p_user.last_name}})</h4>
 {% endif %}
 <button class="usa-button" onclick="window.location.href='/existingdata/create/'">
-  Add new source or attach 'Existing Data'
+    Add new source or attach 'Existing Data'
 </button>
 
 <table class="table table-bordered table-hover">
-  <thead class="table-secondary">
-    <tr>
-      <th data-sortable scope="col">User Email</th>
-      <th data-sortable scope="col">User Office/Lab</th>
-      <th data-sortable scope="col">Source</th>
-      <th data-sortable scope="col">Date Accessed</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% if existing_data_list %} {% for data in existing_data_list %}
-    <tr id="{{data.id}}" onclick="rowClick('{{data.id}}')">
-      <td scope="row">{{data.email}}</td>
-      <td>{{data.work}}</td>
-      <td>{{data.source_title}}</td>
-      <td>{{data.date_accessed}}</td>
-    </tr>
+    <thead class="table-secondary">
+        <tr>
+            <th data-sortable scope="col">User Email</th>
+            <th data-sortable scope="col">User Office/Lab</th>
+            <th data-sortable scope="col">Source</th>
+            <th data-sortable scope="col">Date Accessed</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if existing_data_list %} {% for data in existing_data_list %}
+        <tr id="{{data.id}}" onclick="rowClick('{{data.id}}')">
+            <td scope="row">{{data.email}}</td>
+            <td>{{data.work}}</td>
+            <td>{{data.source_title}}</td>
+            <td>{{data.date_accessed}}</td>
+        </tr>
 
-    {% endfor %} {% else %}
-    <tr>
-      <td colspan="4">No Existing Data</td>
-    </tr>
-    {% endif %}
-  </tbody>
+        {% endfor %} {% else %}
+        <tr>
+            <td colspan="4">No Existing Data</td>
+        </tr>
+        {% endif %}
+    </tbody>
 </table>
 
 <div class="usa-button-group">
-  <button class="usa-button modSelectedButton" onclick="viewEditExistingData(this)" disabled> View or Edit Existing Data </button>
-  <button class="usa-button" onclick="exportAllData('docx')"> Export All Data to Docx </button>
-  <button class="usa-button" onclick="exportAllData('pdf')"> Export All Data to PDF </button>
-  <button class="usa-button" onclick="exportAllData('excel')"> Export All Data to Excel </button>
+    <button class="usa-button modSelectedButton" onclick="viewEditExistingData(this)" disabled> View or Edit Existing Data </button>
+    <button class="usa-button" onclick="exportAllData('docx')"> Export All Data to Docx </button>
+    <button class="usa-button" onclick="exportAllData('pdf')"> Export All Data to PDF </button>
+    <button class="usa-button" onclick="exportAllData('excel')"> Export All Data to Excel </button>
 </div>
 
 {% endblock %}
@@ -53,24 +53,24 @@
 
 {% block scripts %}
 <script>
-  function viewEditExistingData(btn) {
-      if ($(btn).attr('disabled')) return;
-      window.location.href = '/existingdata/detail/' + $(btn).attr('id');
-  }
-  function exportAllData(exportType) {
-      urlType = 'exportexcel'
-      if (exportType === 'pdf')
-          urlType = 'exportpdf'
-      else if (exportType === 'docx')
-          urlType = 'exportdocx'
-      else
-          urlType = 'exportexcel'
+    function viewEditExistingData(btn) {
+            if ($(btn).attr('disabled')) return;
+            window.location.href = '/existingdata/detail/' + $(btn).attr('id');
+    }
+    function exportAllData(exportType) {
+            urlType = 'exportexcel'
+            if (exportType === 'pdf')
+                    urlType = 'exportpdf'
+            else if (exportType === 'docx')
+                    urlType = 'exportdocx'
+            else
+                    urlType = 'exportexcel'
 
-      {% if team %}
-      window.location.href = '/existingdata/' + urlType + '/team/{{team.id}}';
-      {% elif p_user %}
-      window.location.href = '/existingdata/' + urlType + '/user/{{p_user.id}}';
-      {% endif %}
-  }
+            {% if team %}
+            window.location.href = '/existingdata/' + urlType + '/team/{{team.id}}';
+            {% elif p_user %}
+            window.location.href = '/existingdata/' + urlType + '/user/{{p_user.id}}';
+            {% endif %}
+    }
 </script>
 {% endblock %}
