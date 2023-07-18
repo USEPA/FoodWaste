@@ -1,9 +1,9 @@
-# qar5_excel.py (qar5)
+# qapp_excel.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
 
-"""Definition of qar5 excel export views."""
+"""Definition of qapp_builder excel export views."""
 
 from io import BytesIO
 from openpyxl import Workbook
@@ -12,8 +12,9 @@ from zipfile import ZipFile
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils.text import slugify
-from constants.qar5_sectionb import SECTION_B_INFO
-from qar5.views import get_qapp_info, get_qar5_for_team, get_qar5_for_user
+from constants.qapp_builder_sectionb import SECTION_B_INFO
+from qapp_builder.views import get_qapp_info, get_qapp_for_team, \
+    get_qapp_for_user
 
 
 @login_required
@@ -32,10 +33,10 @@ def export_excel(request, *args, **kwargs):
 
     if qapp_id is None or user_id or team_id:
         if user_id:
-            qapp_ids = get_qar5_for_user(
+            qapp_ids = get_qapp_for_user(
                 user_id).values_list('id', flat=True)
         else:
-            qapp_ids = get_qar5_for_team(
+            qapp_ids = get_qapp_for_team(
                 team_id).values_list('id', flat=True)
 
         # Create a zip archive to return multiple PDFs

@@ -13,8 +13,8 @@ from qapp_builder.views import QappCreate, QappDetail, ProjectApprovalCreate, \
     RevisionCreate, QappList, QappEdit, QappIndex, ProjectApprovalEdit, \
     ProjectApprovalSignatureDelete, ProjectApprovalSignatureEdit, \
     ProjectLeadDelete, ProjectLeadEdit
-from qapp_builder.qar5_docx import export_doc, export_doc_single
-from qapp_builder.qar5_pdf import export_pdf, export_pdf_single
+from qapp_builder.qapp_docx import export_doc, export_doc_single
+from qapp_builder.qapp_pdf import export_pdf, export_pdf_single
 
 
 urlpatterns = [
@@ -42,27 +42,27 @@ urlpatterns = [
 
     # Single QAPP Exports (if user has access, owner or team):
     re_path(r'^exportdoc/(?P<pk>\d+)/?$',
-            export_doc_single, name='qar5_doc'),
+            export_doc_single, name='qapp_doc'),
     re_path(r'^exportpdf/(?P<pk>\d+)/?$',
-            export_pdf_single, name='qar5_pdf'),
+            export_pdf_single, name='qapp_pdf'),
     # re_path(r'^exportexcel/(?P<pk>\d+)/?$',
-    #         export_excel_single, name='qar5_excel'),
+    #         export_excel_single, name='qapp_excel'),
 
     # All QAPP Exports for User:
     re_path(r'^exportdoc/user/(?P<pk>\d+)/?$',
-            export_doc, name='qar5_all_doc'),
+            export_doc, name='qapp_all_doc'),
     re_path(r'^exportpdf/user/(?P<pk>\d+)/?$',
-            export_pdf, name='qar5_all_pdf'),
+            export_pdf, name='qapp_all_pdf'),
     # re_path(r'^exportexcel/user/(?P<pk>\d+)/?$',
-    #         export_excel, name='qar5_all_excel'),
+    #         export_excel, name='qapp_all_excel'),
 
     # All QAPP Exports for Team:
     re_path(r'^exportdoc/team/(?P<pk>\d+)/?$',
-            export_doc, name='qar5_all_doc'),
+            export_doc, name='qapp_all_doc'),
     re_path(r'^exportpdf/team/(?P<pk>\d+)/?$',
-            export_pdf, name='qar5_all_pdf'),
+            export_pdf, name='qapp_all_pdf'),
     # re_path(r'^exportexcel/team/(?P<pk>\d+)/?$',
-    #         export_excel, name='qar5_all_excel'),
+    #         export_excel, name='qapp_all_excel'),
 
     ############################################
     # Project Approval (and signatures) URLs

@@ -76,7 +76,7 @@ INSTALLED_APPS = [
     'flowsa',
     'projects',
     'scifinder',
-    'qar5',
+    'qapp_builder',
     'support',
     'teams',
     'phonenumber_field',

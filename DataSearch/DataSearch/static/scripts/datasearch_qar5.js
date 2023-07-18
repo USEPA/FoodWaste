@@ -15,7 +15,7 @@ function SectionBTypeChanged(e) {
 //////////////////////////////////////////////////////////////////////
 // Project Lead Section
 function addProjectLead(id) {
-    window.location.href = '/qar5/project_lead/create?qapp_id=' + id;
+    window.location.href = '/qapp_builder/project_lead/create?qapp_id=' + id;
 }
 
 function getId(btn) {
@@ -28,32 +28,32 @@ function getId(btn) {
 
 function editProjectLead(btn) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qar5/project_lead/edit/' + getId(btn);
+    window.location.href = '/qapp_builder/project_lead/edit/' + getId(btn);
 }
 
 function removeProjectLead(btn) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qar5/project_lead/delete/' + getId(btn);
+    window.location.href = '/qapp_builder/project_lead/delete/' + getId(btn);
 }
 
 //////////////////////////////////////////////////////////////////////
 // Project Approval Section
 function editApprovalPage(id) {
-    window.location.href = '/qar5/approval/edit/' + id;
+    window.location.href = '/qapp_builder/approval/edit/' + id;
 }
 //////////////////////////////////////////////////////////////////////
 // Project Approval Signature Section
 function addApprovalSignature(id) {
-    window.location.href = '/qar5/approval_signature/create?qapp_id=' + id;
+    window.location.href = '/qapp_builder/approval_signature/create?qapp_id=' + id;
 }
 
 function editApprovalSignature(btn) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qar5/approval_signature/edit/' + getId(btn);
+    window.location.href = '/qapp_builder/approval_signature/edit/' + getId(btn);
 }
 
 function removeApprovalSignature(btn) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qar5/approval_signature/delete/' + getId(btn);
+    window.location.href = '/qapp_builder/approval_signature/delete/' + getId(btn);
 }
 //////////////////////////////////////////////////////////////////////

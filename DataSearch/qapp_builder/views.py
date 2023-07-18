@@ -17,9 +17,9 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, \
     TemplateView, UpdateView, DeleteView
-from constants.qar5 import SECTION_A_INFO, SECTION_D_INFO, SECTION_E_INFO, \
-    SECTION_F_INFO, SECTION_C_INFO
-from constants.qar5_sectionb import SECTION_B_INFO
+from constants.qapp_builder import SECTION_A_INFO, SECTION_D_INFO, \
+    SECTION_E_INFO, SECTION_F_INFO, SECTION_C_INFO
+from constants.qapp_builder_sectionb import SECTION_B_INFO
 from qapp_builder.forms import QappForm, QappApprovalForm, QappLeadForm, \
     QappApprovalSignatureForm, SectionAForm, SectionBForm, \
     SectionDForm, RevisionForm, ReferencesForm, SectionCForm
@@ -131,9 +131,9 @@ class QappList(LoginRequiredMixin, ListView):
         p_id = path[len(path) - 1]
         p_type = path[len(path) - 2]
         if p_type == 'user':
-            return get_qar5_for_user(p_id)
+            return get_qapp_for_user(p_id)
         if p_type == 'team':
-            return get_qar5_for_team(p_id)
+            return get_qapp_for_team(p_id)
         return get_qapp_all()
 
 
@@ -977,7 +977,7 @@ class RevisionCreate(LoginRequiredMixin, CreateView):
         return render(request, self.template_name, ctx)
 
 
-def get_qar5_for_user(user_id, qapp_id=None):
+def get_qapp_for_user(user_id, qapp_id=None):
     """Get all qapps created by a User."""
     user = User.objects.get(id=user_id)
     if qapp_id:
@@ -985,7 +985,7 @@ def get_qar5_for_user(user_id, qapp_id=None):
     return Qapp.objects.filter(prepared_by=user)
 
 
-def get_qar5_for_team(team_id, qapp_id=None):
+def get_qapp_for_team(team_id, qapp_id=None):
     """Get all data belonging to a team."""
     team = Team.objects.get(id=team_id)
     include_qapps = QappSharingTeamMap.objects.filter(
@@ -1001,7 +1001,7 @@ def get_qar5_for_team(team_id, qapp_id=None):
 def get_qapp_info(user, qapp_id):
     """Return all pieces of a qapp in a dictionary."""
     ctx = {}
-    ctx['qapp'] = get_qar5_for_user(user.id, qapp_id).first()
+    ctx['qapp'] = get_qapp_for_user(user.id, qapp_id).first()
 
     # Only return this if the user has access to it via super, owner, or team:
     # db_user = User.objects.get(id=user.id)

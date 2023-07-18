@@ -68,7 +68,7 @@
         <label class="usa-label grid-col-12" for="">or create...</label>
         <div class="grid-col-12 usa-button-group">
             <button class="usa-button usa-button--outline" onclick="window.location.href='/teams/team'">New Team</button>
-            <button class="usa-button usa-button--outline" onclick="window.location.href='/qar5/create'">New QAPP</button>
+            <button class="usa-button usa-button--outline" onclick="window.location.href='/qapp_builder/create'">New QAPP</button>
         </div>
     </div>
 </div>
@@ -78,11 +78,11 @@
 <script>
     function entryByUser(selObj) {
         let val = selObj.value;
-        window.location.href=`/qar5/list/user/${val}`;
+        window.location.href=`/qapp_builder/list/user/${val}`;
     }
     function entryByTeam(selObj) {
         let val = selObj.value;
-        window.location.href=`/qar5/list/team/${val}`;
+        window.location.href=`/qapp_builder/list/team/${val}`;
     }
 </script>
 {% endblock %}

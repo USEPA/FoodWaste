@@ -13,7 +13,7 @@
         <div class="border rounded p-3 row">
             {% include 'EPA_QAPP_Header_Partial.html' %}
             <div class="col-md-12">
-                <form enctype="multipart/form-data" action="/qar5/SectionA?qapp_id={{qapp_id}}" method="post" role="form" id="sectiona_form">
+                <form enctype="multipart/form-data" action="/qapp_builder/SectionA?qapp_id={{qapp_id}}" method="post" role="form" id="sectiona_form">
                     {% csrf_token %}
                     <div class="">
                         <div class="usa-form-group row hidden">{{form.qapp}}</div>

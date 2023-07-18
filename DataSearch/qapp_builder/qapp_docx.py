@@ -1,9 +1,9 @@
-# qar5_docx.py (qapp_builder)
+# qapp_docx.py (qapp_builder)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
 
-"""Definition of qar5 docx export methods."""
+"""Definition of qapp_builder docx export methods."""
 
 
 import tempfile
@@ -21,9 +21,9 @@ from docx.shared import Inches, Pt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.templatetags.static import static
 from django.utils.text import slugify
-from constants.qar5_sectionb import SECTION_B_INFO
-from qar5.settings import DEBUG, STATIC_ROOT
-from qar5.views import get_qar5_for_user, get_qar5_for_team, \
+from constants.qapp_builder_sectionb import SECTION_B_INFO
+from qapp_builder.settings import DEBUG, STATIC_ROOT
+from qapp_builder.views import get_qapp_for_user, get_qapp_for_team, \
     get_qapp_info
 
 
@@ -41,10 +41,10 @@ def export_doc(request, *args, **kwargs):
 
     if qapp_id is None or user_id or team_id:
         if user_id:
-            qapp_ids = get_qar5_for_user(
+            qapp_ids = get_qapp_for_user(
                 user_id).values_list('id', flat=True)
         else:
-            qapp_ids = get_qar5_for_team(
+            qapp_ids = get_qapp_for_team(
                 team_id).values_list('id', flat=True)
 
         zip_mem = BytesIO()

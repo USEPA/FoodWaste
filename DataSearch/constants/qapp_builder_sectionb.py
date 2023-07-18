@@ -1,10 +1,10 @@
-# qar5_sectionb.py (constants)
+# qapp_sectionb.py (constants)
 # !/usr/bin/env python3
 # coding=utf-8
 # young.daniel@epa.gov
 # py-lint: disable=C0301
 
-"""Constants for the QAR5 QAPP Builder module."""
+"""Constants for the QAPP QAPP Builder module."""
 
 SECTION_B_TYPES = (
     ('Analytical Methods', 'Analytical Methods'),

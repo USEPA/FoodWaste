@@ -13,7 +13,7 @@ from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
 from django.forms.widgets import DateTimeInput
 from django.utils.translation import gettext_lazy as _
 from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES
-from constants.qar5 import SECTION_A_INFO, SECTION_C_INFO
+from constants.qapp_builder import SECTION_A_INFO, SECTION_C_INFO
 from qapp_builder.models import Division, Qapp, QappApproval, QappLead, \
     QappApprovalSignature, SectionA, SectionB, SectionD, Revision, \
     SectionBType, References, SectionC

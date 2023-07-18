@@ -28,7 +28,7 @@
 
     {% if user.is_authenticated %}
     <div class="row mb-2">
-        <button class="col-sm-12 btn btn-md btn-info" onclick="window.location.href='/qar5/create'">
+        <button class="col-sm-12 btn btn-md btn-info" onclick="window.location.href='/qapp_builder/create'">
             Create a new QAPP
         </button>
     </div>
@@ -47,14 +47,14 @@
             </thead>
             <tbody>
                 {% if qapp_list %}
-                {% for qar5 in qapp_list %}
-                <tr id="{{qar5.id}}" onclick="rowClick('{{qar5.id}}')">
-                    <td scope="row">{{qar5.division_branch}}</td>
-                    <td>{{qar5.title}}</td>
-                    <td>{{qar5.qa_category}}</td>
-                    <td>{{qar5.revision_number}}</td>
-                    <td>{{qar5.strap}}</td>
-                    <td>{{qar5.tracking_id}}</td>
+                {% for qapp_builder in qapp_list %}
+                <tr id="{{qapp_builder.id}}" onclick="rowClick('{{qapp_builder.id}}')">
+                    <td scope="row">{{qapp_builder.division_branch}}</td>
+                    <td>{{qapp_builder.title}}</td>
+                    <td>{{qapp_builder.qa_category}}</td>
+                    <td>{{qapp_builder.revision_number}}</td>
+                    <td>{{qapp_builder.strap}}</td>
+                    <td>{{qapp_builder.tracking_id}}</td>
                 </tr>
                 <!-- TODO: Show prepared by if you are admin -->
                 {% endfor %}
@@ -67,22 +67,22 @@
 
     <div class="row">
         <div class="col-sm-3">
-            <i class="btn btn-info btn-md" onclick="viewEditExistingQar5(this)" disabled>
+            <i class="btn btn-info btn-md" onclick="viewEditExistingQapp(this)" disabled>
                 View or Edit Existing QAPP
             </i>
         </div>
         <div class="col-sm-3">
-            <button class="btn btn-info btn-md" onclick="exportAllQar5('docx')">
+            <button class="btn btn-info btn-md" onclick="exportAllQapp('docx')">
                 Export All QAPP to Word Doc
             </button>
         </div>
         <div class="col-sm-3">
-            <button class="btn btn-info btn-md" onclick="exportAllQar5('pdf')">
+            <button class="btn btn-info btn-md" onclick="exportAllQapp('pdf')">
                 Export All QAPP to PDF
             </button>
         </div>
         <div class="col-sm-3">
-            <button class="btn btn-info btn-md" onclick="exportAllQar5('excel')">
+            <button class="btn btn-info btn-md" onclick="exportAllQapp('excel')">
                 Export All QAPP to Excel
             </button>
         </div>
@@ -94,11 +94,11 @@
 
 {% block scripts %}
     <script>
-        function viewEditExistingQar5(btn) {
+        function viewEditExistingQapp(btn) {
             if ($(btn).attr('disabled')) return;
-            window.location.href = '/qar5/detail/' + $(btn).attr('id');
+            window.location.href = '/qapp_builder/detail/' + $(btn).attr('id');
         }
-        function exportAllQar5(exportType) {
+        function exportAllQapp(exportType) {
             if (exportType === 'docx')
                 window.location.href = window.location.pathname.replace('list', 'exportdoc');
             else if (exportType === 'pdf')

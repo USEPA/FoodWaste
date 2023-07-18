@@ -10,7 +10,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from constants.qar5 import SECTION_C_INFO
+from constants.qapp_builder import SECTION_C_INFO
 from constants.utils import get_attachment_storage_path, upload_storage
 from teams.models import Team
 

@@ -103,7 +103,7 @@ urlpatterns = [
     # Begin other module import URLs.
     re_path(r'^flowsa/', include('flowsa.urls', namespace='flowsa')),
     re_path(r'^projects/', include('projects.urls')),
-    re_path(r'^qar5/', include('qar5.urls')),
+    re_path(r'^qapp_builder/', include('qapp_builder.urls')),
     re_path(r'^scifinder/', include('scifinder.urls', namespace='scifinder')),
     re_path(r'^support/', include('support.urls')),
     re_path(r'^teams/', include('teams.urls')),

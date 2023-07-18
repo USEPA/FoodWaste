@@ -22,7 +22,7 @@ from constants.utils import download_file, download_files
 from DataSearch.forms import ExistingDataForm
 from DataSearch.models import ExistingData, ExistingDataSharingTeamMap, \
     Attachment, DataAttachmentMap
-from qar5.models import SectionA
+from qapp_builder.models import SectionA
 from teams.models import Team, TeamMembership
 
 
