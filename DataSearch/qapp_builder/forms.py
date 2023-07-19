@@ -6,6 +6,7 @@
 
 """Definition of forms."""
 
+import datetime
 from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
     Textarea, ModelMultipleChoiceField, SelectMultiple, \
     BooleanField, FileField, ClearableFileInput, \
@@ -13,7 +14,9 @@ from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
 from django.forms.widgets import DateTimeInput
 from django.utils.translation import gettext_lazy as _
 from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES
-from constants.qapp_builder import SECTION_A_INFO, SECTION_C_INFO
+from constants.qapp_builder import SECTION_A_INFO, SECTION_D_INFO, \
+    SECTION_E_INFO, SECTION_F_INFO, SECTION_C_INFO
+from constants.qapp_builder_sectionb import SECTION_B_INFO
 from qapp_builder.models import Division, Qapp, QappApproval, QappLead, \
     QappApprovalSignature, SectionA, SectionB, SectionD, Revision, \
     SectionBType, References, SectionC
@@ -282,6 +285,10 @@ class SectionAForm(ModelForm):
         label=_("Section B Types"),
         required=True)
 
+    @staticmethod
+    def get_help_text():
+        return SECTION_A_INFO
+
     class Meta:
         """Meta data for SectionAForm Form."""
 
@@ -329,6 +336,10 @@ class SectionBForm(ModelForm):
                                              widget=Textarea(
                                                  {'class': 'usa-input'}))
 
+    @staticmethod
+    def get_help_text():
+        return SECTION_B_INFO
+
     class Meta:
         """Meta data for SectionBForm Form."""
 
@@ -354,6 +365,10 @@ class SectionCForm(ModelForm):
         label=_("C.2 Reports to Management"),
         required=False, widget=Textarea({'class': 'usa-textarea'}),
         initial=SECTION_C_INFO[1])
+
+    @staticmethod
+    def get_help_text():
+        return SECTION_C_INFO
 
     class Meta:
         """Meta data for SectionCForm Form."""
@@ -383,6 +398,10 @@ class SectionDForm(ModelForm):
         label=_("D.3 Reconciliation with User Requirements"),
         required=True, widget=Textarea({'class': 'usa-textarea'}))
 
+    @staticmethod
+    def get_help_text():
+        return SECTION_D_INFO
+
     class Meta:
         """Meta data for SectionDForm Form."""
 
@@ -401,6 +420,10 @@ class ReferencesForm(ModelForm):
     references = CharField(
         label=_("References"),
         required=True, widget=Textarea({'class': 'usa-textarea'}))
+
+    @staticmethod
+    def get_help_text():
+        return SECTION_E_INFO
 
     class Meta:
         """Meta data for References Form."""
@@ -433,6 +456,10 @@ class RevisionForm(ModelForm):
     initial_version = CharField(
         label=_("Initial Version"),
         required=True, widget=TextInput({'class': 'usa-input'}))
+
+    @staticmethod
+    def get_help_text():
+        return SECTION_F_INFO
 
     class Meta:
         """Meta data for Revision Form."""
