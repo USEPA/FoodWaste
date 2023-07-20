@@ -107,9 +107,7 @@ urlpatterns = [
     re_path(r'^scifinder/', include('scifinder.urls', namespace='scifinder')),
     re_path(r'^support/', include('support.urls')),
     re_path(r'^teams/', include('teams.urls')),
-
-    # auth
-    path('oauth2/', include('django_auth_adfs.urls')),
+    re_path(r'^accounts/', include('accounts.urls')),
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

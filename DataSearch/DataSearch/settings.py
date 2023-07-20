@@ -68,9 +68,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    # auth
-    'django_auth_adfs',
     # Add your apps here to enable them.
+    'accounts',
     'constants',
     'DataSearch',
     'flowsa',
@@ -92,7 +91,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_auth_adfs.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'DataSearch.urls'
@@ -189,49 +187,6 @@ APP_DISCLAIMER = 'The information and data presented in this product ' + \
                  'information or data was not documented by those ' + \
                  'sources; therefore, no claim is made regarding ' + \
                  'their quality.'
-
-# ##########################################################################
-# django-auth-adfs section
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_adfs.backend.AdfsAuthCodeBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-# ##############################################################################
-# NOTE: Overwrite these values AND the AUTH_ADFS dictionary in local_settings.py
-client_id = ''
-client_secret = ''
-tenant_id = ''
-
-login_exempt_urls = [
-    '^$',
-    '/',
-    '/contact/?$',
-    '/dashboard/?$'
-]
-
-AUTH_ADFS = {
-    'AUDIENCE': client_id,
-    'CLIENT_ID': client_id,
-    'CLIENT_SECRET': client_secret,
-    'CLAIM_MAPPING': {'first_name': 'given_name',
-                      'last_name': 'family_name',
-                      'email': 'upn'},
-    'GROUPS_CLAIM': 'roles',
-    'MIRROR_GROUPS': True,
-    'USERNAME_CLAIM': 'email',
-    'TENANT_ID': tenant_id,
-    'RELYING_PARTY_ID': client_id,
-    'LOGIN_EXEMPT_URLS': login_exempt_urls,
-}
-# END Overwrite section
-# ##############################################################################
-
-# Configure django to redirect users to the right URL for login
-LOGIN_URL = "django_auth_adfs:login"
-LOGIN_REDIRECT_URL = "/"
-
 
 try:
     from .local_settings import *  # noqa: F401
