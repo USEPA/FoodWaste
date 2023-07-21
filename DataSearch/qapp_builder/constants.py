@@ -9,4 +9,5 @@ CURRENT_CSS = 'usa-step-indicator__segment--current'
 COMPLETE_SPAN = 'completed'
 INCOMPLETE_SPAN = 'not completed'
 
-ALL_QAPP_PAGES = ['section_a', 'section_b', 'section_c', 'section_d']
+ALL_QAPP_PAGES = ['section_a', 'section_b', 'section_c', 'section_d',
+                  'section_e', 'section_f']

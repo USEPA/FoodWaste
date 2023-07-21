@@ -1,9 +1,11 @@
 {% extends 'main/base.html' %}
 {% block content %}
 
+{% if step_num %}
 {% include '_wizard_header.html' %}
+{% endif %}
 
-<h3>Input {{page_title}} Values for Scenario {{scenario_id}}</h3>
+<h3>Input {{page_title}} Values for QAPP {{qapp_id}}</h3>
 
 <form method="post" >
     {% if form.errors %}

@@ -57,3 +57,46 @@ a.disabled {
 .section-b-type-input {
   min-height: 12em;
 }
+
+.well {
+  border-style: groove;
+  border-color: lightgray;
+  border-width: .1em;
+  border-radius: 1em;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.table-label {
+  font-weight: bold;
+}
+
+.table-label-values {
+  border-collapse: collapse;
+}
+
+.table-label-values td {
+  border: none;
+  padding: .33em;
+}
+
+.vertical-button-group button {
+  display: inline-block;
+  margin-bottom: 1em;
+  width: 100%
+}
+
+.full-width {
+  width: 100%;
+}
+
+.narrow-button-group {
+  display: flex;
+  margin-bottom: .25em;
+}
+
+.narrow-button-group button {
+  margin-left: .5em;
+  margin-right: .5em;
+  padding: .25em;
+}

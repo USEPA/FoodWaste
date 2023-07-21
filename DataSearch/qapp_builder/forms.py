@@ -6,12 +6,11 @@
 
 """Definition of forms."""
 
-import datetime
 from django.forms import CharField, ChoiceField, ModelForm, TextInput, \
     Textarea, ModelMultipleChoiceField, SelectMultiple, \
-    BooleanField, FileField, ClearableFileInput, \
+    BooleanField, FileField, ClearableFileInput, HiddenInput, \
     ModelChoiceField, Select, DateTimeField, CheckboxInput
-from django.forms.widgets import DateTimeInput
+from django.forms.widgets import DateTimeInput, Widget
 from django.utils.translation import gettext_lazy as _
 from constants.models import QA_CATEGORY_CHOICES, XMURAL_CHOICES
 from constants.qapp_builder import SECTION_A_INFO, SECTION_D_INFO, \
@@ -20,6 +19,7 @@ from constants.qapp_builder_sectionb import SECTION_B_INFO
 from qapp_builder.models import Division, Qapp, QappApproval, QappLead, \
     QappApprovalSignature, SectionA, SectionB, SectionD, Revision, \
     SectionBType, References, SectionC
+from qapp_builder.form_widgets import UswdsCheckboxInput
 from teams.models import Team, TeamMembership
 
 
@@ -28,15 +28,15 @@ class QappForm(ModelForm):
 
     division = ModelChoiceField(label=_("Division:"),
                                 queryset=Division.objects.all(),
-                                widget=Select(
-                                    attrs={'class': 'form-item__select'}),
+                                widget=Select(attrs={
+                                    'class': 'form-item__select mt-2 mb-2'}),
                                 initial=0)
 
-    division_branch = CharField(widget=TextInput({'class': 'usa-input'}),
+    division_branch = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                                 label=_("Division Branch:"),
                                 required=True)
 
-    title = CharField(widget=TextInput({'class': 'usa-input'}),
+    title = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                       label=_("QAPP Title:"),
                       required=True)
 
@@ -45,40 +45,41 @@ class QappForm(ModelForm):
 
     qa_category = ChoiceField(label=_("QA Category:"),
                               choices=QA_CATEGORY_CHOICES,
-                              widget=Select(
-                                  attrs={'class': 'form-item__select'}),
+                              widget=Select(attrs={
+                                  'class': 'form-item__select mt-2 mb-2'}),
                               required=True)
 
     intra_extra = ChoiceField(label=_("Intra/Extramural:"),
                               choices=XMURAL_CHOICES,
-                              widget=Select(
-                                  attrs={'class': 'form-item__select'}),
+                              widget=Select(attrs={
+                                  'class': 'form-item__select mt-2 mb-2'}),
                               required=True)
 
     revision_number = CharField(label=_("Revision Number:"),
                                 required=True,
-                                widget=TextInput({'class': 'usa-input'}))
+                                widget=TextInput({'class': 'usa-input mb-2'}))
 
     date = DateTimeField(label=_("Date:"),
                          required=True,
-                         widget=DateTimeInput(attrs={'class': 'usa-input'}))
+                         widget=DateTimeInput(
+                             attrs={'class': 'usa-input mb-2'}))
 
     # prepared_by = CharField(
     #     label=_("Prepared By:"), required=True,
-    #     widget=TextInput({'class': 'usa-input',
+    #     widget=TextInput({'class': 'usa-input mb-2',
     #                      'readonly':'readonly'}))
 
-    strap = CharField(widget=TextInput({'class': 'usa-input'}),
+    strap = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                       label=_("StRAP:"),
                       required=True)
 
-    tracking_id = CharField(widget=TextInput({'class': 'usa-input'}),
+    tracking_id = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                             label=_("QA Tracking ID:"),
                             required=True)
 
     teams = ModelMultipleChoiceField(
         widget=SelectMultiple({
-            'class': 'form-item__select',
+            'class': 'form-item__select mt-2 mb-2',
             'placeholder': 'Teams'
         }),
         queryset=Team.objects.all(),
@@ -88,7 +89,7 @@ class QappForm(ModelForm):
     can_edit = BooleanField(
         required=False,
         label=_("Teams can edit the QAPP"),
-        widget=CheckboxInput(attrs={'class': 'form-control col-sm-1 mb-2'}))
+        widget=CheckboxInput(attrs={'class': 'form-control mb-2 col-sm-1'}))
 
     def __init__(self, *args, **kwargs):
         """Override default init to add custom queryset for teams."""
@@ -116,7 +117,7 @@ class QappForm(ModelForm):
 class QappLeadForm(ModelForm):
     """Form for creating project leads for a given qapp."""
 
-    name = CharField(widget=TextInput({'class': 'usa-input'}),
+    name = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                      label=_("Lead Name:"),
                      required=True)
 
@@ -125,7 +126,7 @@ class QappLeadForm(ModelForm):
                             required=True,
                             label=_("Parent QAPP"),
                             widget=TextInput(attrs={
-                                'class': 'usa-input',
+                                'class': 'usa-input mb-2',
                                 'readonly': 'readonly'
                             }))
 
@@ -139,22 +140,27 @@ class QappLeadForm(ModelForm):
 class QappApprovalForm(ModelForm):
     """Form for creating the QAPP Approval page."""
 
-    project_plan_title = CharField(widget=TextInput({'class': 'usa-input'}),
-                                   label=_("Project Plan Title"),
-                                   required=True)
+    project_plan_title = CharField(
+        widget=TextInput({'class': 'usa-input mb-2'}),
+        label=_("Project Plan Title"),
+        required=True)
 
-    activity_number = CharField(widget=TextInput({'class': 'usa-input'}),
+    activity_number = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                                 label=_("Activity Number"),
                                 required=True)
 
     qapp = ModelChoiceField(queryset=Qapp.objects.all(),
-                            initial=0,
-                            required=True,
-                            label=_("Parent QAPP"),
-                            widget=TextInput(attrs={
-                                'class': 'usa-input',
-                                'readonly': 'readonly'
-                            }))
+                            required=False,
+                            widget=HiddenInput())
+
+    # qapp = ModelChoiceField(queryset=Qapp.objects.all(),
+    #                         initial=0,
+    #                         required=True,
+    #                         label=_("Parent QAPP"),
+    #                         widget=TextInput(attrs={
+    #                             'class': 'usa-input mb-2',
+    #                             'readonly': 'readonly'
+    #                         }))
 
     class Meta:
         """Meta data for QappApproval Form."""
@@ -163,42 +169,74 @@ class QappApprovalForm(ModelForm):
         fields = ('project_plan_title', 'activity_number', 'qapp')
 
 
+# class CustomCheckboxWidget(CheckboxInput):
+#     """Custom Checkbox widget to allow better control for EPA USWDS."""
+#     def render(self, name, value, attrs={'class': 'usa-input mb-2'},
+#                renderer=None):
+#         if not attrs.get('class', None):
+#             attrs['class'] = 'usa-input mb-2'
+#         widget = super().render(name, value, attrs=attrs,
+#                                 renderer=renderer)
+#         label = self.attrs.get('label')
+#         return ('<div class="usa-checkbox"><label class='
+#                 f'"usa-checkbox__label">{label}</label>{widget}</div>')
+
+
 class QappApprovalSignatureForm(ModelForm):
     """Form for creating the QAPP Approval Signatures."""
 
-    qapp_approval = ModelChoiceField(
-        queryset=QappApproval.objects.all(),
-        initial=0,
-        required=True,
-        label=_("Parent QAPP Approval"),
-        widget=TextInput(attrs={
-            'class': 'usa-input',
-            'readonly': 'readonly'
-        }))
+    qapp_approval = ModelChoiceField(queryset=QappApproval.objects.all(),
+                                     required=False,
+                                     widget=HiddenInput())
+
+    # contractor = BooleanField(
+    #     required=False,
+    #     label=False,
+    #     # label=_("Contractor? Default (no check) is EPA."),
+    #     widget=UswdsCheckboxInput({'class': 'usa-checkbox__input'}))
+    #     # widget=UswdsCheckboxInput())
+
+    # contractor = BooleanField(
+    #     required=False,
+    #     label=None,
+    #     widget=CustomCheckboxWidget({
+    #         'label': 'Contractor? Default (no check) is EPA',
+    #         'class': 'usa-checkbox__input'
+    #     }))
 
     contractor = BooleanField(
         required=False,
-        label=_("Contractor Signature? Default (no check) is EPA."),
+        label=_("Contractor? Default (no check) is EPA."),
         widget=CheckboxInput(
             attrs={'class': 'form-control custom-control-input'}))
 
-    name = CharField(widget=TextInput({'class': 'usa-input'}),
+    name = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
                      label=_("Print Name:"),
                      required=False)
 
     signature = CharField(label=_("Signature:"),
                           required=False,
                           widget=TextInput({
-                              'class': 'usa-input',
+                              'class': 'usa-input mb-2',
                               'readonly': 'readonly'
                           }))
 
     date = CharField(label=_("Date:"),
                      required=False,
                      widget=TextInput({
-                         'class': 'usa-input',
+                         'class': 'usa-input mb-2',
                          'readonly': 'readonly'
                      }))
+
+    # def __init__(self, *args, **kwargs):
+    #     """Extending default init so we can wrap boolean input in a div."""
+    #     super().__init__(*args, **kwargs)
+
+    #     for field_name, field in self.fields.items():
+    #         if field_name == 'contractor':
+    #             field.widget = CustomCheckboxWidget(
+    #                 # self, field_name, None,
+    #                 {'label': 'Contractor? Default (no check) is EPA.'})
 
     class Meta:
         """Meta data for QappApprovalSignature Form."""
@@ -215,70 +253,70 @@ class SectionAForm(ModelForm):
                             required=True,
                             label=_("Parent QAPP"),
                             widget=Textarea(attrs={
-                                'class': 'usa-input',
+                                'class': 'usa-input mb-2',
                                 'readonly': 'readonly'
                             }))
 
     # A2 is new, see Jira DAT-32
     a2 = CharField(label=_("A.2 Definitions and Acronyms"),
                    required=True,
-                   widget=Textarea({'class': 'usa-textarea'}))
+                   widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     # Keywords is new, see Jira DAT-35
     a2_keywords = CharField(label=_("Keywords"),
                             required=True,
-                            widget=Textarea({'class': 'usa-textarea'}))
+                            widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     a3 = CharField(label=_("A.3 Distribution List"),
                    required=False,
                    widget=Textarea({
-                       'class': 'usa-textarea',
+                       'class': 'usa-textarea mb-2',
                        'readonly': 'readonly'
                    }),
                    initial=SECTION_A_INFO['a3'])
 
     a4 = CharField(label=_("A.4 Project Task Organization"),
                    required=True,
-                   widget=Textarea({'class': 'usa-textarea'}))
+                   widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     a4_chart = FileField(label=_("Upload Organizational Chart (optional)"),
                          required=False,
                          widget=ClearableFileInput(attrs={
                              'multiple': False,
-                             'class': 'custom-file-input'
+                             'class': 'custom-file-input mb-2'
                          }))
 
     a5 = CharField(label=_("A.5 Problem Definition Background"),
                    required=True,
-                   widget=Textarea({'class': 'usa-textarea'}))
+                   widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     a6 = CharField(label=_("A.6 Project Description"),
                    required=True,
-                   widget=Textarea({'class': 'usa-textarea'}))
+                   widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     a7 = CharField(label=_("A.7 Quality Objectives and Criteria"),
                    required=True,
-                   widget=Textarea({'class': 'usa-textarea'}))
+                   widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     a8 = CharField(label=_("A.8 Special Training Certification"),
                    required=True,
-                   widget=Textarea({'class': 'usa-textarea'}))
+                   widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     a9 = CharField(label=_("A.9 Documents and Records"),
                    required=False,
                    widget=Textarea({
-                       'class': 'usa-textarea',
+                       'class': 'usa-textarea mb-2',
                        'readonly': 'readonly'
                    }),
                    initial=SECTION_A_INFO['a9'])
 
     a9_drive_path = CharField(label=_("A.9 Drive Path:"),
                               required=True,
-                              widget=TextInput({'class': 'usa-input'}))
+                              widget=TextInput({'class': 'usa-input mb-2'}))
 
     sectionb_type = ModelMultipleChoiceField(
         widget=SelectMultiple({
-            'class': 'form-item__select section-b-type-input',
+            'class': 'form-item__select mt-2 mb-2 section-b-type-input',
             'placeholder': 'Section B Type'
         }),
         queryset=SectionBType.objects.all(),
@@ -305,7 +343,7 @@ class SectionBForm(ModelForm):
                             required=True,
                             label=_("Parent QAPP"),
                             widget=Select(attrs={
-                                'class': 'form-item__select',
+                                'class': 'form-item__select mt-2 mb-2',
                                 'readonly': 'readonly'
                             }))
 
@@ -315,7 +353,7 @@ class SectionBForm(ModelForm):
         required=True,
         label=_("Section B Type"),
         widget=Select(attrs={
-            'class': 'form-item__select',
+            'class': 'form-item__select mt-2 mb-2',
             'readonly': 'readonly'
         }))
 
@@ -334,7 +372,7 @@ class SectionBForm(ModelForm):
                                              label=_(val['label']),
                                              required=False,
                                              widget=Textarea(
-                                                 {'class': 'usa-input'}))
+                                                 {'class': 'usa-input mb-2'}))
 
     @staticmethod
     def get_help_text():
@@ -353,17 +391,17 @@ class SectionCForm(ModelForm):
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
                             required=True, label=_("Parent QAPP"),
                             widget=Textarea(
-                                attrs={'class': 'usa-input',
+                                attrs={'class': 'usa-input mb-2',
                                        'readonly': 'readonly'}))
 
     c1 = CharField(
         label=_("C.1 Assessments and Response Actions"),
-        required=False, widget=Textarea({'class': 'usa-textarea'}),
+        required=False, widget=Textarea({'class': 'usa-textarea mb-2'}),
         initial=SECTION_C_INFO[0])
 
     c2 = CharField(
         label=_("C.2 Reports to Management"),
-        required=False, widget=Textarea({'class': 'usa-textarea'}),
+        required=False, widget=Textarea({'class': 'usa-textarea mb-2'}),
         initial=SECTION_C_INFO[1])
 
     @staticmethod
@@ -383,20 +421,20 @@ class SectionDForm(ModelForm):
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
                             required=True, label=_("Parent QAPP"),
                             widget=Textarea(
-                                attrs={'class': 'usa-input',
+                                attrs={'class': 'usa-input mb-2',
                                        'readonly': 'readonly'}))
 
     d1 = CharField(
         label=_("D.1 Data Review, Verification, and Validation"),
-        required=True, widget=Textarea({'class': 'usa-textarea'}))
+        required=True, widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     d2 = CharField(
         label=_("D.2 Verification and Validation Methods"),
-        required=True, widget=Textarea({'class': 'usa-textarea'}))
+        required=True, widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     d3 = CharField(
         label=_("D.3 Reconciliation with User Requirements"),
-        required=True, widget=Textarea({'class': 'usa-textarea'}))
+        required=True, widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     @staticmethod
     def get_help_text():
@@ -415,11 +453,11 @@ class ReferencesForm(ModelForm):
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
                             required=True, label=_("Parent QAPP"),
                             widget=Textarea(
-                                attrs={'class': 'usa-input',
+                                attrs={'class': 'usa-input mb-2',
                                        'readonly': 'readonly'}))
     references = CharField(
         label=_("References"),
-        required=True, widget=Textarea({'class': 'usa-textarea'}))
+        required=True, widget=Textarea({'class': 'usa-textarea mb-2'}))
 
     @staticmethod
     def get_help_text():
@@ -438,24 +476,24 @@ class RevisionForm(ModelForm):
     qapp = ModelChoiceField(queryset=Qapp.objects.all(), initial=0,
                             required=True, label=_("Parent QAPP"),
                             widget=Textarea(
-                                attrs={'class': 'usa-input',
+                                attrs={'class': 'usa-input mb-2',
                                        'readonly': 'readonly'}))
     revision = CharField(
         label=_("Revision Number"),
-        required=True, widget=TextInput({'class': 'usa-input'}))
+        required=True, widget=TextInput({'class': 'usa-input mb-2'}))
 
     description = CharField(
         label=_("Description"),
-        required=True, widget=TextInput({'class': 'usa-input'}))
+        required=True, widget=TextInput({'class': 'usa-input mb-2'}))
 
     effective_date = DateTimeField(
         label=_("Effective Date"),
         required=True, widget=DateTimeInput(
-            attrs={'class': 'usa-input'}))
+            attrs={'class': 'usa-input mb-2'}))
 
     initial_version = CharField(
         label=_("Initial Version"),
-        required=True, widget=TextInput({'class': 'usa-input'}))
+        required=True, widget=TextInput({'class': 'usa-input mb-2'}))
 
     @staticmethod
     def get_help_text():

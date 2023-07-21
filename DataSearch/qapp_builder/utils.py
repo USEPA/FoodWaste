@@ -14,21 +14,22 @@ def get_steps(ctx, current_step):
 
     Args:
         ctx (dict): the view's context which is modified and returned
-        current_step (int): the current step's index in ALL_SCENARIO_FIELDS
+        current_step (int): the current step's index in ALL_QAPP_PAGES
 
     Returns:
         dict: ctx, the view's context
     """
 
-    for idx, field in enumerate(CONST.ALL_SCENARIO_FIELDS):
-        if idx is current_step:  # idx == current
-            ctx[f'{field}_status_css'] = CONST.CURRENT_CSS
+    if current_step:
+        for idx, field in enumerate(CONST.ALL_QAPP_PAGES):
+            if idx is current_step:  # idx == current
+                ctx[f'{field}_status_css'] = CONST.CURRENT_CSS
 
-        elif idx > current_step:  # idx > current
-            ctx[f'{field}_status_span'] = CONST.INCOMPLETE_SPAN
+            elif idx > current_step:  # idx > current
+                ctx[f'{field}_status_span'] = CONST.INCOMPLETE_SPAN
 
-        else:  # idx < current
-            ctx[f'{field}_status_css'] = CONST.COMPLETE_CSS
-            ctx[f'{field}_status_span'] = CONST.COMPLETE_SPAN
+            else:  # idx < current
+                ctx[f'{field}_status_css'] = CONST.COMPLETE_CSS
+                ctx[f'{field}_status_span'] = CONST.COMPLETE_SPAN
 
     return ctx

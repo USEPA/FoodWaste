@@ -1,8 +1,10 @@
 {% include 'epa/head.html' %}
-<body class="" id="#top">
-<div class="skiplinks" role="navigation" aria-labelledby="skip-to-main--624dbe8d6ad20">
-    <a id="skip-to-main--624dbe8d6ad20" href="#main" class="skiplinks__link visually-hidden focusable">Skip to main content</a>
-</div>
-
+{% load static %}
+<!--
+  Add any additional head content here. The content in this file should be
+  specific to this app and will override any conflicting content from the EPA
+  template. For example custom CSS.
+-->
+<link rel="stylesheet" type="text/css" href="{% static 'lib/bootstrap.min.css' %}"/>
 {% include 'epa/section_banner.html' %}
 {% include 'epa/header.html' %}

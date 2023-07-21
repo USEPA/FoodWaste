@@ -44,16 +44,16 @@ function editApprovalPage(id) {
 //////////////////////////////////////////////////////////////////////
 // Project Approval Signature Section
 function addApprovalSignature(id) {
-    window.location.href = '/qapp_builder/approval_signature/create?qapp_id=' + id;
+    window.location.href = `/qapp_builder/${id}/approval/signature/create`
 }
 
 function editApprovalSignature(btn) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qapp_builder/approval_signature/edit/' + getId(btn);
+    window.location.href = '/qapp_builder/approval/signature/edit/' + getId(btn);
 }
 
 function removeApprovalSignature(btn) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qapp_builder/approval_signature/delete/' + getId(btn);
+    window.location.href = '/qapp_builder/approval/signature/delete/' + getId(btn);
 }
 //////////////////////////////////////////////////////////////////////

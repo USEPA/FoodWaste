@@ -1,0 +1,18 @@
+{% extends 'qapp_sections/_section_layout.html' %}
+
+{% block section_content %}
+<h4 class="text-center">Section A.1</h4>
+<div class="grid-row">
+    <div class="grid-col-9">{% include '_qapp_detail_partial.html' %}</div>
+    <div class="grid-col-3">
+        <div class="vertical-button-group">
+            <button class="usa-button">Back to QAPP List</button>
+            <button class="usa-button usa-button--accent-warm">Edit QAPP</button>
+            <button class="usa-button usa-button--secondary">Delete QAPP</button>
+            <button class="usa-button mt-5">Export to Word</button>
+            <button class="usa-button">Export to PDF</button>
+        </div>
+    </div>
+</div>
+{% include 'qapp_sections/project_leads.html' %}
+{% endblock %}

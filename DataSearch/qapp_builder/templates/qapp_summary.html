@@ -1,18 +1,24 @@
 {% extends 'main/base.html' %}
 {% block content %}
 
-<h3>Details for Scenario {{scenario.id}} "{{scenario}}"</h3>
+<h3>QAPP {{qapp.id}} "{{qapp}}"</h3>
 
-<div class="grid-row grid-gap">
-    <div class="tablet:grid-col">
+{% include 'qapp_sections/qapp_detail.html' %}
+{% include 'qapp_sections/approval.html' %}
+{% include 'qapp_status.html' %}
 
-    </div>
-</div>
 
+
+
+
+
+
+
+{% comment %}
 <div class="grid-row grid-gap">
     <div class="tablet:grid-col">
         <h5 class="site-preview-heading border-top-1px border-base-light padding-top-1 margin-top-0">
-            QAPP {{qapp.id}} - Status of required inputs
+            Status of required inputs
         </h5>
         <ul class="usa-icon-list">
             <!------------ Conditions ------------>
@@ -161,6 +167,7 @@
         </ul>
     </div>
 </div>
+{% endcomment %}
 
 <!-- <ol class="usa-process-list">
     <li class="usa-process-list__item">
