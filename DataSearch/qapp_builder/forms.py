@@ -189,6 +189,18 @@ class QappApprovalSignatureForm(ModelForm):
                                      required=False,
                                      widget=HiddenInput())
 
+    name = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
+                     label=_("Print Name:"),
+                     required=False)
+
+    signature = CharField(label=_("Signature:"),
+                          required=False,
+                          widget=HiddenInput())
+
+    date = CharField(label=_("Date:"),
+                     required=False,
+                     widget=HiddenInput())
+
     # contractor = BooleanField(
     #     required=False,
     #     label=False,
@@ -208,25 +220,7 @@ class QappApprovalSignatureForm(ModelForm):
         required=False,
         label=_("Contractor? Default (no check) is EPA."),
         widget=CheckboxInput(
-            attrs={'class': 'form-control custom-control-input'}))
-
-    name = CharField(widget=TextInput({'class': 'usa-input mb-2'}),
-                     label=_("Print Name:"),
-                     required=False)
-
-    signature = CharField(label=_("Signature:"),
-                          required=False,
-                          widget=TextInput({
-                              'class': 'usa-input mb-2',
-                              'readonly': 'readonly'
-                          }))
-
-    date = CharField(label=_("Date:"),
-                     required=False,
-                     widget=TextInput({
-                         'class': 'usa-input mb-2',
-                         'readonly': 'readonly'
-                     }))
+            attrs={'class': 'form-control mb-2 col-sm-1'}))
 
     # def __init__(self, *args, **kwargs):
     #     """Extending default init so we can wrap boolean input in a div."""
@@ -242,7 +236,7 @@ class QappApprovalSignatureForm(ModelForm):
         """Meta data for QappApprovalSignature Form."""
 
         model = QappApprovalSignature
-        fields = ('qapp_approval', 'contractor', 'name', 'signature', 'date')
+        fields = ('qapp_approval', 'name', 'signature', 'date', 'contractor')
 
 
 class SectionAForm(ModelForm):

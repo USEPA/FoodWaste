@@ -6,9 +6,9 @@
     <div class="grid-col-9">{% include '_qapp_detail_partial.html' %}</div>
     <div class="grid-col-3">
         <div class="vertical-button-group">
-            <button class="usa-button">Back to QAPP List</button>
-            <button class="usa-button usa-button--accent-warm">Edit QAPP</button>
-            <button class="usa-button usa-button--secondary">Delete QAPP</button>
+            <button class="usa-button" onclick="window.location='/qapp_builder'">Back to QAPP List</button>
+            <button class="usa-button usa-button--accent-warm" onclick="window.location='/qapp_builder/{{qapp_id}}/edit'">Edit QAPP</button>
+            <button class="usa-button usa-button--secondary" onclick="window.location='/qapp_builder/{{qapp_id}}/delete'">Delete QAPP</button>
             <button class="usa-button mt-5">Export to Word</button>
             <button class="usa-button">Export to PDF</button>
         </div>

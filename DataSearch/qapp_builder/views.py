@@ -9,10 +9,11 @@
 from typing import Any, Dict
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, DeleteView, \
+    UpdateView
 from qapp_builder.forms import QappForm, QappApprovalForm, \
     QappApprovalSignatureForm
-from qapp_builder.models import Qapp
+from qapp_builder.models import Qapp, QappApproval, QappApprovalSignature
 from qapp_builder.utils import get_steps
 
 
@@ -21,8 +22,45 @@ def get_qapp_status(qapp):
     return ctx
 
 
+class FromSummaryPartial(LoginRequiredMixin):
+    """Custom partial class used for all views that go back to QAPP Summary."""
+
+    next_url = 'qapp_summary'
+
+    def get_context_data(self, *args, **kwargs):
+        """Override default context to return the proper qapp vals."""
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['pk'] = self.kwargs.get('pk')
+        ctx['qapp_id'] = self.kwargs.get('qapp_id', ctx['pk'])
+        return ctx
+
+    def get_success_url(self):
+        return reverse_lazy(self.next_url,
+                            args=(self.kwargs.get('qapp_id',
+                                                  self.kwargs.get('pk')),))
+
+
+class WizardDeletePartial(FromSummaryPartial, DeleteView):
+    """Custom partial class to contain constant pieces of other Delete views."""
+
+    template_name = '_confirm_delete.html'
+
+
+class WizardEditPartial(FromSummaryPartial, UpdateView):
+    """Custom partial class to facilitate other Update views."""
+
+    template_name = '_generic_inputs_create.html'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['qapp_id'] = self.kwargs.get('qapp_id')
+        return ctx
+
+
 class WizardCreatePartial(LoginRequiredMixin, CreateView):
     """Custom partial class to contain constant pieces of other classes."""
+
+    template_name = '_generic_inputs_create.html'
 
     def get_context_data(self, *args, **kwargs):
         """Override default context to return the proper qapp step."""
@@ -41,7 +79,17 @@ class WizardCreatePartial(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Override default form validator to add qapp_id"""
         obj = form.save(commit=False)
-        obj.qapp_id = self.kwargs.get('pk', None)
+
+        if hasattr(obj, 'qapp_id'):
+            obj.qapp_id = self.kwargs.get('pk', None)
+        elif hasattr(obj, 'qapp_approval_id'):
+            qapp_id = self.kwargs.get('pk', None)
+            qapp_approval = QappApproval.objects.filter(qapp_id=qapp_id).first()
+            obj.qapp_approval_id = qapp_approval.id if qapp_approval else None
+
+        if hasattr(obj, 'prepared_by'):
+            obj.prepared_by = self.request.user
+
         return super(WizardCreatePartial, self).form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
@@ -49,7 +97,9 @@ class WizardCreatePartial(LoginRequiredMixin, CreateView):
         On successful Scenario creation, automatically redirect users
         to the next page in the qapp wizard.
         """
-        return reverse_lazy(self.next_url, args=(self.object.id,))
+        arg_id = self.kwargs.get('qapp_id',
+                                 self.kwargs.get('pk', self.object.id))
+        return reverse_lazy(self.next_url, args=(arg_id,))
 
 
 class QappList(LoginRequiredMixin, ListView):
@@ -78,7 +128,13 @@ class QappDetail(LoginRequiredMixin, DetailView):
         ctx = super().get_context_data(*args, **kwargs)
         ctx['status'] = get_qapp_status(ctx['object'])
         ctx['page_title'] = 'QAPP Details'
-        ctx['qapp_id'] = self.kwargs['pk']
+        ctx['qapp_id'] = ctx['object'].id
+        ctx['project_approval'] = QappApproval.objects.filter(
+            qapp_id=ctx['qapp_id']).first()
+        if ctx['project_approval']:
+            ctx['project_approval_signatures'] = \
+                QappApprovalSignature.objects.filter(
+                    qapp_approval_id=ctx['project_approval'].id)
         ctx = get_steps(ctx, ctx.get('step_num', None))
         return ctx
 
@@ -87,24 +143,54 @@ class QappCreate(WizardCreatePartial):
     """QAPP Create view."""
 
     form_class = QappForm
-    template_name = '_generic_inputs_create.html'
     page_title = 'QAPP'
     next_url = 'approval_create'
+
+
+class QappDelete(WizardDeletePartial):
+    """View for deleting a QAPP model object."""
+
+    model = Qapp
+    next_url = 'qapp'
+
+    def get_success_url(self):
+        return reverse_lazy(self.next_url)
+
+
+class QappEdit(WizardEditPartial):
+    """View for editing/updating a QAPP model object."""
+
+    model = Qapp
+    form_class = QappForm
 
 
 class ApprovalCreate(WizardCreatePartial):
     """QAPP Approval Create view."""
 
     form_class = QappApprovalForm
-    template_name = '_generic_inputs_create.html'
     page_title = 'Approval'
     next_url = 'qapp_summary'
+
+    def get_context_data(self, *args, **kwargs: Any) -> Dict[str, Any]:
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['qapp_id'] = self.kwargs.get('pk')
+        return ctx
 
 
 class ApprovalSignatureCreate(WizardCreatePartial):
     """View to add a new Signature to the QAPP Approval page."""
 
     form_class = QappApprovalSignatureForm
-    template_name = '_generic_inputs_create.html'
     page_title = 'Approval Signature'
     next_url = 'qapp_summary'
+
+
+class ApprovalSignatureDelete(WizardDeletePartial):
+
+    model = QappApprovalSignature
+
+
+class ApprovalSignatureEdit(WizardEditPartial):
+
+    model = QappApprovalSignature
+    form_class = QappApprovalSignatureForm

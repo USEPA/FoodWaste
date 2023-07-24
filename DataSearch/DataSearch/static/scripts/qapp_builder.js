@@ -47,13 +47,13 @@ function addApprovalSignature(id) {
     window.location.href = `/qapp_builder/${id}/approval/signature/create`
 }
 
-function editApprovalSignature(btn) {
+function editApprovalSignature(btn, qapp_id) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qapp_builder/approval/signature/edit/' + getId(btn);
+    window.location.href = `/qapp_builder/${qapp_id}/approval/signature/${getId(btn)}/edit`;
 }
 
-function removeApprovalSignature(btn) {
+function deleteApprovalSignature(btn, qapp_id) {
     if ($(btn).attr('disabled')) return;
-    window.location.href = '/qapp_builder/approval/signature/delete/' + getId(btn);
+    window.location.href = `/qapp_builder/${qapp_id}/approval/signature/${getId(btn)}/delete`;
 }
 //////////////////////////////////////////////////////////////////////

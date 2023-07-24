@@ -1,0 +1,18 @@
+{% extends "main/base.html" %} {% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <h4>Are you sure you want to delete "{{ object }}"?</h4>
+    <div class="usa-button-group">
+        <button type="submit" class="usa-button usa-button--secondary" value="Confirm">Delete</button>
+        <button
+            type="reset"
+            class="usa-button"
+            onclick="window.location = '/qapp_builder/{{qapp_id}}/detail'"
+        >
+            Go Back
+        </button>
+    </div>
+</form>
+
+{% endblock %}

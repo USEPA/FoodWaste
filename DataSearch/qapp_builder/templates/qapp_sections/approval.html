@@ -1,7 +1,9 @@
 {% load static %}
 
 {% block extend_js %}
+<script src="https://www.epa.gov/core/assets/vendor/jquery/jquery.min.js?v=3.6.0"></script>
 <script src="{% static 'scripts/qapp_builder.js' %}"></script>
+<script src="{% static 'scripts/app.js' %}"></script>
 {% endblock %}
 
 <div class="well">
@@ -34,12 +36,12 @@
                 <use href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#add"></use>
               </svg>
         </button>
-        <button class="usa-button usa-button--accent-warm" disabled>
+        <button class="usa-button usa-button--accent-warm modSelectedButton" onclick="editApprovalSignature(this, {{qapp.id}})" disabled>
             <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
                 <use href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#edit"></use>
               </svg>
         </button>
-        <button class="usa-button usa-button--secondary" disabled>
+        <button class="usa-button usa-button--secondary modSelectedButton" onclick="deleteApprovalSignature(this, {{qapp.id}})" disabled>
             <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
                 <use href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#delete"></use>
               </svg>

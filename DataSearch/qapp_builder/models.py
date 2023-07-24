@@ -8,6 +8,7 @@
 """Definition of models."""
 
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.contrib.auth.models import User
 from constants.qapp_builder import SECTION_C_INFO
@@ -124,12 +125,17 @@ class QappLead(models.Model):
 class QappApproval(models.Model):
     """Class representing the approval page of a QAPP document."""
 
-    project_plan_title = models.TextField(blank=False, null=False)
-    activity_number = models.TextField(blank=False, null=False)
     qapp = models.OneToOneField(Qapp, blank=False,
                                 on_delete=models.CASCADE,
-                                primary_key=False)
+                                primary_key=True,
+                                db_column='id')
+    project_plan_title = models.TextField(blank=False, null=False)
+    activity_number = models.TextField(blank=False, null=False)
     # Dynamic number of signatures, one-to-many:
+
+    @property
+    def id(self):
+        return self.qapp.id
 
 
 class QappApprovalSignature(models.Model):

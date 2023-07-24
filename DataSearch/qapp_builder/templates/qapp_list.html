@@ -69,7 +69,8 @@
 <script>
   function editQapp(btn) {
     if ($(btn).attr("disabled")) return;
-    window.location.href = "/qapp_builder/edit/" + $(btn).attr("id");
+    const id = $(btn).attr("id");
+    window.location.href = `/qapp_builder/${id}/detail`;
   }
 
   function exportAll(exportType) {
