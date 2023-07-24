@@ -30,7 +30,8 @@
         </div>
     </div>
 
-    <div class="narrow-button-group float-right">
+    {% extends '_micro_crud_buttons.html' %}
+    {% block buttons %}
         <button class="usa-button" onclick="addApprovalSignature({{qapp.id}})">
             <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
                 <use href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#add"></use>
@@ -46,7 +47,7 @@
                 <use href="https://www.epa.gov/themes/epa_theme/images/sprite.svg#delete"></use>
               </svg>
         </button>
-    </div>
+    {% endblock %}
 
     <table class="usa-table full-width">
         <thead>

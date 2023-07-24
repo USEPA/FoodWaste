@@ -22,6 +22,9 @@ def get_qapp_status(qapp):
     return ctx
 
 
+# #############################################################################
+# Partial views
+
 class FromSummaryPartial(LoginRequiredMixin):
     """Custom partial class used for all views that go back to QAPP Summary."""
 
@@ -102,6 +105,8 @@ class WizardCreatePartial(LoginRequiredMixin, CreateView):
         return reverse_lazy(self.next_url, args=(arg_id,))
 
 
+# #############################################################################
+# QAPP views
 class QappList(LoginRequiredMixin, ListView):
     """
     QAPP Index View where a user can view existing, edit existing,
@@ -164,6 +169,8 @@ class QappEdit(WizardEditPartial):
     form_class = QappForm
 
 
+# #############################################################################
+# QAPP Approval views
 class ApprovalCreate(WizardCreatePartial):
     """QAPP Approval Create view."""
 
