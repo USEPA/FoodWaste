@@ -17,7 +17,7 @@ django-phonenumber-field>=7.0.2   # An international phone number field for djan
 djangorestframework>=3.14.0       # Powerful and flexible toolkit for building Web APIs.
 django-wkhtmltopdf>=3.4.0         # Allows a Django site to output dynamic PDFs.
 openpyxl>=3.1.0                   # Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files.
-psycopg2>=2.9.5                   # Python-PostgreSQL Database Adapter.
+psycopg2-binary>=2.9.5                   # Python-PostgreSQL Database Adapter.
 python-docx>=0.8.11               # Python library for creating and updating Microsoft Word (.docx) files.
 # NOTE: xhtml2pdf is the culprit bringing in dangerous "future" package.
 #       Eventually, we need to resolve this.
@@ -38,5 +38,7 @@ pycodestyle>=2.10.0               # Tool to check your Python code against some 
 pydocstyle>=6.3.0                 # Static analysis tool for checking compliance with Python docstring conventions in PEP 257.
 pylint-django>=2.5.3              # pylint_django.checkers.db_performance looks for migrations which add new model fields and these fields have a default value.
 
-# AAD Auth
-django-auth-adfs
+# SSO Auth
+grafana-django-saml2-auth
+django-extensions
+werkzeug

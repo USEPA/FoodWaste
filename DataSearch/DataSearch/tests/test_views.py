@@ -11,7 +11,7 @@ These will pass when you run "manage.py test".
 
 # from unittest import TestCase
 import django
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User
 from django.db.models.query import QuerySet, EmptyQuerySet
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase

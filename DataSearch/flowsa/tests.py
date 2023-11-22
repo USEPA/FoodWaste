@@ -14,7 +14,7 @@ import django
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.test.client import RequestFactory
-from accounts.models import User
+from django.contrib.auth.models import User
 from flowsa.models import Upload
 from flowsa.views import FlowsaIndex
 

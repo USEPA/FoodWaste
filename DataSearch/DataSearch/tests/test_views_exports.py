@@ -13,7 +13,7 @@ These will pass when you run "manage.py test".
 from io import BytesIO
 import django
 from django.db.models.query import QuerySet, EmptyQuerySet
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
